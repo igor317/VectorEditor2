@@ -14,7 +14,7 @@ namespace TestEditor
     {
         PictureEditor pictureEditor; // Класс редактора
         OpenFileDialog openFileDialog; // Тест
-        SaveFileDialog saveFileDialog;
+        SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
 
         public Form1()
