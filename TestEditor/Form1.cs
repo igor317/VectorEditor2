@@ -13,7 +13,7 @@ namespace TestEditor
     public partial class Form1 : Form
     {
         PictureEditor pictureEditor; // Класс редактора
-        OpenFileDialog openFileDialog;
+        OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog;
         bool inSelect = false;
 
