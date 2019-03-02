@@ -249,7 +249,7 @@ namespace TestEditor
             counterLines = counter + countAddingLines;
             Array.Resize(ref lines, counterLines);
             Array.Copy(buffer, lines, buffer.Length);
-            Array.Clear(lines, counter, lines.Length - counter);
+            Array.Clear(lines, counter, countAddingLines);
         }
         #endregion
     }
