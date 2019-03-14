@@ -71,9 +71,9 @@ namespace TestEditor
 
         private void DrawCursor()
         {
-            if (editMode == EditMode.LineModeD)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD)
                 SelectCursor.DrawXCursor(gBuff);
-            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD)
                 LastCursor.DrawXCursor(gBuff);
         }
 
@@ -100,15 +100,28 @@ namespace TestEditor
                 count++;
             for (int i = 0; i < count; ++i)
             {
-                if (pic.Lines[i] != 0)
-                {
-                    if (pic.Lines[i].selected)
-                        gBuff.DrawLine(gizmoEditor.SelectionPen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
-                    else
-                        gBuff.DrawLine(pic.Lines[i].pen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
-                }
+                if (pic.Lines[i] == 0)
+                    return;
+                if (pic.Lines[i].selected)
+                    gBuff.DrawLine(gizmoEditor.SelectionPen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
                 else
-                    break;
+                    gBuff.DrawLine(pic.Lines[i].pen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
+            }
+        }
+
+        private void DrawCircles()
+        {
+            int count = pic.CounterCircles;
+            if (editMode == EditMode.CircleModeD)
+                count++;
+            for (int i = 0;i<count;++i)
+            {
+                if (pic.Circles[i] == 0)
+                    return;
+                if (pic.Circles[i].selected)
+                    gBuff.DrawEllipse(gizmoEditor.SelectionPen, pic.Circles[i].x1, pic.Circles[i].y1, pic.Circles[i].radius * 2, pic.Circles[i].radius * 2);
+                else
+                    gBuff.DrawEllipse(pic.Circles[i].pen, pic.Circles[i].x1, pic.Circles[i].y1, pic.Circles[i].radius * 2, pic.Circles[i].radius * 2);
             }
         }
         #endregion
@@ -141,6 +154,7 @@ namespace TestEditor
             DrawSelectionRectangle();
             DrawGizmo();
             DrawLines();
+            DrawCircles();
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 
@@ -167,7 +181,7 @@ namespace TestEditor
         public void SetEditMode(EditMode mode)
         {
             editMode = mode;
-            if (mode == EditMode.LineModeM || mode == EditMode.LineModeD || mode == EditMode.SelectionMode)
+            if (mode != EditMode.ReadyToSelect)
                 gizmoEditor.ResetGizmo();
         }
 

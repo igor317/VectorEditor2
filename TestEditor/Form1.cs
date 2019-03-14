@@ -60,7 +60,14 @@ namespace TestEditor
                                 break;
                             case EditMode.LineModeD:
                                 pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
-                                pictureEditor.Picture.AddLine(e.X, e.Y, new Pen(Color.Black), false);
+                                pictureEditor.Picture.AddLine(new Pen(Color.Black), false);
+                                break;
+                            case EditMode.CircleModeM:
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
+                                break;
+                            case EditMode.CircleModeD:
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
+                                pictureEditor.Picture.AddCircle(new Pen(Color.Black),false);
                                 break;
                             case EditMode.SelectionMode:
                                 pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
@@ -93,7 +100,6 @@ namespace TestEditor
                         case EditMode.ReadyToSelect:
                             pictureEditor.SetEditMode(EditMode.SelectionMode);
                             pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,false);
-
                             break;
                     }
                     break;
@@ -118,7 +124,10 @@ namespace TestEditor
                     switch (pictureEditor.EditMode)
                     {
                         case EditMode.LineModeD:
-                            pictureEditor.Picture.AddLine(e.X, e.Y, new Pen(Color.Black), true);
+                            pictureEditor.Picture.AddLine(new Pen(Color.Black), true);
+                            break;
+                        case EditMode.CircleModeD:
+                            pictureEditor.Picture.AddCircle(new Pen(Color.Black), true);
                             break;
                         case EditMode.SelectionMode:
                             pictureEditor.GizmoEditor.CreateGizmo();
@@ -137,6 +146,15 @@ namespace TestEditor
                         case EditMode.LineModeD:
                             pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Green));
                             pictureEditor.SetEditMode(EditMode.LineModeM);
+                            break;
+                        case EditMode.CircleModeM:
+                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
+                            pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y, false);
+                            pictureEditor.SetEditMode(EditMode.CircleModeD);
+                            break;
+                        case EditMode.CircleModeD:
+                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Green));
+                            pictureEditor.SetEditMode(EditMode.CircleModeM);
                             break;
                         case EditMode.ReadyToSelect:
                             pictureEditor.GizmoEditor.ResetControllers();

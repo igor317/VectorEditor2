@@ -449,9 +449,9 @@ namespace TestEditor
         private void ClearSelectionArray()
         {
             for (int i = 0;i<pic.CounterLines;++i)
-            {
                 pic.Lines[i].selected = false;
-            }
+            for (int i = 0; i < pic.CounterCircles; ++i)
+                pic.Circles[i].selected = false;
         }
 
         private void CalculateAngles(float xPos, float yPos, int res)
@@ -554,13 +554,25 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterLines + 1; ++i)
             {
                 if (pic.Lines[i] == 0)
-                    return;
+                    break;
                 if (pic.Lines[i].x1 >= selectRect.x1 && pic.Lines[i].x1 <= selectRect.x2
                     && pic.Lines[i].y1 >= selectRect.y1 && pic.Lines[i].y1 <= selectRect.y2
                     && pic.Lines[i].x2 >= selectRect.x1 && pic.Lines[i].x2 <= selectRect.x2
                     && pic.Lines[i].y2 >= selectRect.y1 && pic.Lines[i].y2 <= selectRect.y2)
                 {
                     pic.Lines[i].selected = true;
+                }
+            }
+            for (int i = 0;i<pic.CounterCircles + 1;++i)
+            {
+                if (pic.Circles[i] == 0)
+                    break;
+                if (pic.Circles[i].x1 >= selectRect.x1 && pic.Circles[i].x1 <= selectRect.x2
+                    && pic.Circles[i].y1 >= selectRect.y1 && pic.Circles[i].y1 <= selectRect.y2
+                    && pic.Circles[i].x1 + 2*pic.Circles[i].radius >= selectRect.x1 && pic.Circles[i].x1 + 2 * pic.Circles[i].radius <= selectRect.x2
+                    && pic.Circles[i].y1 + 2 * pic.Circles[i].radius >= selectRect.y1 && pic.Circles[i].y1 + 2 * pic.Circles[i].radius <= selectRect.y2)
+                {
+                    pic.Circles[i].selected = true;
                 }
             }
 

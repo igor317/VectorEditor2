@@ -51,6 +51,15 @@ namespace TestEditor
             y1 = yCent + radius1 * (float)Math.Cos(radAngle1);
         }
 
+        public void AddLine(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        {
+            x1 = lastCursor.X;
+            y1 = lastCursor.Y;
+            x2 = selectCursor.X;
+            y2 = selectCursor.Y;
+            this.pen = pen;
+        }
+
         public static bool operator !=(LinePic c1, LinePic c2)
         {
             if ((c1.x1 != c2.x2) || (c1.y1 != c2.y1) || (c1.x1 != c2.x2) || (c1.y2 != c2.y2))
@@ -79,14 +88,98 @@ namespace TestEditor
 
     }
 
+    public struct Circle
+    {
+        public float xR;
+        public float yR;
+        public float radius;
+        public Pen pen;
+        public bool selected;
+
+        public float x1, y1;
+
+        private float angle1, angle2;
+        private float radius1, radius2;
+        private float hc1, wc1, hc2, wc2;
+        private float xCent, yCent;
+
+        public void SetCenterPoint(float xCenter, float yCenter)
+        {
+            xCent = xCenter;
+            yCent = yCenter;
+        }
+
+        public void CalculateRotationAxes(float xCenter, float yCenter)
+        {
+            SetCenterPoint(xCenter, yCenter);
+            hc1 = yCenter - yR;
+            wc1 = xR - xCenter;
+            hc2 = yCenter - y1;
+            wc2 = x1 - xCenter;
+            radius1 = Convert.ToSingle(Math.Sqrt(hc1 * hc1 + wc1 * wc1));
+            radius2 = Convert.ToSingle(Math.Sqrt(hc2 * hc2 + wc2 * wc2));
+            angle1 = (float)Math.Atan2(hc1, wc1);
+            angle2 = (float)Math.Atan2(hc2, wc2);
+        }
+
+        public void RotateCircle(float angle)
+        {
+            double radAngle1 = Math.PI / 2 + angle + angle1;
+            double radAngle2 = Math.PI / 2 + angle + angle2;
+            x1 = xCent + radius2 * (float)Math.Sin(radAngle2);
+            y1 = yCent + radius2 * (float)Math.Cos(radAngle2);
+            xR = xCent + radius1 * (float)Math.Sin(radAngle1);
+            yR = yCent + radius1 * (float)Math.Cos(radAngle1);
+        }
+
+        public void AddCircle(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        {
+            xR = lastCursor.X;
+            yR = lastCursor.Y;
+            radius = Convert.ToSingle(Math.Sqrt(Math.Pow(xR - selectCursor.X, 2) + Math.Pow(yR - selectCursor.Y, 2)));
+            x1 = xR - radius;
+            y1 = yR - radius;
+            this.pen = pen;
+        }
+
+        public static bool operator !=(Circle c1, Circle c2)
+        {
+            if ((c1.xR != c2.xR) || (c1.yR != c2.yR) || (c1.radius != c2.radius))
+                return true;
+            return false;
+        }
+        public static bool operator ==(Circle c1, Circle c2)
+        {
+            if ((c1.xR == c2.xR) && (c1.yR == c2.yR) && (c1.radius == c2.radius))
+                return true;
+            return false;
+        }
+
+        public static bool operator !=(Circle c1, int i2)
+        {
+            if ((c1.xR != i2) || (c1.yR != i2) || (c1.radius != i2))
+                return true;
+            return false;
+        }
+        public static bool operator ==(Circle c1, int i2)
+        {
+            if ((c1.xR == i2) && (c1.yR == i2) && (c1.radius == i2))
+                return true;
+            return false;
+        }
+    }
+
     class IpPicture
     {
         #region VARIABLES
         private const short countAddingLines = 2;
 
         private LinePic[] lines;
+        private Circle[] circles;
         private LinePic[] buffer;
         private int counterLines = countAddingLines;
+        private int counterCircles = countAddingLines;
+        private int counterC = 0;
         private int counter = 0;
         private IpCursor selectCursor;
         private IpCursor lastCursor;
@@ -98,15 +191,25 @@ namespace TestEditor
         {
             get { return lines; }
         }
+        public Circle[] Circles
+        {
+            get { return circles; }
+        }
+
         public int CounterLines
         {
             get { return counter; }
+        }
+        public int CounterCircles
+        {
+            get { return counterC; }
         }
         #endregion
         #region PUBLIC METHODS
         public IpPicture(IpCursor selectCursor, IpCursor lastCursor, int sizeX, int sizeY)
         {
             lines = new LinePic[counterLines];
+            circles = new Circle[counterCircles];
             this.selectCursor = selectCursor;
             this.lastCursor = lastCursor;
             vectorPicture = new VectorPicture();
@@ -114,7 +217,7 @@ namespace TestEditor
             this.sizeY = sizeY;
         }
 
-        public void AddLine(int x, int y, Pen pen, bool DrawSelectLine)
+        public void AddLine(Pen pen, bool DrawSelectLine)
         {
             if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
                 return;
@@ -123,11 +226,7 @@ namespace TestEditor
                 counterLines += countAddingLines;
                 Array.Resize(ref lines, counterLines);
             }
-            lines[counter].x1 = lastCursor.X;
-            lines[counter].y1 = lastCursor.Y;
-            lines[counter].x2 = selectCursor.X;
-            lines[counter].y2 = selectCursor.Y;
-            lines[counter].pen = pen;
+            lines[counter].AddLine(lastCursor, selectCursor, pen);
 
             if (DrawSelectLine)
             {
@@ -135,6 +234,26 @@ namespace TestEditor
                 lastCursor.Y = selectCursor.Y;
                 counter++;
             }
+        }
+
+        public void AddCircle(Pen pen, bool DrawSelectCircle)
+        {
+            if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
+                return;
+            if (counterC >= counterCircles - 1)
+            {
+                counterCircles += countAddingLines;
+                Array.Resize(ref circles, counterCircles);
+            }
+            circles[counterC].AddCircle(lastCursor, selectCursor,pen);
+
+            if (DrawSelectCircle)
+            {
+                lastCursor.X = selectCursor.X;
+                lastCursor.Y = selectCursor.Y;
+                counterC++;
+            }
+
         }
 
         public void StepBack()
@@ -160,8 +279,11 @@ namespace TestEditor
         public void ResetPicture()
         {
             counterLines = countAddingLines;
+            counterCircles = countAddingLines;
             lines = new LinePic[counterLines];
+            circles = new Circle[counterCircles];
             counter = 0;
+            counterC = 0;
         }
 
         public void LoadFile(string path)
