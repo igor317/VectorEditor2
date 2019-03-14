@@ -134,23 +134,31 @@ namespace TestEditor
                 return;
             vectorPicture.LoadPicture(path);
             counter = 0;
+            counterC = 0;
             float xC = sizeX / vectorPicture.OriginX;
             float yC = sizeY / vectorPicture.OriginY;
-            counterLines = vectorPicture.Counter + 1;
+            counterLines = vectorPicture.CounterLines + 1;
+            counterCircles = vectorPicture.CounterCircles + 1;
             lines = new LinePic[counterLines];
-            for (int i = 0; i < vectorPicture.Counter; ++i)
+            circles = new Circle[counterCircles];
+            for (int i = 0; i < vectorPicture.CounterLines; ++i)
             {
-                lines[i].x1 = Convert.ToInt16(vectorPicture.GetX1(i) * xC);
-                lines[i].y1 = Convert.ToInt16(vectorPicture.GetY1(i) * yC);
-                lines[i].x2 = Convert.ToInt16(vectorPicture.GetX2(i) * xC);
-                lines[i].y2 = Convert.ToInt16(vectorPicture.GetY2(i) * yC);
+                lines[i].x1 = Convert.ToInt16(vectorPicture.GetLineX1(i) * xC);
+                lines[i].y1 = Convert.ToInt16(vectorPicture.GetLineY1(i) * yC);
+                lines[i].x2 = Convert.ToInt16(vectorPicture.GetLineX2(i) * xC);
+                lines[i].y2 = Convert.ToInt16(vectorPicture.GetLineY2(i) * yC);
                 lines[i].pen = new Pen(Color.Black);
                 counter++;
             }
-            selectCursor.X = lines[vectorPicture.Counter - 1].x2;
-            selectCursor.Y = lines[vectorPicture.Counter - 1].y2;
-            lastCursor.X = lines[vectorPicture.Counter - 1].x2;
-            lastCursor.Y = lines[vectorPicture.Counter - 1].y2;
+            for (int i = 0;i<vectorPicture.CounterCircles;++i)
+            {
+                circles[i].xR = Convert.ToInt16(vectorPicture.GetCircleXC(i) * xC);
+                circles[i].yR = Convert.ToInt16(vectorPicture.GetCircleYC(i) * yC);
+                circles[i].radius = Convert.ToInt16(vectorPicture.GetCircleRadius(i) * (xC+yC)/2);
+                circles[i].pen = new Pen(Color.Black);
+                circles[i].ReCalcPoints();
+                counterC++;
+            }
             vectorPicture.ClearBuffer();
         }
 
@@ -165,6 +173,12 @@ namespace TestEditor
                     {
                         file.WriteLine("<line " + "x1=" + "\"" + lines[i].x1 + "\"" + " " + "y1=" + "\"" + lines[i].y1 +
                             "\"" + " " + "x2=" + "\"" + lines[i].x2 + "\"" + " " + "y2=" + "\"" + lines[i].y2 + "\"" + "\\>");
+                    }
+
+                    for (int i = 0;i<counterC;++i)
+                    {
+                        file.WriteLine("<circle " + "cx=" + "\"" + circles[i].xR + "\"" + " " + "cy=" + "\"" + circles[i].yR +
+                            "\"" + " " + "r=" + "\"" + circles[i].radius + "\"" + "\\>");
                     }
                     file.Close();
                 }

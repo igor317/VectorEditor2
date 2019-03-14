@@ -12,12 +12,16 @@ namespace TestEditor
         #region VARIABLES
         private const short addCounterPoint = 2;    // Увеличение размера массива
         private const short countWords = 10;        // Число слов в строке
+        private float originX, originY;
 
         private string[] text;                      // Контейнер для текста
-        private float[] x1, y1, x2, y2;             // Массив координат
-        private int counter = 0;                    // Счетчик
-        private float originX, originY;             // Родные координаты
-        private int CounterPoint = addCounterPoint; // Максимальное количество точек
+        private float[] xL1, yL1, xL2, yL2;         // Массив координат
+
+        private float[] xC, yC, radC;
+        private int counterLines = 0;
+        private int counterCircles = 0;
+        private int cL = addCounterPoint;     // Максимальное количество точек
+        private int cC = addCounterPoint;
         #endregion
 
         #region SET&GET METHODS
@@ -29,39 +33,60 @@ namespace TestEditor
         {
             get { return originY; }
         }
-        public int Counter
+        public int CounterLines
         {
-            get { return counter; }
+            get { return counterLines; }
         }
 
-        public float GetX1(int pos)
+        public int CounterCircles
         {
-            return x1[pos];
-        }
-        public float GetY1(int pos)
-        {
-            return y1[pos];
-        }
-        public float GetX2(int pos)
-        {
-            return x2[pos];
-        }
-        public float GetY2(int pos)
-        {
-            return y2[pos];
+            get { return counterCircles; }
         }
 
+        public float GetLineX1(int pos)
+        {
+            return xL1[pos];
+        }
+        public float GetLineY1(int pos)
+        {
+            return yL1[pos];
+        }
+        public float GetLineX2(int pos)
+        {
+            return xL2[pos];
+        }
+        public float GetLineY2(int pos)
+        {
+            return yL2[pos];
+        }
+
+        public float GetCircleXC(int pos)
+        {
+            return xC[pos];
+        }
+        public float GetCircleYC(int pos)
+        {
+            return yC[pos];
+        }
+        public float GetCircleRadius(int pos)
+        {
+            return radC[pos];
+        }
         #endregion
 
         #region PUBLIC METHODS
         public void LoadPicture(string path)
         {
-            x1 = new float[CounterPoint];
-            y1 = new float[CounterPoint];
-            x2 = new float[CounterPoint];
-            y2 = new float[CounterPoint];
+            xL1 = new float[cL];
+            yL1 = new float[cL];
+            xL2 = new float[cL];
+            yL2 = new float[cL];
+            xC = new float[cC];
+            yC = new float[cC];
+            radC = new float[cC];
             string str;
-            counter = 0;
+            counterLines = 0;
+            counterCircles = 0;
             using (StreamReader file = new StreamReader(path))
             {
                 if (path.Substring(path.Length - 3, 3) == "svg")
@@ -76,16 +101,28 @@ namespace TestEditor
                             }
                             if (str.Substring(1, 4) == "line")
                             {
-                                GetFunctionFromString(str);
-                                if (counter >= CounterPoint - 1)
+                                GetLineFromString(str);
+                                if (CounterLines >= cL - 1)
                                 {
-                                    CounterPoint += addCounterPoint;
-                                    Array.Resize(ref x1, CounterPoint);
-                                    Array.Resize(ref y1, CounterPoint);
-                                    Array.Resize(ref x2, CounterPoint);
-                                    Array.Resize(ref y2, CounterPoint);
+                                    cL += addCounterPoint;
+                                    Array.Resize(ref xL1, cL);
+                                    Array.Resize(ref yL1, cL);
+                                    Array.Resize(ref xL2, cL);
+                                    Array.Resize(ref yL2, cL);
                                 }
-                                counter++;
+                                counterLines++;
+                            }
+                            if (str.Substring(1,6) == "circle")
+                            {
+                                GetCircleFromString(str);
+                                if (CounterCircles >= cC - 1)
+                                {
+                                    cC += addCounterPoint;
+                                    Array.Resize(ref xC, cC);
+                                    Array.Resize(ref yC, cC);
+                                    Array.Resize(ref radC, cC);
+                                }
+                                counterCircles++;
                             }
                         }
                     }
@@ -101,16 +138,28 @@ namespace TestEditor
                         }
                         if (str.Substring(1, 4) == "line")
                         {
-                            GetFunctionFromString(str);
-                            if (counter >= CounterPoint - 1)
+                            GetLineFromString(str);
+                            if (CounterLines >= cL - 1)
                             {
-                                CounterPoint += addCounterPoint;
-                                Array.Resize(ref x1, CounterPoint);
-                                Array.Resize(ref y1, CounterPoint);
-                                Array.Resize(ref x2, CounterPoint);
-                                Array.Resize(ref y2, CounterPoint);
+                                cL += addCounterPoint;
+                                Array.Resize(ref xL1, cL);
+                                Array.Resize(ref yL1, cL);
+                                Array.Resize(ref xL2, cL);
+                                Array.Resize(ref yL2, cL);
                             }
-                            counter++;
+                            counterLines++;
+                        }
+                        if (str.Substring(1, 6) == "circle")
+                        {
+                            GetCircleFromString(str);
+                            if (CounterCircles >= cC - 1)
+                            {
+                                cC += addCounterPoint;
+                                Array.Resize(ref xC, cC);
+                                Array.Resize(ref yC, cC);
+                                Array.Resize(ref radC, cC);
+                            }
+                            counterCircles++;
                         }
                     }
                 }
@@ -120,16 +169,19 @@ namespace TestEditor
 
         public void ClearBuffer()
         {
-            x1 = null;
-            y1 = null;
-            x2 = null;
-            y2 = null;
+            xL1 = null;
+            yL1 = null;
+            xL2 = null;
+            yL2 = null;
+            xC = null;
+            yC = null;
+            radC = null;
             text = null;
         }
         #endregion
 
         #region PRIVATE METHODS
-        private void GetFunctionFromString(string originalStr)
+        private void GetLineFromString(string originalStr)
         {
             text = new string[countWords];
             int k = 0;
@@ -154,19 +206,58 @@ namespace TestEditor
                 {
                     if (text[i].Substring(0, 2) == "x1")
                     {
-                        x1[counter] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        xL1[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y1")
                     {
-                        y1[counter] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        yL1[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "x2")
                     {
-                        x2[counter] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        xL2[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y2")
                     {
-                        y2[counter] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        yL2[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                }
+            }
+        }
+
+        private void GetCircleFromString(string originalStr)
+        {
+            text = new string[countWords];
+            int k = 0;
+            string temp = "";
+            for (int i = 0; i < originalStr.Length; ++i)
+            {
+                if (originalStr.Substring(i, 1) != " " && originalStr.Substring(i, 1) != ">")
+                {
+                    temp += originalStr.Substring(i, 1);
+                }
+                else
+                {
+                    text[k] = temp;
+                    k++;
+                    temp = "";
+                }
+            }
+
+            for (int i = 0; i < text.Length; ++i)
+            {
+                if (text[i] != null)
+                {
+                    if (text[i].Substring(0, 2) == "cx")
+                    {
+                        xC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "cy")
+                    {
+                        yC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 1) == "r")
+                    {
+                        radC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                 }
             }
