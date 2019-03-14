@@ -72,53 +72,7 @@ namespace TestEditor
             cursor.Y = (yR >= 0.5f) ? yT : yT + 1;
         }
 
-        private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos, int[] selectLines, float res)
-        {
-
-            cursor.X = xPos;
-            cursor.Y = yPos;
-            for (int i = 0; i < pic.CounterLines; ++i)
-            {
-                bool f = false;
-                if (pic.Lines[i] == 0)
-                    return;
-
-                if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
-                {
-                    for (int k = 0; k < selectLines.Length; ++k)
-                    {
-                        if (i == selectLines[k])
-                        {
-                            f = true;
-                            break;
-                        }
-                    }
-                    if (f)
-                        continue;
-                    cursor.X = pic.Lines[i].x1;
-                    cursor.Y = pic.Lines[i].y1;
-                    break;
-                }
-                if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
-                {
-                    for (int k = 0; k < selectLines.Length; ++k)
-                    {
-                        if (i == selectLines[k])
-                        {
-                            f = true;
-                            break;
-                        }
-                    }
-                    if (f)
-                        continue;
-                    cursor.X = pic.Lines[i].x2;
-                    cursor.Y = pic.Lines[i].y2;
-                    break;
-                }
-
-            }
-        }
-        private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos, float res)
+        private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos,bool ignoreSelected, float res)
         {
             cursor.X = xPos;
             cursor.Y = yPos;
@@ -126,6 +80,12 @@ namespace TestEditor
             {
                 if (pic.Lines[i] != 0)
                 {
+                    if (ignoreSelected)
+                    {
+                        if (pic.Lines[i].selected)
+                            continue;
+                    }
+                    
                     if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
                     {
                         cursor.X = pic.Lines[i].x1;
@@ -206,13 +166,13 @@ namespace TestEditor
             }
         }
 
-        public void MoveCursor(IpCursor cursor, float xPos, float yPos,int[] selectLines)
+        public void MoveCursor(IpCursor cursor, float xPos, float yPos, bool ignoreSelected)
         {
             if (EnableMagnet)
-                if (selectLines == null)
-                    MagnetCursorPosition(cursor, xPos, yPos, 5);
+                if (ignoreSelected)
+                    MagnetCursorPosition(cursor, xPos, yPos,true, 5);
                 else
-                    MagnetCursorPosition(cursor, xPos, yPos,selectLines, 5);
+                    MagnetCursorPosition(cursor, xPos, yPos,false, 5);
             if (EnableGrid)
             {
                 if (xPos != -1)

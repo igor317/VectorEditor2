@@ -55,15 +55,15 @@ namespace TestEditor
                     case MouseButtons.Left:
                         switch (pictureEditor.EditMode)
                         {
-                            case EditMode.MoveLastPoint:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, null);
+                            case EditMode.LineModeM:
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,false);
                                 break;
-                            case EditMode.DrawMode:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, null);
+                            case EditMode.LineModeD:
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
                                 pictureEditor.Picture.AddLine(e.X, e.Y, new Pen(Color.Black), false);
                                 break;
                             case EditMode.SelectionMode:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, null);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
                                 pictureEditor.GizmoEditor.FindSelectionLines();
                                 break;
                         }
@@ -92,7 +92,7 @@ namespace TestEditor
                     {
                         case EditMode.ReadyToSelect:
                             pictureEditor.SetEditMode(EditMode.SelectionMode);
-                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,null);
+                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,false);
 
                             break;
                     }
@@ -117,7 +117,7 @@ namespace TestEditor
                 case MouseButtons.Left:
                     switch (pictureEditor.EditMode)
                     {
-                        case EditMode.DrawMode:
+                        case EditMode.LineModeD:
                             pictureEditor.Picture.AddLine(e.X, e.Y, new Pen(Color.Black), true);
                             break;
                         case EditMode.SelectionMode:
@@ -129,14 +129,14 @@ namespace TestEditor
                 case MouseButtons.Right:
                     switch (pictureEditor.EditMode)
                     {
-                        case EditMode.MoveLastPoint:
+                        case EditMode.LineModeM:
                             pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
-                            pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,null);
-                            pictureEditor.SetEditMode(EditMode.DrawMode);
+                            pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,false);
+                            pictureEditor.SetEditMode(EditMode.LineModeD);
                             break;
-                        case EditMode.DrawMode:
+                        case EditMode.LineModeD:
                             pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Green));
-                            pictureEditor.SetEditMode(EditMode.MoveLastPoint);
+                            pictureEditor.SetEditMode(EditMode.LineModeM);
                             break;
                         case EditMode.ReadyToSelect:
                             pictureEditor.GizmoEditor.ResetControllers();
@@ -156,7 +156,7 @@ namespace TestEditor
         private void button1_Click(object sender, EventArgs e)
         {
             pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
-            pictureEditor.SetEditMode(EditMode.DrawMode);
+            pictureEditor.SetEditMode(EditMode.LineModeD);
             pictureEditor.Picture.StepBack();
             pictureEditor.Draw();
         }
@@ -186,12 +186,7 @@ namespace TestEditor
 
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
-                pictureEditor.SetEditMode(EditMode.ReadyToSelect);
-            else
-                pictureEditor.SetEditMode(EditMode.MoveLastPoint);
-            pictureEditor.Draw();
-            CheckState();
+
         }
 
         private void Clear()
@@ -232,6 +227,33 @@ namespace TestEditor
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             pictureEditor.Grid.EnableRotationGrid = checkBox2.Checked;
+        }
+
+        private void rbSelectionMode_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawMode();
+        }
+
+        private void rbLine_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawMode();
+        }
+
+        private void rbCircle_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawMode();
+        }
+
+        private void DrawMode()
+        {
+            if (rbSelectionMode.Checked)
+                pictureEditor.SetEditMode(EditMode.ReadyToSelect);
+            if (rbLine.Checked)
+                pictureEditor.SetEditMode(EditMode.LineModeM);
+            if (rbCircle.Checked)
+                pictureEditor.SetEditMode(EditMode.CircleModeM);
+            pictureEditor.Draw();
+            CheckState();
         }
     }
 }

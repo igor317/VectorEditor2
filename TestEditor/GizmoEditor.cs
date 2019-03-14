@@ -242,15 +242,10 @@ namespace TestEditor
     class GizmoEditor
     {
         #region VARIABLES
-        public static int unusedSelectedLines = 999;
-        private const short countAddingSelectLines = 2;
         private float minX, minY,maxX,maxY;
         private Pen selectionPen = new Pen(Color.Red);
 
-        private int[] selectLines;
         private Gizmo gizmo;
-        private int counterSelect = 0;
-        private int counterSelectLines = countAddingSelectLines;
         private SelectRect selectRect;
         private IpGrid grid;
         private IpPicture pic;
@@ -270,26 +265,19 @@ namespace TestEditor
         #endregion
 
         #region GET&GET METHODS
-        public int[] SelectLines
-        {
-            get { return selectLines; }
-        }
         public Pen SelectionPen
         {
             get { return selectionPen; }
-        }
-        public int CountSelectedLines
-        {
-            get { return counterSelect; }
         }
         #endregion
 
         #region PRIVATE METHODS
         private void CalculateLineNormal()
         {
-            for (int i = 0; i < CountSelectedLines; ++i)
+            for (int i = 0; i < pic.CounterLines; ++i)
             {
-                pic.Lines[selectLines[i]].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                if (pic.Lines[i].selected)
+                    pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
             }
         }
     
@@ -299,31 +287,34 @@ namespace TestEditor
             maxX = 0;
             minY = 10000;
             maxY = 0;
-            for (int i = 0; i < CountSelectedLines; ++i)
+            for (int i = 0; i < pic.CounterLines; ++i)
             {
-                if (pic.Lines[selectLines[i]].x1 < minX)
-                    minX = pic.Lines[selectLines[i]].x1;
-                if (pic.Lines[selectLines[i]].x2 < minX)
-                    minX = pic.Lines[selectLines[i]].x2;
-                if (pic.Lines[selectLines[i]].y1 < minY)
-                    minY = pic.Lines[selectLines[i]].y1;
-                if (pic.Lines[selectLines[i]].y2 < minY)
-                    minY = pic.Lines[selectLines[i]].y2;
+                if (pic.Lines[i].selected)
+                {
+                    if (pic.Lines[i].x1 < minX)
+                        minX = pic.Lines[i].x1;
+                    if (pic.Lines[i].x2 < minX)
+                        minX = pic.Lines[i].x2;
+                    if (pic.Lines[i].y1 < minY)
+                        minY = pic.Lines[i].y1;
+                    if (pic.Lines[i].y2 < minY)
+                        minY = pic.Lines[i].y2;
 
-                if (pic.Lines[selectLines[i]].x1 > maxX)
-                    maxX = pic.Lines[selectLines[i]].x1;
-                if (pic.Lines[selectLines[i]].x2 > maxX)
-                    maxX = pic.Lines[selectLines[i]].x2;
-                if (pic.Lines[selectLines[i]].y1 > maxY)
-                    maxY = pic.Lines[selectLines[i]].y1;
-                if (pic.Lines[selectLines[i]].y2 > maxY)
-                    maxY = pic.Lines[selectLines[i]].y2;
+                    if (pic.Lines[i].x1 > maxX)
+                        maxX = pic.Lines[i].x1;
+                    if (pic.Lines[i].x2 > maxX)
+                        maxX = pic.Lines[i].x2;
+                    if (pic.Lines[i].y1 > maxY)
+                        maxY = pic.Lines[i].y1;
+                    if (pic.Lines[i].y2 > maxY)
+                        maxY = pic.Lines[i].y2;
+                }
             }
         }
 
         private void MoveCenterPoint(int xPos, int yPos)
         {
-            grid.MoveCursor(gizmo.moveCursor, xPos, yPos, null);
+            grid.MoveCursor(gizmo.moveCursor, xPos, yPos,false);
             CalculateLineNormal();
         }
 
@@ -335,10 +326,10 @@ namespace TestEditor
             float m2 = gizmo.moveCursor.Y;
             IpCursor pos = new IpCursor();
 
-            grid.MoveCursor(pos, xPos, yPos, selectLines);
+            grid.MoveCursor(pos, xPos, yPos,true);
             k1 = pos.X;
             k2 = pos.Y;
-            grid.MoveCursor(gizmo.moveCursor, xPos, yPos, selectLines);
+            grid.MoveCursor(gizmo.moveCursor, xPos,yPos,true);
 
             gizmo.x1 += k1 - m1;
             gizmo.x2 += k1 - m1;
@@ -347,13 +338,16 @@ namespace TestEditor
             gizmo.rotationCursor.X += k1 - m1;
             gizmo.rotationCursor.Y += k2 - m2;
             gizmo.ResetControllers(false,false);
-            for (int i = 0; i < CountSelectedLines; ++i)
+            for (int i = 0; i < pic.CounterLines; ++i)
             {
-                pic.Lines[selectLines[i]].x1 += k1 - m1;
-                pic.Lines[selectLines[i]].y1 += k2 - m2;
-                pic.Lines[selectLines[i]].x2 += k1 - m1;
-                pic.Lines[selectLines[i]].y2 += k2 - m2;
-                pic.Lines[SelectLines[i]].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                if (pic.Lines[i].selected)
+                {
+                    pic.Lines[i].x1 += k1 - m1;
+                    pic.Lines[i].y1 += k2 - m2;
+                    pic.Lines[i].x2 += k1 - m1;
+                    pic.Lines[i].y2 += k2 - m2;
+                    pic.Lines[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                }
             }
         }
 
@@ -363,40 +357,43 @@ namespace TestEditor
             float mR = gizmo.xScaleR.X;
             float mL = gizmo.xScaleL.X;
             IpCursor pos = new IpCursor();
-            grid.MoveCursor(pos, xPos, -1, null);
+            grid.MoveCursor(pos, xPos, -1,true);
             kX = pos.X;
 
-            for (int i = 0; i < CountSelectedLines; ++i)
+            for (int i = 0; i < pic.CounterLines; ++i)
             {
-                float coeff1 = 0;
-                float coeff2 = 0;
-                if (right)
+                if (pic.Lines[i].selected)
                 {
-                    coeff1 = 1 - ((gizmo.xScaleR.X - pic.Lines[selectLines[i]].x1) / gizmo.width);
-                    coeff2 = 1 - ((gizmo.xScaleR.X - pic.Lines[selectLines[i]].x2) / gizmo.width);
-                    pic.Lines[selectLines[i]].x1 += (kX-mR) * coeff1;
-                    pic.Lines[selectLines[i]].x2 += (kX-mR) * coeff2;
+                    float coeff1 = 0;
+                    float coeff2 = 0;
+                    if (right)
+                    {
+                        coeff1 = 1 - ((gizmo.xScaleR.X - pic.Lines[i].x1) / gizmo.width);
+                        coeff2 = 1 - ((gizmo.xScaleR.X - pic.Lines[i].x2) / gizmo.width);
+                        pic.Lines[i].x1 += (kX - mR) * coeff1;
+                        pic.Lines[i].x2 += (kX - mR) * coeff2;
+                    }
+                    else
+                    {
+                        coeff1 = 1 - ((pic.Lines[i].x1 - gizmo.xScaleL.X) / gizmo.width);
+                        coeff2 = 1 - ((pic.Lines[i].x2 - gizmo.xScaleL.X) / gizmo.width);
+                        pic.Lines[i].x1 += (kX - mL) * coeff1;
+                        pic.Lines[i].x2 += (kX - mL) * coeff2;
+                    }
+                    pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
-                else
-                {
-                    coeff1 = 1 - ((pic.Lines[selectLines[i]].x1 - gizmo.xScaleL.X) / gizmo.width);
-                    coeff2 = 1 - ((pic.Lines[selectLines[i]].x2 - gizmo.xScaleL.X) / gizmo.width);
-                    pic.Lines[selectLines[i]].x1 += (kX-mL) * coeff1;
-                    pic.Lines[selectLines[i]].x2 += (kX-mL) * coeff2;
-                }
-                pic.Lines[selectLines[i]].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
             }
             if (right)
             {
                 gizmo.width += kX - mR;
                 gizmo.x2 = gizmo.x1 + gizmo.width;
-                grid.MoveCursor(gizmo.xScaleR, xPos, -1, null);
+                grid.MoveCursor(gizmo.xScaleR, xPos, -1,true);
             }
             else
             {
                 gizmo.x1 += kX - mL;
                 gizmo.width = gizmo.x2 - gizmo.x1;
-                grid.MoveCursor(gizmo.xScaleL, xPos, -1, null);
+                grid.MoveCursor(gizmo.xScaleL, xPos, -1, true);
             }
             gizmo.ResetControllers(true, true);
         }
@@ -407,52 +404,54 @@ namespace TestEditor
             float mU = gizmo.yScaleU.Y;
             float mD = gizmo.yScaleD.Y;
             IpCursor pos = new IpCursor();
-            grid.MoveCursor(pos, -1, yPos, null);
+            grid.MoveCursor(pos, -1, yPos, true);
             kY = pos.Y;
 
-            for (int i = 0; i < CountSelectedLines; ++i)
+            for (int i = 0; i < pic.CounterLines; ++i)
             {
-                float coeff1 = 0;
-                float coeff2 = 0;
-                if (up)
+                if (pic.Lines[i].selected)
                 {
-                    coeff1 = 1 - ((pic.Lines[selectLines[i]].y1 - gizmo.yScaleU.Y) / gizmo.height);
-                    coeff2 = 1 - ((pic.Lines[selectLines[i]].y2 - gizmo.yScaleU.Y) / gizmo.height);
-                    pic.Lines[selectLines[i]].y1 += (kY - mU) * coeff1;
-                    pic.Lines[selectLines[i]].y2 += (kY - mU) * coeff2;
+                    float coeff1 = 0;
+                    float coeff2 = 0;
+                    if (up)
+                    {
+                        coeff1 = 1 - ((pic.Lines[i].y1 - gizmo.yScaleU.Y) / gizmo.height);
+                        coeff2 = 1 - ((pic.Lines[i].y2 - gizmo.yScaleU.Y) / gizmo.height);
+                        pic.Lines[i].y1 += (kY - mU) * coeff1;
+                        pic.Lines[i].y2 += (kY - mU) * coeff2;
+                    }
+                    else
+                    {
+                        coeff1 = 1 - ((gizmo.yScaleD.Y - pic.Lines[i].y1) / gizmo.height);
+                        coeff2 = 1 - ((gizmo.yScaleD.Y - pic.Lines[i].y2) / gizmo.height);
+                        pic.Lines[i].y1 += (kY - mD) * coeff1;
+                        pic.Lines[i].y2 += (kY - mD) * coeff2;
+                    }
+                    pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
-                else
-                {
-                    coeff1 = 1 - ((gizmo.yScaleD.Y - pic.Lines[selectLines[i]].y1) / gizmo.height);
-                    coeff2 = 1 - ((gizmo.yScaleD.Y - pic.Lines[selectLines[i]].y2) / gizmo.height);
-                    pic.Lines[selectLines[i]].y1 += (kY - mD) * coeff1;
-                    pic.Lines[selectLines[i]].y2 += (kY - mD) * coeff2;
-                }
-                pic.Lines[selectLines[i]].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
 
             }
             if (up)
             {
                 gizmo.y1 += kY - mU;
                 gizmo.height += mU - kY;
-                grid.MoveCursor(gizmo.yScaleU, -1, yPos, null);
+                grid.MoveCursor(gizmo.yScaleU, -1, yPos, true);
             }
             else
             {
                 gizmo.height += kY - mD;
                 gizmo.y2 = gizmo.y1 + gizmo.height;
-                grid.MoveCursor(gizmo.yScaleD, -1, yPos, null);
+                grid.MoveCursor(gizmo.yScaleD, -1, yPos, true);
             }
             gizmo.ResetControllers(true,true);
         }
 
         private void ClearSelectionArray()
         {
-            counterSelect = 0;
-            counterSelectLines = countAddingSelectLines;
-            selectLines = new int[counterSelectLines];
-            for (int i = 0; i < counterSelectLines; ++i)
-                selectLines[i] = unusedSelectedLines;
+            for (int i = 0;i<pic.CounterLines;++i)
+            {
+                pic.Lines[i].selected = false;
+            }
         }
 
         private void CalculateAngles(float xPos, float yPos, int res)
@@ -468,8 +467,9 @@ namespace TestEditor
         {
             gizmo.rotationCursor.X = gizmo.moveCursor.X + gizmo.radius * (float)Math.Sin(gizmo.cursorAngle);
             gizmo.rotationCursor.Y = gizmo.moveCursor.Y + gizmo.radius * (float)Math.Cos(gizmo.cursorAngle);
-            for (int i = 0; i < CountSelectedLines; ++i)
-                pic.Lines[selectLines[i]].RotateLine(gizmo.cursorAngle - (float)Math.PI);
+            for (int i = 0; i < pic.CounterLines; ++i)
+                if (pic.Lines[i].selected)
+                    pic.Lines[i].RotateLine(gizmo.cursorAngle - (float)Math.PI);
         }
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
@@ -550,7 +550,6 @@ namespace TestEditor
 
         public void FindSelectionLines()
         {
-            counterSelect = 0;
             ClearSelectionArray();
             for (int i = 0; i < pic.CounterLines + 1; ++i)
             {
@@ -561,15 +560,7 @@ namespace TestEditor
                     && pic.Lines[i].x2 >= selectRect.x1 && pic.Lines[i].x2 <= selectRect.x2
                     && pic.Lines[i].y2 >= selectRect.y1 && pic.Lines[i].y2 <= selectRect.y2)
                 {
-                    if (counterSelect >= counterSelectLines - 1)
-                    {
-                        counterSelectLines += countAddingSelectLines;
-                        Array.Resize(ref selectLines, counterSelectLines);
-                        for (int k = counterSelect; k < counterSelectLines; ++k)
-                            selectLines[k] = unusedSelectedLines;
-                    }
-                    selectLines[counterSelect] = i;
-                    counterSelect++;
+                    pic.Lines[i].selected = true;
                 }
             }
 
@@ -577,7 +568,13 @@ namespace TestEditor
 
         public void CreateGizmo()
         {
-            if (CountSelectedLines <= 0)
+            bool f = false;
+            for (int i = 0;i<pic.CounterLines; ++i)
+            {
+                if (pic.Lines[i].selected)
+                    f = true;
+            }
+            if (!f)
                 return;
             CalcGizmo();
             gizmo = new Gizmo(minX, minY, maxX, maxY);
@@ -685,7 +682,7 @@ namespace TestEditor
 
         public void DeleteSelectedLines()
         {
-            pic.DeleteLine(selectLines);
+            pic.DeleteSelectedLines();
             ResetGizmo();
         }
         #endregion

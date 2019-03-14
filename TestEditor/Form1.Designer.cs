@@ -37,12 +37,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ckbMagnet = new System.Windows.Forms.CheckBox();
             this.chkTest = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.rbLine = new System.Windows.Forms.RadioButton();
+            this.rbSelectionMode = new System.Windows.Forms.RadioButton();
+            this.rbCircle = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // panel1
@@ -135,17 +137,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(958, 442);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(83, 17);
-            this.checkBox1.TabIndex = 9;
-            this.checkBox1.Text = "SelectMode";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
-            // 
             // ckbMagnet
             // 
             this.ckbMagnet.AutoSize = true;
@@ -199,17 +190,53 @@
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
+            // rbLine
+            // 
+            this.rbLine.AutoSize = true;
+            this.rbLine.Checked = true;
+            this.rbLine.Location = new System.Drawing.Point(975, 145);
+            this.rbLine.Name = "rbLine";
+            this.rbLine.Size = new System.Drawing.Size(45, 17);
+            this.rbLine.TabIndex = 15;
+            this.rbLine.Text = "Line";
+            this.rbLine.UseVisualStyleBackColor = true;
+            this.rbLine.CheckedChanged += new System.EventHandler(this.rbLine_CheckedChanged);
+            // 
+            // rbSelectionMode
+            // 
+            this.rbSelectionMode.AutoSize = true;
+            this.rbSelectionMode.Location = new System.Drawing.Point(975, 191);
+            this.rbSelectionMode.Name = "rbSelectionMode";
+            this.rbSelectionMode.Size = new System.Drawing.Size(99, 17);
+            this.rbSelectionMode.TabIndex = 16;
+            this.rbSelectionMode.Text = "Selection Mode";
+            this.rbSelectionMode.UseVisualStyleBackColor = true;
+            this.rbSelectionMode.CheckedChanged += new System.EventHandler(this.rbSelectionMode_CheckedChanged);
+            // 
+            // rbCircle
+            // 
+            this.rbCircle.AutoSize = true;
+            this.rbCircle.Location = new System.Drawing.Point(975, 168);
+            this.rbCircle.Name = "rbCircle";
+            this.rbCircle.Size = new System.Drawing.Size(51, 17);
+            this.rbCircle.TabIndex = 17;
+            this.rbCircle.Text = "Circle";
+            this.rbCircle.UseVisualStyleBackColor = true;
+            this.rbCircle.CheckedChanged += new System.EventHandler(this.rbCircle_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.rbCircle);
+            this.Controls.Add(this.rbSelectionMode);
+            this.Controls.Add(this.rbLine);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.chkTest);
             this.Controls.Add(this.ckbMagnet);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
@@ -238,12 +265,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox ckbMagnet;
         private System.Windows.Forms.CheckBox chkTest;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.RadioButton rbLine;
+        private System.Windows.Forms.RadioButton rbSelectionMode;
+        private System.Windows.Forms.RadioButton rbCircle;
     }
 }
 

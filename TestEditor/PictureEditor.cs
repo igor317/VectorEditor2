@@ -11,10 +11,13 @@ namespace TestEditor
 {
     public enum EditMode
     {
-        MoveLastPoint = 1,
-        DrawMode,
+        LineModeM = 1,
+        LineModeD,
         ReadyToSelect,
         SelectionMode,
+        CircleModeM,
+        CircleModeD,
+
     };
 
     class PictureEditor
@@ -68,9 +71,9 @@ namespace TestEditor
 
         private void DrawCursor()
         {
-            if (editMode == EditMode.DrawMode)
+            if (editMode == EditMode.LineModeD)
                 SelectCursor.DrawXCursor(gBuff);
-            if (editMode == EditMode.DrawMode || editMode == EditMode.MoveLastPoint)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM)
                 LastCursor.DrawXCursor(gBuff);
         }
 
@@ -93,23 +96,13 @@ namespace TestEditor
         private void DrawLines()
         {
             int count = pic.CounterLines;
-            bool selected;
-            if (editMode == EditMode.DrawMode)
+            if (editMode == EditMode.LineModeD)
                 count++;
             for (int i = 0; i < count; ++i)
             {
                 if (pic.Lines[i] != 0)
                 {
-                    selected = false;
-                    for (int j = 0; j < gizmoEditor.CountSelectedLines; ++j)
-                    {
-                        if (i == gizmoEditor.SelectLines[j])
-                        {
-                            selected = true;
-                            break;
-                        }
-                    }
-                    if (selected)
+                    if (pic.Lines[i].selected)
                         gBuff.DrawLine(gizmoEditor.SelectionPen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
                     else
                         gBuff.DrawLine(pic.Lines[i].pen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
@@ -136,7 +129,7 @@ namespace TestEditor
             bmp = new Bitmap(sizeX, sizeY, graph);
             gBuff = Graphics.FromImage(bmp);
             gBuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            editMode = EditMode.MoveLastPoint;
+            editMode = EditMode.LineModeM;
         }
 
         public void Draw()
@@ -174,7 +167,7 @@ namespace TestEditor
         public void SetEditMode(EditMode mode)
         {
             editMode = mode;
-            if (mode == EditMode.MoveLastPoint || mode == EditMode.DrawMode || mode == EditMode.SelectionMode)
+            if (mode == EditMode.LineModeM || mode == EditMode.LineModeD || mode == EditMode.SelectionMode)
                 gizmoEditor.ResetGizmo();
         }
 

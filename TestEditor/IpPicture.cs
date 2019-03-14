@@ -15,6 +15,7 @@ namespace TestEditor
         public float x2;
         public float y2;
         public Pen pen;
+        public bool selected;
 
         private float angle1, angle2;
         private float radius1, radius2;
@@ -206,47 +207,29 @@ namespace TestEditor
             }
         }
 
-        public void DeleteLine(int[] selectedLines)
+        public void DeleteSelectedLines()
         {
-            if (selectedLines == null || selectedLines[0] == GizmoEditor.unusedSelectedLines)
-                return;
-            int k = 0;
-            bool flag = true;
+            counter = 0;
+            counterLines = countAddingLines;
+            buffer = new LinePic[counterLines];
 
             for (int i = 0; i < lines.Length; ++i)
             {
-                for (int j = 0; j < selectedLines.Length; ++j)
+                if (counterLines >= counterLines - 1)
                 {
-                    if (i == selectedLines[j])
-                        k++;
+                    counterLines += countAddingLines;
+                    Array.Resize(ref buffer, counterLines);
                 }
-            }
-            k = counter - k;
-
-            buffer = new LinePic[k + 1];
-            k = 0;
-
-            for (int i = 0; i < counter; ++i)
-            {
-                flag = true;
-                if (lines[i] == 0)
-                    break;
-                for (int j = 0; j < selectedLines.Length; ++j)
+                if (lines[i] != 0)
                 {
-                    if (i == selectedLines[j])
+                    if (!lines[i].selected)
                     {
-                        flag = false;
-                        break;
+                        buffer[counter] = lines[i];
+                        counter++;
                     }
                 }
-                if (flag)
-                {
-                    buffer[k] = lines[i];
-                    k++;
-                }
             }
-            counter = buffer.Length - 1;
-            counterLines = counter + countAddingLines;
+
             Array.Resize(ref lines, counterLines);
             Array.Copy(buffer, lines, buffer.Length);
             Array.Clear(lines, counter, countAddingLines);
