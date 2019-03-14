@@ -40,13 +40,14 @@ namespace TestEditor
         #endregion
 
         #region PRIVATE METHODS
-        private void CalculateLineNormal()
+        private void CalculateNormals()
         {
             for (int i = 0; i < pic.CounterLines; ++i)
-            {
                 if (pic.Lines[i].selected)
                     pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
-            }
+            for (int i = 0; i < pic.CounterCircles; ++i)
+                if (pic.Circles[i].selected)
+                    pic.Circles[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
         }
     
         private void CalcGizmo()
@@ -107,7 +108,7 @@ namespace TestEditor
         private void MoveCenterPoint(int xPos, int yPos)
         {
             grid.MoveCursor(gizmo.moveCursor, xPos, yPos,false);
-            CalculateLineNormal();
+            CalculateNormals();
         }
 
         private void MoveSelectedLines(float xPos, float yPos)
@@ -148,7 +149,7 @@ namespace TestEditor
                     pic.Circles[i].xR += k1 - m1;
                     pic.Circles[i].yR += k2 - m2;
                     pic.Circles[i].ReCalcPoints();
-                    pic.Lines[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                    pic.Circles[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
             }
         }
@@ -272,6 +273,9 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterLines; ++i)
                 if (pic.Lines[i].selected)
                     pic.Lines[i].RotateLine(gizmo.cursorAngle - (float)Math.PI);
+            for (int i = 0; i < pic.CounterCircles; ++i)
+                if (pic.Circles[i].selected)
+                    pic.Circles[i].RotateCircle(gizmo.cursorAngle - (float)Math.PI);
         }
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
@@ -387,16 +391,22 @@ namespace TestEditor
             for (int i = 0;i<pic.CounterLines; ++i)
             {
                 if (pic.Lines[i].selected)
+                {
                     f = true;
+                    break;
+                }
             }
             for (int i = 0; i < pic.CounterCircles; ++i)
                 if (pic.Circles[i].selected)
+                {
                     k = true;
+                    break;
+                }
             if (!f && !k)
                 return;
             CalcGizmo();
             gizmo = new Gizmo(minX, minY, maxX, maxY);
-            CalculateLineNormal();
+            CalculateNormals();
         }
 
         public void ControlGizmo(int xPos,int yPos)
@@ -495,7 +505,7 @@ namespace TestEditor
         public void ResetCenterPoint()
         {
             gizmo.ResetControllers(true, true);
-            CalculateLineNormal();
+            CalculateNormals();
         }
 
         public void DeleteSelected()

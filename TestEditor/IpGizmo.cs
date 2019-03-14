@@ -87,8 +87,6 @@ namespace TestEditor
                 ResetRadius();
             }
             ShowCursors();
-
-            //frsAngle = (float)Math.PI;
         }
 
         private void ShowCursors()
