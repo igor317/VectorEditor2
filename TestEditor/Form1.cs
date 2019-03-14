@@ -238,7 +238,7 @@ namespace TestEditor
 
         private void button5_Click(object sender, EventArgs e)
         {
-            pictureEditor.GizmoEditor.DeleteSelectedLines();
+            pictureEditor.GizmoEditor.DeleteSelected();
             pictureEditor.Draw();
         }
 
