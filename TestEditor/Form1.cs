@@ -16,21 +16,18 @@ namespace TestEditor
         EllipseMode,
         SelectMode
     }
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         PictureEditor pictureEditor; // Класс редактора
         OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
+        bool k = false, kk = false;
         Mode mode;
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
             pictureEditor = new PictureEditor(panel1);
-            openFileDialog = new OpenFileDialog();
-            saveFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "Векторный рисунок|*.svg;*.cpi";
-            saveFileDialog.Filter = "Векторный рисунок|*.cpi";
             mode = Mode.SelectMode;
             DrawMode();
         }
@@ -140,21 +137,17 @@ namespace TestEditor
                     switch (pictureEditor.EditMode)
                     {
                         case EditMode.LineModeM:
-                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
                             pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,false);
                             pictureEditor.SetEditMode(EditMode.LineModeD);
                             break;
                         case EditMode.LineModeD:
-                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Green));
                             pictureEditor.SetEditMode(EditMode.LineModeM);
                             break;
                         case EditMode.CircleModeM:
-                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
                             pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y, false);
                             pictureEditor.SetEditMode(EditMode.CircleModeD);
                             break;
                         case EditMode.CircleModeD:
-                            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Green));
                             pictureEditor.SetEditMode(EditMode.CircleModeM);
                             break;
                         case EditMode.ReadyToSelect:
@@ -167,41 +160,10 @@ namespace TestEditor
             pictureEditor.Draw();
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            Clear();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            pictureEditor.SetCursorSettings(pictureEditor.LastCursor, 5, new Pen(Color.Red));
-            pictureEditor.SetEditMode(EditMode.LineModeD);
-            pictureEditor.Picture.StepBack();
-            pictureEditor.Draw();
-        }
-
         private void Form1_Shown(object sender, EventArgs e)
         {
             pictureEditor.Draw();
 
-        }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            Clear();
-            string path = "";
-            openFileDialog.ShowDialog();
-            path = openFileDialog.FileName;
-            pictureEditor.Picture.LoadFile(path);
-            pictureEditor.Draw();
-        }
-
-        private void button3_Click_1(object sender, EventArgs e)
-        {
-            string path = "";
-            saveFileDialog.ShowDialog();
-            path = saveFileDialog.FileName;
-            pictureEditor.Picture.SaveFile(path);
         }
 
         private void Clear()
@@ -215,12 +177,6 @@ namespace TestEditor
             label1.Text = pictureEditor.EditMode.ToString();
         }
 
-        private void chkTest_CheckedChanged(object sender, EventArgs e)
-        {
-            pictureEditor.GizmoEditor.mCenterPoint = chkTest.Checked;
-            CheckState();
-        }
-
         private void button4_Click(object sender, EventArgs e)
         {
             pictureEditor.GizmoEditor.ResetCenterPoint();
@@ -230,6 +186,13 @@ namespace TestEditor
 
         private void DrawMode()
         {
+            CleanImages(pSelectMode);
+            CleanImages(pRotationMagnet);
+            CleanImages(pLine);
+            CleanImages(pCircle);
+            CleanImages(pGrid);
+            CleanImages(pMagnet);
+            CleanImages(pMoveCenterPoint);
             if (!pictureEditor.Grid.EnableGrid)
                 toolTip1.SetToolTip(pGrid, "Show Grid");
             else
@@ -251,23 +214,30 @@ namespace TestEditor
             pRotationMagnet.Image = (pictureEditor.Grid.EnableRotationGrid) ? ImageList.Images[9] : ImageList.Images[8];
             pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
             pGrid.Image = (pictureEditor.Grid.EnableGrid) ? ImageList.Images[11] : ImageList.Images[10];
+            pMoveCenterPoint.Image = (pictureEditor.GizmoEditor.mCenterPoint) ? ImageList.Images[13] : ImageList.Images[12];
             switch (mode)
             {
                 case Mode.SelectMode:
-                    pictureEditor.SetEditMode(EditMode.ReadyToSelect);
                     pSelectMode.Image = ImageList.Images[1];
                     break;
                 case Mode.LineMode:
-                    pictureEditor.SetEditMode(EditMode.LineModeM);
                     pLine.Image = ImageList.Images[3];
                     break;
                 case Mode.EllipseMode:
-                    pictureEditor.SetEditMode(EditMode.CircleModeM);
                     pCircle.Image = ImageList.Images[5];
                     break;
             }
             pictureEditor.Draw();
             CheckState();
+        }
+
+        private void CleanImages(PictureBox picture)
+        {
+            if (picture.Image != null)
+            {
+                picture.Image.Dispose();
+                picture.Image = null;
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -281,14 +251,23 @@ namespace TestEditor
                         DrawMode();
                     }
                     break;
-            }
-            //pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
-            //DrawMode();
-
+                case Keys.ControlKey:
+                    k = true;
+                    break;
+                case Keys.Z:
+                    kk = true;
+                    break;
+            }     
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            if (k && kk)
+            {
+                pictureEditor.SetEditMode(EditMode.LineModeD);
+                pictureEditor.Picture.StepBack();
+                pictureEditor.Draw();
+            }
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
@@ -302,24 +281,33 @@ namespace TestEditor
                     pictureEditor.GizmoEditor.DeleteSelected();
                     pictureEditor.Draw();
                     break;
+                case Keys.ControlKey:
+                    k = false;
+                    break;
+                case Keys.Z:
+                    kk = false;
+                    break;
             }
-            //DrawMode();
+
         }
 
         private void pSelectMode_MouseClick(object sender, MouseEventArgs e)
         {
+            pictureEditor.SetEditMode(EditMode.ReadyToSelect);
             mode = Mode.SelectMode;
             DrawMode();
         }
 
         private void pLine_MouseClick(object sender, MouseEventArgs e)
         {
+            pictureEditor.SetEditMode(EditMode.LineModeM);
             mode = Mode.LineMode;
             DrawMode();
         }
 
         private void pCircle_MouseClick(object sender, MouseEventArgs e)
         {
+            pictureEditor.SetEditMode(EditMode.CircleModeM);
             mode = Mode.EllipseMode;
             DrawMode();
         }
@@ -339,6 +327,46 @@ namespace TestEditor
         private void pGrid_MouseClick(object sender, MouseEventArgs e)
         {
             pictureEditor.Grid.EnableGrid = (!pictureEditor.Grid.EnableGrid) ? pictureEditor.Grid.EnableGrid = true : pictureEditor.Grid.EnableGrid = false;
+            DrawMode();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "";
+            openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Векторный рисунок|*.svg;*.cpi";
+            openFileDialog.ShowDialog();
+            path = openFileDialog.FileName;
+            if (path != "")
+            {
+                Clear();
+
+                pictureEditor.Picture.LoadFile(path);
+                pictureEditor.Draw();
+            }
+            openFileDialog.Dispose();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = "";
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Векторный рисунок|*.cpi";
+            saveFileDialog.ShowDialog();
+            path = saveFileDialog.FileName;
+            if (path != "")
+                pictureEditor.Picture.SaveFile(path);
+            saveFileDialog.Dispose();
+        }
+
+        private void pMoveCenterPoint_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.GizmoEditor.mCenterPoint = (!pictureEditor.GizmoEditor.mCenterPoint) ? pictureEditor.GizmoEditor.mCenterPoint = true : pictureEditor.GizmoEditor.mCenterPoint = false;
             DrawMode();
         }
     }

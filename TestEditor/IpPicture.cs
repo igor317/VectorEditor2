@@ -122,8 +122,10 @@ namespace TestEditor
         {
             counterLines = countAddingLines;
             counterCircles = countAddingLines;
-            lines = new LinePic[counterLines];
-            circles = new Ellipse[counterCircles];
+            Array.Clear(lines, 0, lines.Length);
+            Array.Clear(circles, 0, circles.Length);
+            Array.Resize(ref lines, counterLines);
+            Array.Resize(ref circles, counterCircles);
             counter = 0;
             counterC = 0;
         }
