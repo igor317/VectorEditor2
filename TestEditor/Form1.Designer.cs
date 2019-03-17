@@ -28,30 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnClear = new System.Windows.Forms.Button();
-            this.ckxEnableGrid = new System.Windows.Forms.CheckBox();
             this.btnIncGrid = new System.Windows.Forms.Button();
             this.btnRedGrid = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.ckbMagnet = new System.Windows.Forms.CheckBox();
             this.chkTest = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.ckBRotationGrid = new System.Windows.Forms.CheckBox();
-            this.rbLine = new System.Windows.Forms.RadioButton();
-            this.rbSelectionMode = new System.Windows.Forms.RadioButton();
-            this.rbCircle = new System.Windows.Forms.RadioButton();
+            this.pLine = new System.Windows.Forms.PictureBox();
+            this.ImageList = new System.Windows.Forms.ImageList(this.components);
+            this.pCircle = new System.Windows.Forms.PictureBox();
+            this.pSelectMode = new System.Windows.Forms.PictureBox();
+            this.pMagnet = new System.Windows.Forms.PictureBox();
+            this.pRotationMagnet = new System.Windows.Forms.PictureBox();
+            this.pGrid = new System.Windows.Forms.PictureBox();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMagnet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pRotationMagnet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(34, 26);
+            this.panel1.Location = new System.Drawing.Point(134, 26);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(900, 600);
+            this.panel1.Size = new System.Drawing.Size(800, 600);
             this.panel1.TabIndex = 0;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
@@ -66,17 +76,6 @@
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-            // 
-            // ckxEnableGrid
-            // 
-            this.ckxEnableGrid.AutoSize = true;
-            this.ckxEnableGrid.Location = new System.Drawing.Point(975, 379);
-            this.ckxEnableGrid.Name = "ckxEnableGrid";
-            this.ckxEnableGrid.Size = new System.Drawing.Size(45, 17);
-            this.ckxEnableGrid.TabIndex = 2;
-            this.ckxEnableGrid.Text = "Grid";
-            this.ckxEnableGrid.UseVisualStyleBackColor = true;
-            this.ckxEnableGrid.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // btnIncGrid
             // 
@@ -137,17 +136,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
-            // ckbMagnet
-            // 
-            this.ckbMagnet.AutoSize = true;
-            this.ckbMagnet.Location = new System.Drawing.Point(958, 465);
-            this.ckbMagnet.Name = "ckbMagnet";
-            this.ckbMagnet.Size = new System.Drawing.Size(62, 17);
-            this.ckbMagnet.TabIndex = 10;
-            this.ckbMagnet.Text = "Magnet";
-            this.ckbMagnet.UseVisualStyleBackColor = true;
-            this.ckbMagnet.CheckedChanged += new System.EventHandler(this.ckbMagnet_CheckedChanged);
-            // 
             // chkTest
             // 
             this.chkTest.AutoSize = true;
@@ -169,90 +157,119 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button5
+            // pLine
             // 
-            this.button5.Location = new System.Drawing.Point(980, 103);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(112, 23);
-            this.button5.TabIndex = 13;
-            this.button5.Text = "Delete Selected";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.pLine.Location = new System.Drawing.Point(12, 109);
+            this.pLine.Name = "pLine";
+            this.pLine.Size = new System.Drawing.Size(25, 25);
+            this.pLine.TabIndex = 18;
+            this.pLine.TabStop = false;
+            this.pLine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pLine_MouseClick);
             // 
-            // ckBRotationGrid
+            // ImageList
             // 
-            this.ckBRotationGrid.AutoSize = true;
-            this.ckBRotationGrid.Location = new System.Drawing.Point(1034, 379);
-            this.ckBRotationGrid.Name = "ckBRotationGrid";
-            this.ckBRotationGrid.Size = new System.Drawing.Size(85, 17);
-            this.ckBRotationGrid.TabIndex = 14;
-            this.ckBRotationGrid.Text = "RotationGrid";
-            this.ckBRotationGrid.UseVisualStyleBackColor = true;
-            this.ckBRotationGrid.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.ImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList.ImageStream")));
+            this.ImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.ImageList.Images.SetKeyName(0, "Cursor.bmp");
+            this.ImageList.Images.SetKeyName(1, "CursorSelected.bmp");
+            this.ImageList.Images.SetKeyName(2, "Line.bmp");
+            this.ImageList.Images.SetKeyName(3, "LineSelected.bmp");
+            this.ImageList.Images.SetKeyName(4, "Ellipse.bmp");
+            this.ImageList.Images.SetKeyName(5, "EllipseSelected.bmp");
+            this.ImageList.Images.SetKeyName(6, "Magnet.bmp");
+            this.ImageList.Images.SetKeyName(7, "MagnetSelected.bmp");
+            this.ImageList.Images.SetKeyName(8, "RotationMagnet.bmp");
+            this.ImageList.Images.SetKeyName(9, "RotationMagnetSelected.bmp");
+            this.ImageList.Images.SetKeyName(10, "Grid.bmp");
+            this.ImageList.Images.SetKeyName(11, "GridSelected.bmp");
             // 
-            // rbLine
+            // pCircle
             // 
-            this.rbLine.AutoSize = true;
-            this.rbLine.Checked = true;
-            this.rbLine.Location = new System.Drawing.Point(975, 145);
-            this.rbLine.Name = "rbLine";
-            this.rbLine.Size = new System.Drawing.Size(45, 17);
-            this.rbLine.TabIndex = 15;
-            this.rbLine.TabStop = true;
-            this.rbLine.Text = "Line";
-            this.rbLine.UseVisualStyleBackColor = true;
-            this.rbLine.CheckedChanged += new System.EventHandler(this.rbLine_CheckedChanged);
+            this.pCircle.Location = new System.Drawing.Point(12, 140);
+            this.pCircle.Name = "pCircle";
+            this.pCircle.Size = new System.Drawing.Size(25, 25);
+            this.pCircle.TabIndex = 19;
+            this.pCircle.TabStop = false;
+            this.pCircle.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pCircle_MouseClick);
             // 
-            // rbSelectionMode
+            // pSelectMode
             // 
-            this.rbSelectionMode.AutoSize = true;
-            this.rbSelectionMode.Location = new System.Drawing.Point(975, 191);
-            this.rbSelectionMode.Name = "rbSelectionMode";
-            this.rbSelectionMode.Size = new System.Drawing.Size(99, 17);
-            this.rbSelectionMode.TabIndex = 16;
-            this.rbSelectionMode.Text = "Selection Mode";
-            this.rbSelectionMode.UseVisualStyleBackColor = true;
-            this.rbSelectionMode.CheckedChanged += new System.EventHandler(this.rbSelectionMode_CheckedChanged);
+            this.pSelectMode.Location = new System.Drawing.Point(12, 78);
+            this.pSelectMode.Name = "pSelectMode";
+            this.pSelectMode.Size = new System.Drawing.Size(25, 25);
+            this.pSelectMode.TabIndex = 20;
+            this.pSelectMode.TabStop = false;
+            this.pSelectMode.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pSelectMode_MouseClick);
             // 
-            // rbCircle
+            // pMagnet
             // 
-            this.rbCircle.AutoSize = true;
-            this.rbCircle.Location = new System.Drawing.Point(975, 168);
-            this.rbCircle.Name = "rbCircle";
-            this.rbCircle.Size = new System.Drawing.Size(51, 17);
-            this.rbCircle.TabIndex = 17;
-            this.rbCircle.Text = "Circle";
-            this.rbCircle.UseVisualStyleBackColor = true;
-            this.rbCircle.CheckedChanged += new System.EventHandler(this.rbCircle_CheckedChanged);
+            this.pMagnet.Location = new System.Drawing.Point(103, 39);
+            this.pMagnet.Name = "pMagnet";
+            this.pMagnet.Size = new System.Drawing.Size(25, 25);
+            this.pMagnet.TabIndex = 21;
+            this.pMagnet.TabStop = false;
+            this.pMagnet.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMagnet_MouseClick);
+            // 
+            // pRotationMagnet
+            // 
+            this.pRotationMagnet.Location = new System.Drawing.Point(72, 39);
+            this.pRotationMagnet.Name = "pRotationMagnet";
+            this.pRotationMagnet.Size = new System.Drawing.Size(25, 25);
+            this.pRotationMagnet.TabIndex = 22;
+            this.pRotationMagnet.TabStop = false;
+            this.pRotationMagnet.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pRotationMagnet_MouseClick);
+            // 
+            // pGrid
+            // 
+            this.pGrid.Location = new System.Drawing.Point(43, 39);
+            this.pGrid.Name = "pGrid";
+            this.pGrid.Size = new System.Drawing.Size(25, 25);
+            this.pGrid.TabIndex = 23;
+            this.pGrid.TabStop = false;
+            this.pGrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pGrid_MouseClick);
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(0, 0);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 655);
+            this.splitter1.TabIndex = 24;
+            this.splitter1.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1131, 655);
-            this.Controls.Add(this.rbCircle);
-            this.Controls.Add(this.rbSelectionMode);
-            this.Controls.Add(this.rbLine);
-            this.Controls.Add(this.ckBRotationGrid);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.splitter1);
+            this.Controls.Add(this.pGrid);
+            this.Controls.Add(this.pRotationMagnet);
+            this.Controls.Add(this.pMagnet);
+            this.Controls.Add(this.pSelectMode);
+            this.Controls.Add(this.pCircle);
+            this.Controls.Add(this.pLine);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.chkTest);
-            this.Controls.Add(this.ckbMagnet);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnRedGrid);
             this.Controls.Add(this.btnIncGrid);
-            this.Controls.Add(this.ckxEnableGrid);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.panel1);
             this.KeyPreview = true;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Vector Editor";
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.pLine)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCircle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMagnet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pRotationMagnet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,21 +279,23 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.CheckBox ckxEnableGrid;
         private System.Windows.Forms.Button btnIncGrid;
         private System.Windows.Forms.Button btnRedGrid;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.CheckBox ckbMagnet;
         private System.Windows.Forms.CheckBox chkTest;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.CheckBox ckBRotationGrid;
-        private System.Windows.Forms.RadioButton rbLine;
-        private System.Windows.Forms.RadioButton rbSelectionMode;
-        private System.Windows.Forms.RadioButton rbCircle;
+        private System.Windows.Forms.PictureBox pLine;
+        private System.Windows.Forms.ImageList ImageList;
+        private System.Windows.Forms.PictureBox pCircle;
+        private System.Windows.Forms.PictureBox pSelectMode;
+        private System.Windows.Forms.PictureBox pMagnet;
+        private System.Windows.Forms.PictureBox pRotationMagnet;
+        private System.Windows.Forms.PictureBox pGrid;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

@@ -10,13 +10,19 @@ using System.Windows.Forms;
 
 namespace TestEditor
 {
+    public enum Mode
+    {
+        LineMode = 0,
+        EllipseMode,
+        SelectMode
+    }
     public partial class Form1 : Form
     {
         PictureEditor pictureEditor; // Класс редактора
         OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
-        bool f = false;
+        Mode mode;
         public Form1()
         {
             InitializeComponent();
@@ -25,13 +31,8 @@ namespace TestEditor
             saveFileDialog = new SaveFileDialog();
             openFileDialog.Filter = "Векторный рисунок|*.svg;*.cpi";
             saveFileDialog.Filter = "Векторный рисунок|*.cpi";
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            pictureEditor.Grid.EnableGrid = ckxEnableGrid.Checked;
-            pictureEditor.Draw();
-            CheckState();
+            mode = Mode.SelectMode;
+            DrawMode();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -182,6 +183,7 @@ namespace TestEditor
         private void Form1_Shown(object sender, EventArgs e)
         {
             pictureEditor.Draw();
+
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -202,11 +204,6 @@ namespace TestEditor
             pictureEditor.Picture.SaveFile(path);
         }
 
-        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void Clear()
         {
             pictureEditor.ClearPicture();
@@ -216,11 +213,6 @@ namespace TestEditor
         private void CheckState()
         {
             label1.Text = pictureEditor.EditMode.ToString();
-        }
-
-        private void ckbMagnet_CheckedChanged(object sender, EventArgs e)
-        {
-            pictureEditor.Grid.EnableMagnet = ckbMagnet.Checked;
         }
 
         private void chkTest_CheckedChanged(object sender, EventArgs e)
@@ -236,54 +228,62 @@ namespace TestEditor
             CheckState();
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            pictureEditor.GizmoEditor.DeleteSelected();
-            pictureEditor.Draw();
-        }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            pictureEditor.Grid.EnableRotationGrid = ckBRotationGrid.Checked;
-        }
-
-        private void rbSelectionMode_CheckedChanged(object sender, EventArgs e)
-        {
-            DrawMode();
-        }
-
-        private void rbLine_CheckedChanged(object sender, EventArgs e)
-        {
-            DrawMode();
-        }
-
-        private void rbCircle_CheckedChanged(object sender, EventArgs e)
-        {
-            DrawMode();
-        }
-
         private void DrawMode()
         {
-            if (rbSelectionMode.Checked)
-                pictureEditor.SetEditMode(EditMode.ReadyToSelect);
-            if (rbLine.Checked)
-                pictureEditor.SetEditMode(EditMode.LineModeM);
-            if (rbCircle.Checked)
-                pictureEditor.SetEditMode(EditMode.CircleModeM);
+            if (!pictureEditor.Grid.EnableGrid)
+                toolTip1.SetToolTip(pGrid, "Show Grid");
+            else
+                toolTip1.SetToolTip(pGrid, "Hide Grid");
+
+            if (!pictureEditor.Grid.EnableMagnet)
+                toolTip1.SetToolTip(pMagnet, "Activate Magnet");
+            else
+                toolTip1.SetToolTip(pMagnet, "Disactivate Magnet");
+
+            if (!pictureEditor.Grid.EnableRotationGrid)
+                toolTip1.SetToolTip(pRotationMagnet, "Activate Rotation Grid (Shift)");
+            else
+                toolTip1.SetToolTip(pRotationMagnet, "Disactivate Rotation Grid (Shift)");
+
+            pSelectMode.Image = ImageList.Images[0];
+            pLine.Image =       ImageList.Images[2];
+            pCircle.Image =     ImageList.Images[4];
+            pRotationMagnet.Image = (pictureEditor.Grid.EnableRotationGrid) ? ImageList.Images[9] : ImageList.Images[8];
+            pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
+            pGrid.Image = (pictureEditor.Grid.EnableGrid) ? ImageList.Images[11] : ImageList.Images[10];
+            switch (mode)
+            {
+                case Mode.SelectMode:
+                    pictureEditor.SetEditMode(EditMode.ReadyToSelect);
+                    pSelectMode.Image = ImageList.Images[1];
+                    break;
+                case Mode.LineMode:
+                    pictureEditor.SetEditMode(EditMode.LineModeM);
+                    pLine.Image = ImageList.Images[3];
+                    break;
+                case Mode.EllipseMode:
+                    pictureEditor.SetEditMode(EditMode.CircleModeM);
+                    pCircle.Image = ImageList.Images[5];
+                    break;
+            }
             pictureEditor.Draw();
             CheckState();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
-                    ckBRotationGrid.Checked = true;
-                    f = true;
+                    if (!pictureEditor.Grid.EnableRotationGrid)
+                    {
+                        pictureEditor.Grid.EnableRotationGrid = true;
+                        DrawMode();
+                    }
                     break;
             }
+            //pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
+            //DrawMode();
 
         }
 
@@ -292,9 +292,54 @@ namespace TestEditor
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
-                    ckBRotationGrid.Checked = false;
+                    if (pictureEditor.Grid.EnableRotationGrid)
+                    {
+                        pictureEditor.Grid.EnableRotationGrid = false;
+                        DrawMode();
+                    }
+                    break;
+                case Keys.Delete:
+                    pictureEditor.GizmoEditor.DeleteSelected();
+                    pictureEditor.Draw();
                     break;
             }
+            //DrawMode();
+        }
+
+        private void pSelectMode_MouseClick(object sender, MouseEventArgs e)
+        {
+            mode = Mode.SelectMode;
+            DrawMode();
+        }
+
+        private void pLine_MouseClick(object sender, MouseEventArgs e)
+        {
+            mode = Mode.LineMode;
+            DrawMode();
+        }
+
+        private void pCircle_MouseClick(object sender, MouseEventArgs e)
+        {
+            mode = Mode.EllipseMode;
+            DrawMode();
+        }
+
+        private void pMagnet_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.Grid.EnableMagnet = (!pictureEditor.Grid.EnableMagnet) ? pictureEditor.Grid.EnableMagnet = true : pictureEditor.Grid.EnableMagnet = false;
+            DrawMode();
+        }
+
+        private void pRotationMagnet_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.Grid.EnableRotationGrid = (!pictureEditor.Grid.EnableRotationGrid) ? pictureEditor.Grid.EnableRotationGrid = true : pictureEditor.Grid.EnableRotationGrid = false;
+            DrawMode();
+        }
+
+        private void pGrid_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.Grid.EnableGrid = (!pictureEditor.Grid.EnableGrid) ? pictureEditor.Grid.EnableGrid = true : pictureEditor.Grid.EnableGrid = false;
+            DrawMode();
         }
     }
 }

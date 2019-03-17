@@ -186,6 +186,15 @@ namespace TestEditor
 
         public void DeleteSelectedLines()
         {
+            bool f = false;
+            for (int i = 0; i < CounterLines; ++i)
+                if (lines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            if (!f)
+                return;
             counter = 0;
             counterLines = countAddingLines;
             bufferLines = new LinePic[counterLines];
@@ -215,6 +224,15 @@ namespace TestEditor
 
         public void DeleteSelectedCircles()
         {
+            bool f = false;
+            for (int i = 0; i < CounterEllipses; ++i)
+                if (Ellipses[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            if (!f)
+                return;
             counterC = 0;
             counterCircles = countAddingLines;
             bufferCircles = new Ellipse[counterCircles];

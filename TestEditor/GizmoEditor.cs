@@ -202,7 +202,7 @@ namespace TestEditor
                         float k = pic.Ellipses[i].radX + pic.Ellipses[i].radY;
                         float rX = pic.Ellipses[i].radX;
                         pic.Ellipses[i].radX += (kX - mR) / 2 * (float)Math.Abs(Math.Cos(pic.Ellipses[i].alpha));
-                        pic.Ellipses[i].radY += (kX - mR) / 2 * (float)Math.Abs(Math.Sin(pic.Ellipses[i].alpha))*coeff2;
+                        pic.Ellipses[i].radY += (kX - mR) / 2 * (float)Math.Abs(Math.Sin(pic.Ellipses[i].alpha));
                         pic.Ellipses[i].xR += (kX - mR) * coeff1;
                         pic.Ellipses[i].CalculatePoints();
                     }
