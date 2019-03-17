@@ -59,6 +59,16 @@ namespace TestEditor
             this.pen = pen;
         }
 
+        public void DrawLine(Graphics buff, Pen selectedPen)
+        {
+            Pen sPen;
+            if (selected)
+                sPen = selectedPen;
+            else
+                sPen = pen;
+            buff.DrawLine(sPen, x1, y1, x2, y2);
+        }
+
         public static bool operator !=(LinePic c1, LinePic c2)
         {
             if ((c1.x1 != c2.x2) || (c1.y1 != c2.y1) || (c1.x1 != c2.x2) || (c1.y2 != c2.y2))

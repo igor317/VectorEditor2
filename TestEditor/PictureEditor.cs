@@ -102,26 +102,20 @@ namespace TestEditor
             {
                 if (pic.Lines[i] == 0)
                     return;
-                if (pic.Lines[i].selected)
-                    gBuff.DrawLine(gizmoEditor.SelectionPen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
-                else
-                    gBuff.DrawLine(pic.Lines[i].pen, pic.Lines[i].x1, pic.Lines[i].y1, pic.Lines[i].x2, pic.Lines[i].y2);
+                pic.Lines[i].DrawLine(gBuff, gizmoEditor.SelectionPen);
             }
         }
 
         private void DrawCircles()
         {
-            int count = pic.CounterCircles;
+            int count = pic.CounterEllipses;
             if (editMode == EditMode.CircleModeD)
                 count++;
             for (int i = 0;i<count;++i)
             {
-                if (pic.Circles[i] == 0)
+                if (pic.Ellipses[i] == 0)
                     return;
-                if (pic.Circles[i].selected)
-                    gBuff.DrawEllipse(gizmoEditor.SelectionPen, pic.Circles[i].x1, pic.Circles[i].y1, pic.Circles[i].radius * 2, pic.Circles[i].radius * 2);
-                else
-                    gBuff.DrawEllipse(pic.Circles[i].pen, pic.Circles[i].x1, pic.Circles[i].y1, pic.Circles[i].radius * 2, pic.Circles[i].radius * 2);
+                pic.Ellipses[i].DrawEllipse(gBuff,gizmoEditor.SelectionPen);
             }
         }
         #endregion

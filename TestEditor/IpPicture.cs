@@ -14,9 +14,9 @@ namespace TestEditor
         private const short countAddingLines = 2;
 
         private LinePic[] lines;
-        private Circle[] circles;
+        private Ellipse[] circles;
         private LinePic[] bufferLines;
-        private Circle[] bufferCircles;
+        private Ellipse[] bufferCircles;
         private int counterLines = countAddingLines;
         private int counterCircles = countAddingLines;
         private int counterC = 0;
@@ -32,7 +32,7 @@ namespace TestEditor
         {
             get { return lines; }
         }
-        public Circle[] Circles
+        public Ellipse[] Ellipses
         {
             get { return circles; }
         }
@@ -41,7 +41,7 @@ namespace TestEditor
         {
             get { return counter; }
         }
-        public int CounterCircles
+        public int CounterEllipses
         {
             get { return counterC; }
         }
@@ -51,7 +51,7 @@ namespace TestEditor
         public IpPicture(IpCursor selectCursor, IpCursor lastCursor, int sizeX, int sizeY)
         {
             lines = new LinePic[counterLines];
-            circles = new Circle[counterCircles];
+            circles = new Ellipse[counterCircles];
             this.selectCursor = selectCursor;
             this.lastCursor = lastCursor;
             vectorPicture = new VectorPicture();
@@ -123,7 +123,7 @@ namespace TestEditor
             counterLines = countAddingLines;
             counterCircles = countAddingLines;
             lines = new LinePic[counterLines];
-            circles = new Circle[counterCircles];
+            circles = new Ellipse[counterCircles];
             counter = 0;
             counterC = 0;
         }
@@ -140,7 +140,7 @@ namespace TestEditor
             counterLines = vectorPicture.CounterLines + 1;
             counterCircles = vectorPicture.CounterCircles + 1;
             lines = new LinePic[counterLines];
-            circles = new Circle[counterCircles];
+            circles = new Ellipse[counterCircles];
             for (int i = 0; i < vectorPicture.CounterLines; ++i)
             {
                 lines[i].x1 = Convert.ToInt16(vectorPicture.GetLineX1(i) * xC);
@@ -154,9 +154,8 @@ namespace TestEditor
             {
                 circles[i].xR = Convert.ToInt16(vectorPicture.GetCircleXC(i) * xC);
                 circles[i].yR = Convert.ToInt16(vectorPicture.GetCircleYC(i) * yC);
-                circles[i].radius = Convert.ToInt16(vectorPicture.GetCircleRadius(i) * (xC+yC)/2);
+                circles[i].radX = Convert.ToInt16(vectorPicture.GetCircleRadius(i) * (xC+yC)/2);
                 circles[i].pen = new Pen(Color.Black);
-                circles[i].ReCalcPoints();
                 counterC++;
             }
             vectorPicture.ClearBuffer();
@@ -178,7 +177,7 @@ namespace TestEditor
                     for (int i = 0;i<counterC;++i)
                     {
                         file.WriteLine("<circle " + "cx=" + "\"" + circles[i].xR + "\"" + " " + "cy=" + "\"" + circles[i].yR +
-                            "\"" + " " + "r=" + "\"" + circles[i].radius + "\"" + "\\>");
+                            "\"" + " " + "r=" + "\"" + circles[i].radX + "\"" + "\\>");
                     }
                     file.Close();
                 }
@@ -218,7 +217,7 @@ namespace TestEditor
         {
             counterC = 0;
             counterCircles = countAddingLines;
-            bufferCircles = new Circle[counterCircles];
+            bufferCircles = new Ellipse[counterCircles];
 
             for (int i = 0; i < circles.Length; ++i)
             {

@@ -45,9 +45,9 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterLines; ++i)
                 if (pic.Lines[i].selected)
                     pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
-            for (int i = 0; i < pic.CounterCircles; ++i)
-                if (pic.Circles[i].selected)
-                    pic.Circles[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+                if (pic.Ellipses[i].selected)
+                    pic.Ellipses[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
         }
     
         private void CalcGizmo()
@@ -56,27 +56,27 @@ namespace TestEditor
             maxX = 0;
             minY = 10000;
             maxY = 0;
-            for (int i = 0; i < pic.CounterCircles; ++i)
+            for (int i = 0; i < pic.CounterEllipses; ++i)
             {
-                if (pic.Circles[i].selected)
+                if (pic.Ellipses[i].selected)
                 {
-                    if (pic.Circles[i].x1 < minX)
-                        minX = pic.Circles[i].x1;
-                    if (pic.Circles[i].x2 < minX)
-                        minX = pic.Circles[i].x2;
-                    if (pic.Circles[i].y1 < minY)
-                        minY = pic.Circles[i].y1;
-                    if (pic.Circles[i].y2 < minY)
-                        minY = pic.Circles[i].y2;
+                    if (pic.Ellipses[i].x1 < minX)
+                        minX = pic.Ellipses[i].x1;
+                    if (pic.Ellipses[i].x2 < minX)
+                        minX = pic.Ellipses[i].x2;
+                    if (pic.Ellipses[i].y1 < minY)
+                        minY = pic.Ellipses[i].y1;
+                    if (pic.Ellipses[i].y2 < minY)
+                        minY = pic.Ellipses[i].y2;
 
-                    if (pic.Circles[i].x1 > maxX)
-                        maxX = pic.Circles[i].x1;
-                    if (pic.Circles[i].x2 > maxX)
-                        maxX = pic.Circles[i].x2;
-                    if (pic.Circles[i].y1 > maxY)
-                        maxY = pic.Circles[i].y1;
-                    if (pic.Circles[i].y2 > maxY)
-                        maxY = pic.Circles[i].y2;
+                    if (pic.Ellipses[i].x1 > maxX)
+                        maxX = pic.Ellipses[i].x1;
+                    if (pic.Ellipses[i].x2 > maxX)
+                        maxX = pic.Ellipses[i].x2;
+                    if (pic.Ellipses[i].y1 > maxY)
+                        maxY = pic.Ellipses[i].y1;
+                    if (pic.Ellipses[i].y2 > maxY)
+                        maxY = pic.Ellipses[i].y2;
                 }
             }
             for (int i = 0; i < pic.CounterLines; ++i)
@@ -142,14 +142,17 @@ namespace TestEditor
                     pic.Lines[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
             }
-            for (int i = 0;i<pic.CounterCircles;++i)
+            for (int i = 0;i<pic.CounterEllipses;++i)
             {
-                if (pic.Circles[i].selected)
+                if (pic.Ellipses[i].selected)
                 {
-                    pic.Circles[i].xR += k1 - m1;
-                    pic.Circles[i].yR += k2 - m2;
-                    pic.Circles[i].ReCalcPoints();
-                    pic.Circles[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                    pic.Ellipses[i].xR += k1 - m1;
+                    pic.Ellipses[i].yR += k2 - m2;
+                    pic.Ellipses[i].x1 += k1 - m1;
+                    pic.Ellipses[i].y1 += k2 - m2;
+                    pic.Ellipses[i].x2 += k1 - m1;
+                    pic.Ellipses[i].y2 += k2 - m2;
+                    pic.Ellipses[i].SetCenterPoint(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
             }
         }
@@ -186,11 +189,32 @@ namespace TestEditor
                     pic.Lines[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
                 }
             }
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+            {
+                if (pic.Ellipses[i].selected)
+                {
+                    float coeff1 = 0;
+                    float coeff2 = 0;
+                    if (right)
+                    {
+                        coeff1 = 1 - ((gizmo.xScaleR.X - pic.Ellipses[i].xR) / gizmo.width);
+                        //coeff2 = 1 - ((gizmo.xScaleR.X - pic.Ellipses[i].radY) / gizmo.width);
+                        float k = pic.Ellipses[i].radX + pic.Ellipses[i].radY;
+                        float rX = pic.Ellipses[i].radX;
+                        pic.Ellipses[i].radX += (kX - mR) / 2 * (float)Math.Abs(Math.Cos(pic.Ellipses[i].alpha));
+                        pic.Ellipses[i].radY += (kX - mR) / 2 * (float)Math.Abs(Math.Sin(pic.Ellipses[i].alpha))*coeff2;
+                        pic.Ellipses[i].xR += (kX - mR) * coeff1;
+                        pic.Ellipses[i].CalculatePoints();
+                    }
+                    pic.Ellipses[i].CalculateRotationAxes(gizmo.moveCursor.X, gizmo.moveCursor.Y);
+                }
+            }
+            
             if (right)
             {
                 gizmo.width += kX - mR;
                 gizmo.x2 = gizmo.x1 + gizmo.width;
-                grid.MoveCursor(gizmo.xScaleR, xPos, -1,true);
+                grid.MoveCursor(gizmo.xScaleR, xPos, -1, true);
             }
             else
             {
@@ -253,8 +277,8 @@ namespace TestEditor
         {
             for (int i = 0;i<pic.CounterLines;++i)
                 pic.Lines[i].selected = false;
-            for (int i = 0; i < pic.CounterCircles; ++i)
-                pic.Circles[i].selected = false;
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+                pic.Ellipses[i].selected = false;
         }
 
         private void CalculateAngles(float xPos, float yPos, int res)
@@ -273,9 +297,9 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterLines; ++i)
                 if (pic.Lines[i].selected)
                     pic.Lines[i].RotateLine(gizmo.cursorAngle - (float)Math.PI);
-            for (int i = 0; i < pic.CounterCircles; ++i)
-                if (pic.Circles[i].selected)
-                    pic.Circles[i].RotateCircle(gizmo.cursorAngle - (float)Math.PI);
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+                if (pic.Ellipses[i].selected)
+                    pic.Ellipses[i].RotateCircle(gizmo.cursorAngle - (float)Math.PI);
         }
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
@@ -369,16 +393,16 @@ namespace TestEditor
                     pic.Lines[i].selected = true;
                 }
             }
-            for (int i = 0;i<pic.CounterCircles + 1;++i)
+            for (int i = 0;i<pic.CounterEllipses + 1;++i)
             {
-                if (pic.Circles[i] == 0)
+                if (pic.Ellipses[i] == 0)
                     break;
-                if (pic.Circles[i].x1 >= selectRect.x1 && pic.Circles[i].x1 <= selectRect.x2
-                    && pic.Circles[i].y1 >= selectRect.y1 && pic.Circles[i].y1 <= selectRect.y2
-                    && pic.Circles[i].x2 >= selectRect.x1 && pic.Circles[i].x2 <= selectRect.x2
-                    && pic.Circles[i].y2 >= selectRect.y1 && pic.Circles[i].y2 <= selectRect.y2)
+                if (pic.Ellipses[i].x1 >= selectRect.x1 && pic.Ellipses[i].x1 <= selectRect.x2
+                    && pic.Ellipses[i].y1 >= selectRect.y1 && pic.Ellipses[i].y1 <= selectRect.y2
+                    && pic.Ellipses[i].x2 >= selectRect.x1 && pic.Ellipses[i].x2 <= selectRect.x2
+                    && pic.Ellipses[i].y2 >= selectRect.y1 && pic.Ellipses[i].y2 <= selectRect.y2)
                 {
-                    pic.Circles[i].selected = true;
+                    pic.Ellipses[i].selected = true;
                 }
             }
 
@@ -396,8 +420,8 @@ namespace TestEditor
                     break;
                 }
             }
-            for (int i = 0; i < pic.CounterCircles; ++i)
-                if (pic.Circles[i].selected)
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+                if (pic.Ellipses[i].selected)
                 {
                     k = true;
                     break;

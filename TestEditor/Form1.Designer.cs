@@ -41,7 +41,7 @@
             this.chkTest = new System.Windows.Forms.CheckBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.ckBRotationGrid = new System.Windows.Forms.CheckBox();
             this.rbLine = new System.Windows.Forms.RadioButton();
             this.rbSelectionMode = new System.Windows.Forms.RadioButton();
             this.rbCircle = new System.Windows.Forms.RadioButton();
@@ -179,16 +179,16 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // checkBox2
+            // ckBRotationGrid
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(1034, 379);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(85, 17);
-            this.checkBox2.TabIndex = 14;
-            this.checkBox2.Text = "RotationGrid";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.ckBRotationGrid.AutoSize = true;
+            this.ckBRotationGrid.Location = new System.Drawing.Point(1034, 379);
+            this.ckBRotationGrid.Name = "ckBRotationGrid";
+            this.ckBRotationGrid.Size = new System.Drawing.Size(85, 17);
+            this.ckBRotationGrid.TabIndex = 14;
+            this.ckBRotationGrid.Text = "RotationGrid";
+            this.ckBRotationGrid.UseVisualStyleBackColor = true;
+            this.ckBRotationGrid.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // rbLine
             // 
@@ -198,6 +198,7 @@
             this.rbLine.Name = "rbLine";
             this.rbLine.Size = new System.Drawing.Size(45, 17);
             this.rbLine.TabIndex = 15;
+            this.rbLine.TabStop = true;
             this.rbLine.Text = "Line";
             this.rbLine.UseVisualStyleBackColor = true;
             this.rbLine.CheckedChanged += new System.EventHandler(this.rbLine_CheckedChanged);
@@ -232,7 +233,7 @@
             this.Controls.Add(this.rbCircle);
             this.Controls.Add(this.rbSelectionMode);
             this.Controls.Add(this.rbLine);
-            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.ckBRotationGrid);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.chkTest);
@@ -246,9 +247,12 @@
             this.Controls.Add(this.ckxEnableGrid);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.panel1);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Shown += new System.EventHandler(this.Form1_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,7 +273,7 @@
         private System.Windows.Forms.CheckBox chkTest;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox ckBRotationGrid;
         private System.Windows.Forms.RadioButton rbLine;
         private System.Windows.Forms.RadioButton rbSelectionMode;
         private System.Windows.Forms.RadioButton rbCircle;

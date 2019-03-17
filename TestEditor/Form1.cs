@@ -16,7 +16,7 @@ namespace TestEditor
         OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
-
+        bool f = false;
         public Form1()
         {
             InitializeComponent();
@@ -244,7 +244,7 @@ namespace TestEditor
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            pictureEditor.Grid.EnableRotationGrid = checkBox2.Checked;
+            pictureEditor.Grid.EnableRotationGrid = ckBRotationGrid.Checked;
         }
 
         private void rbSelectionMode_CheckedChanged(object sender, EventArgs e)
@@ -272,6 +272,29 @@ namespace TestEditor
                 pictureEditor.SetEditMode(EditMode.CircleModeM);
             pictureEditor.Draw();
             CheckState();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            switch (e.KeyCode)
+            {
+                case Keys.ShiftKey:
+                    ckBRotationGrid.Checked = true;
+                    f = true;
+                    break;
+            }
+
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.ShiftKey:
+                    ckBRotationGrid.Checked = false;
+                    break;
+            }
         }
     }
 }
