@@ -35,6 +35,8 @@ namespace TestEditor
         private Graphics graph;                                               // Первичный буфер
         private Graphics gBuff;                                               // Вторичный буфер
         private Bitmap bmp;                                                   // Изображения для буфера
+        public float scaleCoeff = 1;
+        private int offX, offY, xS, yS;
 
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         #endregion
@@ -69,12 +71,20 @@ namespace TestEditor
 
         #region PRIVATE METHODS
 
+        private void CalculateCoords()
+        {
+            offX = 0;
+            offY = 0;
+            xS = sizeX * (int)scaleCoeff;
+            yS = sizeY * (int)scaleCoeff;
+        }
+
         private void DrawCursor()
         {
             if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD)
-                SelectCursor.DrawXCursor(gBuff);
+                SelectCursor.DrawXCursor(gBuff,scaleCoeff);
             if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD)
-                LastCursor.DrawXCursor(gBuff);
+                LastCursor.DrawXCursor(gBuff, scaleCoeff);
         }
 
         private void DrawGizmo()
@@ -102,7 +112,7 @@ namespace TestEditor
             {
                 if (pic.Lines[i] == 0)
                     return;
-                pic.Lines[i].DrawLine(gBuff, gizmoEditor.SelectionPen);
+                pic.Lines[i].DrawLine(gBuff,scaleCoeff, gizmoEditor.SelectionPen);
             }
         }
 
@@ -141,8 +151,8 @@ namespace TestEditor
 
         public void Draw()
         {
+            CalculateCoords();
             gBuff.FillRectangle(whiteHolstBrush, 0, 0, sizeX, sizeY);
-
             Grid.DrawGrid(gBuff);
             DrawCursor();
             DrawSelectionRectangle();
@@ -183,6 +193,26 @@ namespace TestEditor
                 SetCursorSettings(lastCursor, 5, new Pen(Color.Red));
         }
 
+        public void IncreaseScaleCoeff()
+        {
+            if (scaleCoeff < 5)
+            {
+                scaleCoeff += 0.1f;
+            }
+            Grid.ScaleCoefficient = scaleCoeff;
+            pic.ScaleCoefficient = scaleCoeff;
+            
+        }
+
+        public void ReduceScaleCoeff()
+        {
+            if (scaleCoeff > 1)
+            {
+                scaleCoeff -= 0.1f;
+            }
+            Grid.ScaleCoefficient = scaleCoeff;
+            pic.ScaleCoefficient = scaleCoeff;
+        }
         public void RasterizeImage(string path)
         {
             if (path == "")

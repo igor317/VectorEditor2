@@ -47,10 +47,10 @@ namespace TestEditor
                         switch (pictureEditor.EditMode)
                         {
                             case EditMode.LineModeM:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,false);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X/pictureEditor.scaleCoeff, e.Y / pictureEditor.scaleCoeff, false);
                                 break;
                             case EditMode.LineModeD:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X / pictureEditor.scaleCoeff, e.Y / pictureEditor.scaleCoeff, false);
                                 pictureEditor.Picture.AddLine(new Pen(Color.Black), false);
                                 break;
                             case EditMode.CircleModeM:
@@ -61,7 +61,7 @@ namespace TestEditor
                                 pictureEditor.Picture.AddCircle(new Pen(Color.Black),false);
                                 break;
                             case EditMode.SelectionMode:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y,false);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
                                 pictureEditor.GizmoEditor.FindSelectionLines();
                                 break;
                         }
@@ -90,7 +90,7 @@ namespace TestEditor
                     {
                         case EditMode.ReadyToSelect:
                             pictureEditor.SetEditMode(EditMode.SelectionMode);
-                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y,false);
+                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
                             break;
                     }
                     break;
@@ -350,6 +350,18 @@ namespace TestEditor
             pictureEditor.SetEditMode(EditMode.LineModeD);
             pictureEditor.Picture.StepBack();
             DrawMode();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pictureEditor.IncreaseScaleCoeff();
+            pictureEditor.Draw();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            pictureEditor.ReduceScaleCoeff();
+            pictureEditor.Draw();
         }
 
         private void pMoveCenterPoint_MouseClick(object sender, MouseEventArgs e)

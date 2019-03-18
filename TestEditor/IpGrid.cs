@@ -18,7 +18,7 @@ namespace TestEditor
         private bool rotationGrid = false;
         private int sizeX, sizeY;
         private IpPicture pic;
-
+        private float scaleCoeff = 1;
         private Pen gridPenLG = new Pen(Color.LightGray);
         private Pen gridPenDG = new Pen(Color.DarkGray);
         #endregion
@@ -37,6 +37,11 @@ namespace TestEditor
         {
             set { maxCountGridLines = value; }
             get { return maxCountGridLines; }
+        }
+        public float ScaleCoefficient
+        {
+            set { scaleCoeff = value; }
+            get { return scaleCoeff; }
         }
         public bool EnableGrid
         {
@@ -58,15 +63,15 @@ namespace TestEditor
         #region PRIVATE METHODS
         private void GridXPosition(IpCursor cursor,float xPos)
         {
-            int LenghtLinesX = sizeX / countGridLines;
-            float xR = xPos / LenghtLinesX - Convert.ToInt16(xPos / LenghtLinesX);
+            int LenghtLinesX = Convert.ToInt32(sizeX / countGridLines);
+            float xR = xPos/ LenghtLinesX - Convert.ToInt16(xPos / LenghtLinesX);
             int xT = LenghtLinesX * Convert.ToInt16(xPos / LenghtLinesX);
             cursor.X = (xR >= 0.5f) ? xT : xT + 1;
         }
 
         private void GridYPosition(IpCursor cursor,float yPos)
         {
-            int LenghtLinesY = sizeY / countGridLines;
+            int LenghtLinesY = Convert.ToInt32(sizeY / countGridLines);
             float yR = yPos / LenghtLinesY - Convert.ToInt16(yPos / LenghtLinesY);
             int yT = LenghtLinesY * Convert.ToInt16(yPos / LenghtLinesY);
             cursor.Y = (yR >= 0.5f) ? yT : yT + 1;
@@ -154,13 +159,13 @@ namespace TestEditor
                     int cury = sizeY / countGridLines * i;
                     if (i == countGridLines / 2)
                     {
-                        graph.DrawLine(gridPenDG, curx, 0, curx, sizeY);
-                        graph.DrawLine(gridPenDG, 0, cury, sizeX, cury);
+                        graph.DrawLine(gridPenDG, curx* scaleCoeff, 0, curx* scaleCoeff, sizeY* scaleCoeff);
+                        graph.DrawLine(gridPenDG, 0, cury* scaleCoeff, sizeX* scaleCoeff, cury* scaleCoeff);
                     }
                     else
                     {
-                        graph.DrawLine(gridPenLG, curx, 0, curx, sizeY);
-                        graph.DrawLine(gridPenLG, 0, cury, sizeX, cury);
+                        graph.DrawLine(gridPenLG, curx* scaleCoeff, 0, curx* scaleCoeff, sizeY* scaleCoeff);
+                        graph.DrawLine(gridPenLG, 0, cury* scaleCoeff, sizeX* scaleCoeff, cury * scaleCoeff);
                     }
                 }
             }

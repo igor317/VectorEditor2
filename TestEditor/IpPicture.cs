@@ -25,6 +25,7 @@ namespace TestEditor
         private IpCursor lastCursor;
         private VectorPicture vectorPicture;
         private int sizeX, sizeY;
+        private float scaleCoeff = 1;
         #endregion
 
         #region SET&GET METHODS
@@ -44,6 +45,11 @@ namespace TestEditor
         public int CounterEllipses
         {
             get { return counterC; }
+        }
+        public float ScaleCoefficient
+        {
+            set { scaleCoeff = value; }
+            get { return scaleCoeff; }
         }
         #endregion
 

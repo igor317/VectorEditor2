@@ -29,6 +29,7 @@ namespace TestEditor
         private bool scaleYD = false;
         private bool scaleXYUR = false;
         private bool rotatePic = false;
+        private float scaleCoeff = 1;
 
         #endregion
 
@@ -338,7 +339,7 @@ namespace TestEditor
         {
             if (gizmo == 0)
                 return;
-            gizmo.DrawGizmo(graph);
+            gizmo.DrawGizmo(graph, scaleCoeff);
         }
 
         public void DrawSelectionRectangle(Graphics graph)
