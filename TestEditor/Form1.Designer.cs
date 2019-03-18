@@ -50,6 +50,8 @@
             this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pMoveCenterPoint = new System.Windows.Forms.PictureBox();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pStepBack = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -58,6 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pMoveCenterPoint)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -136,6 +139,7 @@
             this.ImageList.Images.SetKeyName(11, "GridSelected.bmp");
             this.ImageList.Images.SetKeyName(12, "MoveCenterPoint.bmp");
             this.ImageList.Images.SetKeyName(13, "MoveCenterPointSelected.bmp");
+            this.ImageList.Images.SetKeyName(14, "Back.bmp");
             // 
             // pCircle
             // 
@@ -193,7 +197,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1131, 24);
@@ -213,21 +218,21 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // OpenToolStripMenuItem
             // 
             this.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.OpenToolStripMenuItem.Text = "Open";
             this.OpenToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -240,12 +245,28 @@
             this.pMoveCenterPoint.TabStop = false;
             this.pMoveCenterPoint.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMoveCenterPoint_MouseClick);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // pStepBack
+            // 
+            this.pStepBack.Location = new System.Drawing.Point(72, 614);
+            this.pStepBack.Name = "pStepBack";
+            this.pStepBack.Size = new System.Drawing.Size(25, 25);
+            this.pStepBack.TabIndex = 27;
+            this.pStepBack.TabStop = false;
+            this.pStepBack.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pStepBack_MouseClick);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.pStepBack);
             this.Controls.Add(this.pMoveCenterPoint);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.pGrid);
@@ -277,6 +298,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pMoveCenterPoint)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,6 +326,8 @@
         private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.PictureBox pMoveCenterPoint;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pStepBack;
     }
 }
 

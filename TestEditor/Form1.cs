@@ -10,12 +10,6 @@ using System.Windows.Forms;
 
 namespace TestEditor
 {
-    public enum Mode
-    {
-        LineMode = 0,
-        EllipseMode,
-        SelectMode
-    }
     public partial class MainWindow : Form
     {
         PictureEditor pictureEditor; // Класс редактора
@@ -23,12 +17,11 @@ namespace TestEditor
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
         bool k = false, kk = false;
-        Mode mode;
         public MainWindow()
         {
             InitializeComponent();
             pictureEditor = new PictureEditor(panel1);
-            mode = Mode.SelectMode;
+            pictureEditor.SetEditMode(EditMode.ReadyToSelect);
             DrawMode();
         }
 
@@ -193,6 +186,7 @@ namespace TestEditor
             CleanImages(pGrid);
             CleanImages(pMagnet);
             CleanImages(pMoveCenterPoint);
+            CleanImages(pStepBack);
             if (!pictureEditor.Grid.EnableGrid)
                 toolTip1.SetToolTip(pGrid, "Show Grid");
             else
@@ -208,25 +202,15 @@ namespace TestEditor
             else
                 toolTip1.SetToolTip(pRotationMagnet, "Disactivate Rotation Grid (Shift)");
 
-            pSelectMode.Image = ImageList.Images[0];
-            pLine.Image =       ImageList.Images[2];
-            pCircle.Image =     ImageList.Images[4];
+            pStepBack.Image = ImageList.Images[14];
+            pLine.Image =       (pictureEditor.EditMode == EditMode.LineModeM || pictureEditor.EditMode == EditMode.LineModeD) ? ImageList.Images[3] : ImageList.Images[2];
+            pCircle.Image = (pictureEditor.EditMode == EditMode.CircleModeM || pictureEditor.EditMode == EditMode.CircleModeD) ? ImageList.Images[5] : ImageList.Images[4];
             pRotationMagnet.Image = (pictureEditor.Grid.EnableRotationGrid) ? ImageList.Images[9] : ImageList.Images[8];
             pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
             pGrid.Image = (pictureEditor.Grid.EnableGrid) ? ImageList.Images[11] : ImageList.Images[10];
             pMoveCenterPoint.Image = (pictureEditor.GizmoEditor.mCenterPoint) ? ImageList.Images[13] : ImageList.Images[12];
-            switch (mode)
-            {
-                case Mode.SelectMode:
-                    pSelectMode.Image = ImageList.Images[1];
-                    break;
-                case Mode.LineMode:
-                    pLine.Image = ImageList.Images[3];
-                    break;
-                case Mode.EllipseMode:
-                    pCircle.Image = ImageList.Images[5];
-                    break;
-            }
+            pSelectMode.Image = (pictureEditor.EditMode == EditMode.ReadyToSelect) ? ImageList.Images[1] : ImageList.Images[0];
+
             pictureEditor.Draw();
             CheckState();
         }
@@ -266,7 +250,7 @@ namespace TestEditor
             {
                 pictureEditor.SetEditMode(EditMode.LineModeD);
                 pictureEditor.Picture.StepBack();
-                pictureEditor.Draw();
+                DrawMode();
             }
             switch (e.KeyCode)
             {
@@ -294,21 +278,18 @@ namespace TestEditor
         private void pSelectMode_MouseClick(object sender, MouseEventArgs e)
         {
             pictureEditor.SetEditMode(EditMode.ReadyToSelect);
-            mode = Mode.SelectMode;
             DrawMode();
         }
 
         private void pLine_MouseClick(object sender, MouseEventArgs e)
         {
             pictureEditor.SetEditMode(EditMode.LineModeM);
-            mode = Mode.LineMode;
             DrawMode();
         }
 
         private void pCircle_MouseClick(object sender, MouseEventArgs e)
         {
             pictureEditor.SetEditMode(EditMode.CircleModeM);
-            mode = Mode.EllipseMode;
             DrawMode();
         }
 
@@ -362,6 +343,13 @@ namespace TestEditor
             if (path != "")
                 pictureEditor.Picture.SaveFile(path);
             saveFileDialog.Dispose();
+        }
+
+        private void pStepBack_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.SetEditMode(EditMode.LineModeD);
+            pictureEditor.Picture.StepBack();
+            DrawMode();
         }
 
         private void pMoveCenterPoint_MouseClick(object sender, MouseEventArgs e)
