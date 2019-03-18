@@ -18,9 +18,11 @@ namespace TestEditor
         private bool rotationGrid = false;
         private int sizeX, sizeY;
         private IpPicture pic;
-        private float scaleCoeff = 1;
         private Pen gridPenLG = new Pen(Color.LightGray);
         private Pen gridPenDG = new Pen(Color.DarkGray);
+
+        private float scale = 1;
+        private float xOff = 0, yoff = 0;
         #endregion
 
         #region SET&GET METHODS
@@ -38,11 +40,6 @@ namespace TestEditor
             set { maxCountGridLines = value; }
             get { return maxCountGridLines; }
         }
-        public float ScaleCoefficient
-        {
-            set { scaleCoeff = value; }
-            get { return scaleCoeff; }
-        }
         public bool EnableGrid
         {
             set { enableGrid = value; }
@@ -57,6 +54,22 @@ namespace TestEditor
         {
             set { rotationGrid = value; }
             get { return rotationGrid; }
+        }
+
+        public float ScaleCoeff
+        {
+            set { scale = value; }
+            get { return scale; }
+        }
+        public float xOffset
+        {
+            set { xOff = value; }
+            get { return xOff; }
+        }
+        public float yOffset
+        {
+            set { yoff = value; }
+            get { return yoff; }
         }
         #endregion
 
@@ -148,24 +161,24 @@ namespace TestEditor
             countGridLines = countG;
         }
 
-        public void DrawGrid(Graphics graph)
+        public void DrawGrid(Graphics graph,float xOffset,float yOffset,float coeff)
         {
             if (EnableGrid)
             {
                 for (int i = 0; i < countGridLines; ++i)
                 {
 
-                    int curx = sizeX / countGridLines * i;
-                    int cury = sizeY / countGridLines * i;
+                    int curx = Convert.ToInt16(sizeX / countGridLines * i);
+                    int cury = Convert.ToInt16(sizeY / countGridLines * i);
                     if (i == countGridLines / 2)
                     {
-                        graph.DrawLine(gridPenDG, curx* scaleCoeff, 0, curx* scaleCoeff, sizeY* scaleCoeff);
-                        graph.DrawLine(gridPenDG, 0, cury* scaleCoeff, sizeX* scaleCoeff, cury* scaleCoeff);
+                        graph.DrawLine(gridPenDG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset);
+                        graph.DrawLine(gridPenDG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);
                     }
                     else
                     {
-                        graph.DrawLine(gridPenLG, curx* scaleCoeff, 0, curx* scaleCoeff, sizeY* scaleCoeff);
-                        graph.DrawLine(gridPenLG, 0, cury* scaleCoeff, sizeX* scaleCoeff, cury * scaleCoeff);
+                        graph.DrawLine(gridPenLG, curx* coeff-xOffset, 0, curx* coeff-xOffset, sizeY* coeff-yOffset);
+                        graph.DrawLine(gridPenLG, 0, cury* coeff-yOffset, sizeX* coeff-xOffset, cury * coeff-yOffset);
                     }
                 }
             }
@@ -175,33 +188,33 @@ namespace TestEditor
         {
             if (EnableMagnet)
                 if (ignoreSelected)
-                    MagnetCursorPosition(cursor, xPos, yPos,true, 5);
+                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, true, 5);
                 else
-                    MagnetCursorPosition(cursor, xPos, yPos,false, 5);
+                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, false, 5);
             if (EnableGrid)
             {
                 if (xPos != -1)
-                    GridXPosition(cursor, xPos);
+                    GridXPosition(cursor, (xPos + xOffset) / ScaleCoeff);
                 if (yPos != -1)
-                    GridYPosition(cursor, yPos);
+                    GridYPosition(cursor, (yPos + yOffset) / ScaleCoeff);
             }
             if (!EnableMagnet && !EnableGrid)
             {
                 if (xPos != -1)
                 {
                     if (xPos < sizeX)
-                        cursor.X = xPos;
+                        cursor.X = (xPos+ xOffset) /ScaleCoeff;
                     if (xPos >= sizeX)
-                        cursor.X = sizeX;
+                        cursor.X = (sizeX+ xOffset) / ScaleCoeff;
                     if (xPos < 0)
                         cursor.X = 0;
                 }
                 if (yPos != -1)
                 {
                     if (yPos < sizeY)
-                        cursor.Y = yPos;
+                        cursor.Y = (yPos+ yOffset) / ScaleCoeff;
                     if (yPos >= sizeY)
-                        cursor.Y = sizeY;
+                        cursor.Y = (sizeY+ yOffset) / ScaleCoeff;
                     if (yPos < 0)
                         cursor.Y = 0;
                 }

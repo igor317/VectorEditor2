@@ -26,6 +26,7 @@ namespace TestEditor
         private VectorPicture vectorPicture;
         private int sizeX, sizeY;
         private float scaleCoeff = 1;
+
         #endregion
 
         #region SET&GET METHODS

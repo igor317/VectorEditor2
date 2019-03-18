@@ -22,6 +22,7 @@ namespace TestEditor
             InitializeComponent();
             pictureEditor = new PictureEditor(panel1);
             pictureEditor.SetEditMode(EditMode.ReadyToSelect);
+            panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
             DrawMode();
         }
 
@@ -47,10 +48,10 @@ namespace TestEditor
                         switch (pictureEditor.EditMode)
                         {
                             case EditMode.LineModeM:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X/pictureEditor.scaleCoeff, e.Y / pictureEditor.scaleCoeff, false);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
                                 break;
                             case EditMode.LineModeD:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X / pictureEditor.scaleCoeff, e.Y / pictureEditor.scaleCoeff, false);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
                                 pictureEditor.Picture.AddLine(new Pen(Color.Black), false);
                                 break;
                             case EditMode.CircleModeM:
@@ -130,14 +131,18 @@ namespace TestEditor
                     switch (pictureEditor.EditMode)
                     {
                         case EditMode.LineModeM:
-                            pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,false);
+                            //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,false);
+                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
+                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
                             pictureEditor.SetEditMode(EditMode.LineModeD);
                             break;
                         case EditMode.LineModeD:
                             pictureEditor.SetEditMode(EditMode.LineModeM);
                             break;
                         case EditMode.CircleModeM:
-                            pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y, false);
+                            //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y, false);
+                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
+                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
                             pictureEditor.SetEditMode(EditMode.CircleModeD);
                             break;
                         case EditMode.CircleModeD:
@@ -352,22 +357,50 @@ namespace TestEditor
             DrawMode();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            pictureEditor.IncreaseScaleCoeff();
-            pictureEditor.Draw();
-        }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            pictureEditor.ReduceScaleCoeff();
-            pictureEditor.Draw();
-        }
-
         private void pMoveCenterPoint_MouseClick(object sender, MouseEventArgs e)
         {
             pictureEditor.GizmoEditor.mCenterPoint = (!pictureEditor.GizmoEditor.mCenterPoint) ? pictureEditor.GizmoEditor.mCenterPoint = true : pictureEditor.GizmoEditor.mCenterPoint = false;
             DrawMode();
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+            pictureEditor.Draw();
+        }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+            pictureEditor.Draw();
+        }
+
+        private void panel1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                pictureEditor.IncreaseScaleCoeff();
+            }
+            else
+            {
+                pictureEditor.ReduceScaleCoeff();
+            }
+            xOffsetB.Enabled = (pictureEditor.ScaleCoeff == 1) ? false : true;
+            yOffsetB.Enabled = (pictureEditor.ScaleCoeff == 1) ? false : true;
+
+            if (xOffsetB.Enabled)
+            {
+                xOffsetB.Maximum = (int)(panel1.Width * (pictureEditor.ScaleCoeff - 1));
+                yOffsetB.Maximum = (int)(panel1.Height * (pictureEditor.ScaleCoeff - 1));
+                pictureEditor.GizmoEditor.CreateGizmo();
+            }
+            else
+            {
+                xOffsetB.Value = 0;
+                yOffsetB.Value = 0;
+                pictureEditor.SetOffsets(0, 0);
+            }
+            pictureEditor.Draw();
         }
     }
 }

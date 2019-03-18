@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.yOffsetB = new System.Windows.Forms.VScrollBar();
+            this.xOffsetB = new System.Windows.Forms.HScrollBar();
             this.btnIncGrid = new System.Windows.Forms.Button();
             this.btnRedGrid = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,8 +54,8 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pMoveCenterPoint = new System.Windows.Forms.PictureBox();
             this.pStepBack = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -67,6 +69,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.yOffsetB);
+            this.panel1.Controls.Add(this.xOffsetB);
             this.panel1.Location = new System.Drawing.Point(153, 39);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(900, 600);
@@ -74,6 +78,26 @@
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
+            // 
+            // yOffsetB
+            // 
+            this.yOffsetB.LargeChange = 1;
+            this.yOffsetB.Location = new System.Drawing.Point(880, 0);
+            this.yOffsetB.Maximum = 0;
+            this.yOffsetB.Name = "yOffsetB";
+            this.yOffsetB.Size = new System.Drawing.Size(20, 600);
+            this.yOffsetB.TabIndex = 1;
+            this.yOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
+            // 
+            // xOffsetB
+            // 
+            this.xOffsetB.LargeChange = 1;
+            this.xOffsetB.Location = new System.Drawing.Point(0, 580);
+            this.xOffsetB.Maximum = 0;
+            this.xOffsetB.Name = "xOffsetB";
+            this.xOffsetB.Size = new System.Drawing.Size(880, 20);
+            this.xOffsetB.TabIndex = 0;
+            this.xOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
             // btnIncGrid
             // 
@@ -255,32 +279,21 @@
             // 
             // pStepBack
             // 
-            this.pStepBack.Location = new System.Drawing.Point(72, 614);
+            this.pStepBack.Location = new System.Drawing.Point(88, 614);
             this.pStepBack.Name = "pStepBack";
             this.pStepBack.Size = new System.Drawing.Size(25, 25);
             this.pStepBack.TabIndex = 27;
             this.pStepBack.TabStop = false;
             this.pStepBack.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pStepBack_MouseClick);
             // 
-            // button1
+            // label2
             // 
-            this.button1.Location = new System.Drawing.Point(88, 339);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(59, 23);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "+";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(23, 339);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(59, 23);
-            this.button2.TabIndex = 29;
-            this.button2.Text = "-";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 556);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "State";
             // 
             // MainWindow
             // 
@@ -288,8 +301,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.pStepBack);
             this.Controls.Add(this.pMoveCenterPoint);
             this.Controls.Add(this.splitter1);
@@ -313,6 +325,7 @@
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).EndInit();
@@ -352,8 +365,9 @@
         private System.Windows.Forms.PictureBox pMoveCenterPoint;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.PictureBox pStepBack;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.HScrollBar xOffsetB;
+        private System.Windows.Forms.VScrollBar yOffsetB;
+        private System.Windows.Forms.Label label2;
     }
 }
 

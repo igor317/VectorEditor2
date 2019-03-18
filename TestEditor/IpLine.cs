@@ -59,14 +59,14 @@ namespace TestEditor
             this.pen = pen;
         }
 
-        public void DrawLine(Graphics buff,float coeff, Pen selectedPen)
+        public void DrawLine(Graphics buff,float xf,float yf,float coeff, Pen selectedPen)
         {
             Pen sPen;
             if (selected)
                 sPen = selectedPen;
             else
                 sPen = pen;
-            buff.DrawLine(sPen, x1*coeff, y1 * coeff, x2 * coeff, y2 * coeff);
+            buff.DrawLine(sPen, x1*coeff - xf, y1 * coeff - yf, x2 * coeff - xf, y2 * coeff - yf);
         }
 
         public static bool operator !=(LinePic c1, LinePic c2)

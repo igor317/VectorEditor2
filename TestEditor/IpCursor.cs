@@ -85,12 +85,12 @@ namespace TestEditor
             return false;
         }
 
-        public void DrawXCursor(Graphics graph,float scale)
+        public void DrawXCursor(Graphics graph,float xOffset,float yOffset,float scale)
         {
             if (enableCursor)
             {
-                graph.DrawLine(Pen, (X - Size)*scale, Y*scale, (X + Size)*scale, Y*scale);
-                graph.DrawLine(Pen, X*scale, (Y - Size)*scale, X*scale, (Y + Size)*scale);
+                graph.DrawLine(Pen, (X - Size)*scale - xOffset, Y*scale - yOffset, (X + Size)*scale - xOffset, Y*scale - yOffset);
+                graph.DrawLine(Pen, X*scale - xOffset, (Y - Size)*scale - yOffset, X*scale - xOffset, (Y + Size)*scale - yOffset);
             }
         }
         #endregion

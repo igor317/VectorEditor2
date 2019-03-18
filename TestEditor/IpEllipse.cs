@@ -93,7 +93,7 @@ namespace TestEditor
             y2 = yR - yMax;
         }
 
-        public void DrawEllipse(Graphics buff, Pen selectedPen)
+        public void DrawEllipse(Graphics buff, float coeff, Pen selectedPen)
         {
             Pen sPen;
             if (selected)
@@ -102,9 +102,9 @@ namespace TestEditor
                 sPen = pen;
             for (int i = 1; i < res; ++i)
             {
-                buff.DrawLine(sPen, xR + x[i], yR + y[i], xR + x[i - 1], yR + y[i - 1]);
+                buff.DrawLine(sPen, (xR + x[i])*coeff, (yR + y[i])*coeff, (xR + x[i - 1])*coeff, (yR + y[i - 1])*coeff);
             }
-            buff.DrawLine(sPen, xR + x[0], yR + y[0], xR + x[res-1], yR + y[res-1]);
+            buff.DrawLine(sPen, (xR + x[0])*coeff, (yR + y[0])*coeff, (xR + x[res-1])*coeff, (yR + y[res-1])*coeff);
         }
 
         public static bool operator !=(Ellipse c1, Ellipse c2)

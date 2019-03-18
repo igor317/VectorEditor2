@@ -35,8 +35,8 @@ namespace TestEditor
         private Graphics graph;                                               // Первичный буфер
         private Graphics gBuff;                                               // Вторичный буфер
         private Bitmap bmp;                                                   // Изображения для буфера
-        public float scaleCoeff = 1;
-        private int offX, offY, xS, yS;
+        private float scaleCoeff = 1;
+        private float xOffset = 0, yOffset = 0;
 
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         #endregion
@@ -67,24 +67,23 @@ namespace TestEditor
         {
             get { return gizmoEditor; }
         }
+
+        public float ScaleCoeff
+        {
+            set { scaleCoeff = value; }
+            get { return scaleCoeff; }
+        }
+        
         #endregion
 
         #region PRIVATE METHODS
 
-        private void CalculateCoords()
-        {
-            offX = 0;
-            offY = 0;
-            xS = sizeX * (int)scaleCoeff;
-            yS = sizeY * (int)scaleCoeff;
-        }
-
         private void DrawCursor()
         {
             if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD)
-                SelectCursor.DrawXCursor(gBuff,scaleCoeff);
+                SelectCursor.DrawXCursor(gBuff,xOffset,yOffset,scaleCoeff);
             if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD)
-                LastCursor.DrawXCursor(gBuff, scaleCoeff);
+                LastCursor.DrawXCursor(gBuff, xOffset, yOffset, scaleCoeff);
         }
 
         private void DrawGizmo()
@@ -112,7 +111,7 @@ namespace TestEditor
             {
                 if (pic.Lines[i] == 0)
                     return;
-                pic.Lines[i].DrawLine(gBuff,scaleCoeff, gizmoEditor.SelectionPen);
+                pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
             }
         }
 
@@ -125,7 +124,7 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     return;
-                pic.Ellipses[i].DrawEllipse(gBuff,gizmoEditor.SelectionPen);
+                pic.Ellipses[i].DrawEllipse(gBuff,scaleCoeff,gizmoEditor.SelectionPen);
             }
         }
         #endregion
@@ -151,9 +150,8 @@ namespace TestEditor
 
         public void Draw()
         {
-            CalculateCoords();
             gBuff.FillRectangle(whiteHolstBrush, 0, 0, sizeX, sizeY);
-            Grid.DrawGrid(gBuff);
+            Grid.DrawGrid(gBuff,xOffset,yOffset,scaleCoeff);
             DrawCursor();
             DrawSelectionRectangle();
             DrawGizmo();
@@ -192,26 +190,30 @@ namespace TestEditor
             if (mode == EditMode.CircleModeD || mode == EditMode.LineModeD)
                 SetCursorSettings(lastCursor, 5, new Pen(Color.Red));
         }
+        public void SetOffsets(float xOffset,float yOffset)
+        {
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+            Grid.xOffset = xOffset;
+            Grid.yOffset = yOffset;
+        }
 
         public void IncreaseScaleCoeff()
         {
             if (scaleCoeff < 5)
-            {
-                scaleCoeff += 0.1f;
-            }
-            Grid.ScaleCoefficient = scaleCoeff;
+                scaleCoeff += 1f;
             pic.ScaleCoefficient = scaleCoeff;
-            
+            gizmoEditor.ScaleCoefficient = scaleCoeff;
+            Grid.ScaleCoeff = ScaleCoeff;
         }
 
         public void ReduceScaleCoeff()
         {
             if (scaleCoeff > 1)
-            {
-                scaleCoeff -= 0.1f;
-            }
-            Grid.ScaleCoefficient = scaleCoeff;
+                scaleCoeff -= 1f;
             pic.ScaleCoefficient = scaleCoeff;
+            gizmoEditor.ScaleCoefficient = scaleCoeff;
+            Grid.ScaleCoeff = ScaleCoeff;
         }
         public void RasterizeImage(string path)
         {
