@@ -124,7 +124,7 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     return;
-                pic.Ellipses[i].DrawEllipse(gBuff,scaleCoeff,gizmoEditor.SelectionPen);
+                pic.Ellipses[i].DrawEllipse(gBuff,xOffset,yOffset,scaleCoeff,gizmoEditor.SelectionPen);
             }
         }
         #endregion
@@ -196,6 +196,8 @@ namespace TestEditor
             this.yOffset = yOffset;
             Grid.xOffset = xOffset;
             Grid.yOffset = yOffset;
+            gizmoEditor.xOffset = xOffset;
+            gizmoEditor.yOffset = yOffset;
         }
 
         public void IncreaseScaleCoeff()
@@ -204,7 +206,7 @@ namespace TestEditor
                 scaleCoeff += 1f;
             pic.ScaleCoefficient = scaleCoeff;
             gizmoEditor.ScaleCoefficient = scaleCoeff;
-            Grid.ScaleCoeff = ScaleCoeff;
+            Grid.ScaleCoeff = scaleCoeff;
         }
 
         public void ReduceScaleCoeff()
@@ -213,7 +215,7 @@ namespace TestEditor
                 scaleCoeff -= 1f;
             pic.ScaleCoefficient = scaleCoeff;
             gizmoEditor.ScaleCoefficient = scaleCoeff;
-            Grid.ScaleCoeff = ScaleCoeff;
+            Grid.ScaleCoeff = scaleCoeff;
         }
         public void RasterizeImage(string path)
         {

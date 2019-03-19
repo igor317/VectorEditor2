@@ -30,7 +30,7 @@ namespace TestEditor
         private bool scaleXYUR = false;
         private bool rotatePic = false;
         private float scaleCoeff = 1;
-
+        private float xOff = 0,yOff = 0;
         #endregion
 
         #region GET&GET METHODS
@@ -42,6 +42,16 @@ namespace TestEditor
         {
             set { scaleCoeff = value; }
             get { return scaleCoeff; }
+        }
+        public float xOffset
+        {
+            set { xOff = value; }
+            get { return xOff; }
+        }
+        public float yOffset
+        {
+            set { yOff = value; }
+            get { return yOff; }
         }
         #endregion
 
@@ -66,46 +76,46 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i].selected)
                 {
-                    if (pic.Ellipses[i].x1*ScaleCoefficient < minX)
-                        minX = pic.Ellipses[i].x1 * ScaleCoefficient;
-                    if (pic.Ellipses[i].x2 * ScaleCoefficient < minX)
-                        minX = pic.Ellipses[i].x2 * ScaleCoefficient;
-                    if (pic.Ellipses[i].y1 * ScaleCoefficient < minY)
-                        minY = pic.Ellipses[i].y1 * ScaleCoefficient;
-                    if (pic.Ellipses[i].y2 * ScaleCoefficient < minY)
-                        minY = pic.Ellipses[i].y2 * ScaleCoefficient;
+                    if (pic.Ellipses[i].x1 < minX)
+                        minX = pic.Ellipses[i].x1;
+                    if (pic.Ellipses[i].x2 < minX)
+                        minX = pic.Ellipses[i].x2;
+                    if (pic.Ellipses[i].y1 < minY)
+                        minY = pic.Ellipses[i].y1;
+                    if (pic.Ellipses[i].y2 < minY)
+                        minY = pic.Ellipses[i].y2;
 
-                    if (pic.Ellipses[i].x1 * ScaleCoefficient > maxX)
-                        maxX = pic.Ellipses[i].x1 * ScaleCoefficient;
-                    if (pic.Ellipses[i].x2 * ScaleCoefficient > maxX)
-                        maxX = pic.Ellipses[i].x2 * ScaleCoefficient;
-                    if (pic.Ellipses[i].y1 * ScaleCoefficient > maxY)
-                        maxY = pic.Ellipses[i].y1 * ScaleCoefficient;
-                    if (pic.Ellipses[i].y2 * ScaleCoefficient > maxY)
-                        maxY = pic.Ellipses[i].y2 * ScaleCoefficient;
+                    if (pic.Ellipses[i].x1 > maxX)
+                        maxX = pic.Ellipses[i].x1;
+                    if (pic.Ellipses[i].x2 > maxX)
+                        maxX = pic.Ellipses[i].x2;
+                    if (pic.Ellipses[i].y1 > maxY)
+                        maxY = pic.Ellipses[i].y1;
+                    if (pic.Ellipses[i].y2 > maxY)
+                        maxY = pic.Ellipses[i].y2;
                 }
             }
             for (int i = 0; i < pic.CounterLines; ++i)
             {
                 if (pic.Lines[i].selected)
                 {
-                    if (pic.Lines[i].x1 * ScaleCoefficient < minX)
-                        minX = pic.Lines[i].x1 * ScaleCoefficient;
-                    if (pic.Lines[i].x2 * ScaleCoefficient < minX)
-                        minX = pic.Lines[i].x2 * ScaleCoefficient;
-                    if (pic.Lines[i].y1 * ScaleCoefficient < minY)
-                        minY = pic.Lines[i].y1 * ScaleCoefficient;
-                    if (pic.Lines[i].y2 * ScaleCoefficient < minY)
-                        minY = pic.Lines[i].y2 * ScaleCoefficient;
+                    if (pic.Lines[i].x1 < minX)
+                        minX = pic.Lines[i].x1;
+                    if (pic.Lines[i].x2 < minX)
+                        minX = pic.Lines[i].x2;
+                    if (pic.Lines[i].y1 < minY)
+                        minY = pic.Lines[i].y1;
+                    if (pic.Lines[i].y2 < minY)
+                        minY = pic.Lines[i].y2;
 
-                    if (pic.Lines[i].x1 * ScaleCoefficient > maxX)
-                        maxX = pic.Lines[i].x1 * ScaleCoefficient;
-                    if (pic.Lines[i].x2 * ScaleCoefficient > maxX)
-                        maxX = pic.Lines[i].x2 * ScaleCoefficient;
-                    if (pic.Lines[i].y1 * ScaleCoefficient > maxY)
-                        maxY = pic.Lines[i].y1 * ScaleCoefficient;
-                    if (pic.Lines[i].y2 * ScaleCoefficient > maxY)
-                        maxY = pic.Lines[i].y2 * ScaleCoefficient;
+                    if (pic.Lines[i].x1 > maxX)
+                        maxX = pic.Lines[i].x1;
+                    if (pic.Lines[i].x2 > maxX)
+                        maxX = pic.Lines[i].x2;
+                    if (pic.Lines[i].y1 > maxY)
+                        maxY = pic.Lines[i].y1;
+                    if (pic.Lines[i].y2> maxY)
+                        maxY = pic.Lines[i].y2;
                 }
             }
            
@@ -289,8 +299,8 @@ namespace TestEditor
 
         private void CalculateAngles(float xPos, float yPos, int res)
         {
-            float h = gizmo.moveCursor.X - xPos;
-            float w = gizmo.moveCursor.Y - yPos;
+            float h = (gizmo.moveCursor.X*scaleCoeff-xOff) - xPos;
+            float w = (gizmo.moveCursor.Y*scaleCoeff-yOff) - yPos;
             gizmo.cursorAngle = (float)Math.Atan2(-h, -w);
             if (grid.EnableRotationGrid)
                 gizmo.cursorAngle = grid.GridRotation(gizmo.cursorAngle, res);
@@ -310,7 +320,7 @@ namespace TestEditor
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
         {
-            if (cursor.InCursorArea(xPos, yPos))
+            if (cursor.InCursorArea(xPos, yPos,xOffset,yOffset,scaleCoeff))
             {
                 cursor.Pen = gizmo.selectedControllerPen;
                 return true;
@@ -344,39 +354,39 @@ namespace TestEditor
         {
             if (gizmo == 0)
                 return;
-            gizmo.DrawGizmo(graph, scaleCoeff);
+            gizmo.DrawGizmo(graph,xOffset,yOffset, scaleCoeff);
         }
 
         public void DrawSelectionRectangle(Graphics graph)
         {
             if (selectCursor.X >= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Правый нижний
             {
-                selectRect.x1 = lastCursor.X*scaleCoeff;
-                selectRect.y1 = lastCursor.Y*scaleCoeff;
-                selectRect.x2 = selectCursor.X*scaleCoeff;
-                selectRect.y2 = selectCursor.Y*scaleCoeff;
+                selectRect.x1 = lastCursor.X*scaleCoeff-xOff;
+                selectRect.y1 = lastCursor.Y*scaleCoeff-yOff;
+                selectRect.x2 = selectCursor.X*scaleCoeff-xOff;
+                selectRect.y2 = selectCursor.Y*scaleCoeff-yOff;
             }
             if (selectCursor.X <= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Левый нижний
             {
-                selectRect.x1 = selectCursor.X * scaleCoeff;
-                selectRect.y1 = lastCursor.Y * scaleCoeff;
-                selectRect.x2 = lastCursor.X * scaleCoeff;
-                selectRect.y2 = selectCursor.Y * scaleCoeff;
+                selectRect.x1 = selectCursor.X * scaleCoeff - xOff;
+                selectRect.y1 = lastCursor.Y * scaleCoeff - yOff;
+                selectRect.x2 = lastCursor.X * scaleCoeff - xOff;
+                selectRect.y2 = selectCursor.Y * scaleCoeff - yOff;
 
             }
             if (selectCursor.X >= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Правый верхний
             {
-                selectRect.x1 = lastCursor.X * scaleCoeff;
-                selectRect.y1 = selectCursor.Y * scaleCoeff;
-                selectRect.x2 = selectCursor.X * scaleCoeff;
-                selectRect.y2 = lastCursor.Y * scaleCoeff;
+                selectRect.x1 = lastCursor.X * scaleCoeff - xOff;
+                selectRect.y1 = selectCursor.Y * scaleCoeff - yOff;
+                selectRect.x2 = selectCursor.X * scaleCoeff - xOff;
+                selectRect.y2 = lastCursor.Y * scaleCoeff - yOff;
             }
             if (selectCursor.X <= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Левый верхний
             {
-                selectRect.x1 = selectCursor.X * scaleCoeff;
-                selectRect.y1 = selectCursor.Y * scaleCoeff;
-                selectRect.x2 = lastCursor.X * scaleCoeff;
-                selectRect.y2 = lastCursor.Y * scaleCoeff;
+                selectRect.x1 = selectCursor.X * scaleCoeff - xOff;
+                selectRect.y1 = selectCursor.Y * scaleCoeff - yOff;
+                selectRect.x2 = lastCursor.X * scaleCoeff - xOff;
+                selectRect.y2 = lastCursor.Y * scaleCoeff - yOff;
             }
             selectRect.width = selectRect.x2 - selectRect.x1;
             selectRect.height = selectRect.y2 - selectRect.y1;
@@ -391,10 +401,10 @@ namespace TestEditor
             {
                 if (pic.Lines[i] == 0)
                     break;
-                if (pic.Lines[i].x1*scaleCoeff >= selectRect.x1 && pic.Lines[i].x1 * scaleCoeff <= selectRect.x2
-                    && pic.Lines[i].y1 * scaleCoeff >= selectRect.y1 && pic.Lines[i].y1 * scaleCoeff <= selectRect.y2
-                    && pic.Lines[i].x2 * scaleCoeff >= selectRect.x1 && pic.Lines[i].x2 * scaleCoeff <= selectRect.x2
-                    && pic.Lines[i].y2 * scaleCoeff >= selectRect.y1 && pic.Lines[i].y2 * scaleCoeff <= selectRect.y2)
+                if (pic.Lines[i].x1 * scaleCoeff - xOff >= selectRect.x1 && pic.Lines[i].x1 * scaleCoeff - xOff <= selectRect.x2
+                    && pic.Lines[i].y1 * scaleCoeff - yOff >= selectRect.y1 && pic.Lines[i].y1 * scaleCoeff - yOff <= selectRect.y2
+                    && pic.Lines[i].x2 * scaleCoeff - xOff >= selectRect.x1 && pic.Lines[i].x2 * scaleCoeff - xOff <= selectRect.x2
+                    && pic.Lines[i].y2 * scaleCoeff - yOff >= selectRect.y1 && pic.Lines[i].y2 * scaleCoeff - yOff <= selectRect.y2)
                 {
                     pic.Lines[i].selected = true;
                 }
@@ -403,10 +413,10 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     break;
-                if (pic.Ellipses[i].x1 >= selectRect.x1 && pic.Ellipses[i].x1 <= selectRect.x2
-                    && pic.Ellipses[i].y1 >= selectRect.y1 && pic.Ellipses[i].y1 <= selectRect.y2
-                    && pic.Ellipses[i].x2 >= selectRect.x1 && pic.Ellipses[i].x2 <= selectRect.x2
-                    && pic.Ellipses[i].y2 >= selectRect.y1 && pic.Ellipses[i].y2 <= selectRect.y2)
+                if (pic.Ellipses[i].x1 * scaleCoeff - xOff >= selectRect.x1 && pic.Ellipses[i].x1 * scaleCoeff - xOff <= selectRect.x2
+                    && pic.Ellipses[i].y1 * scaleCoeff - yOff >= selectRect.y1 && pic.Ellipses[i].y1 * scaleCoeff - yOff <= selectRect.y2
+                    && pic.Ellipses[i].x2 * scaleCoeff - xOff >= selectRect.x1 && pic.Ellipses[i].x2 * scaleCoeff - xOff <= selectRect.x2
+                    && pic.Ellipses[i].y2 * scaleCoeff - yOff >= selectRect.y1 && pic.Ellipses[i].y2 * scaleCoeff - yOff <= selectRect.y2)
                 {
                     pic.Ellipses[i].selected = true;
                 }

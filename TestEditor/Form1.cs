@@ -16,7 +16,7 @@ namespace TestEditor
         OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
-        bool k = false, kk = false;
+        bool ctrl = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -241,22 +241,13 @@ namespace TestEditor
                     }
                     break;
                 case Keys.ControlKey:
-                    k = true;
-                    break;
-                case Keys.Z:
-                    kk = true;
+                    ctrl = true;
                     break;
             }     
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (k && kk)
-            {
-                pictureEditor.SetEditMode(EditMode.LineModeD);
-                pictureEditor.Picture.StepBack();
-                DrawMode();
-            }
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
@@ -271,10 +262,15 @@ namespace TestEditor
                     pictureEditor.Draw();
                     break;
                 case Keys.ControlKey:
-                    k = false;
+                    ctrl = false;
                     break;
                 case Keys.Z:
-                    kk = false;
+                    if (ctrl)
+                    {
+                        pictureEditor.SetEditMode(EditMode.LineModeD);
+                        pictureEditor.Picture.StepBack();
+                        DrawMode();
+                    }
                     break;
             }
 
@@ -377,11 +373,30 @@ namespace TestEditor
 
         private void panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0)
+            int res = 10;
+            if (e.Delta > 0 && !ctrl)
+            {
+                if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0)
+                {
+                    yOffsetB.Value = (yOffsetB.Value >= res) ? yOffsetB.Value- res : 0;
+                    pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+                    pictureEditor.Draw();
+                }
+            }
+            if (e.Delta < 0 && !ctrl)
+            {
+                if (yOffsetB.Value < yOffsetB.Maximum && yOffsetB.Value >= 0)
+                {
+                    yOffsetB.Value = (yOffsetB.Value <= yOffsetB.Maximum-10) ? yOffsetB.Value + 10 : yOffsetB.Maximum;
+                    pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+                    pictureEditor.Draw();
+                }
+            }
+            if (e.Delta > 0 && ctrl)
             {
                 pictureEditor.IncreaseScaleCoeff();
             }
-            else
+            if (e.Delta < 0 && ctrl)
             {
                 pictureEditor.ReduceScaleCoeff();
             }
@@ -392,7 +407,7 @@ namespace TestEditor
             {
                 xOffsetB.Maximum = (int)(panel1.Width * (pictureEditor.ScaleCoeff - 1));
                 yOffsetB.Maximum = (int)(panel1.Height * (pictureEditor.ScaleCoeff - 1));
-                pictureEditor.GizmoEditor.CreateGizmo();
+
             }
             else
             {

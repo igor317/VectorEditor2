@@ -75,12 +75,12 @@ namespace TestEditor
             Y = 0;
         }
 
-        public bool InCursorArea(float x,float y)
+        public bool InCursorArea(float x,float y,float xOffset,float yOffset,float scale)
         {
             if (!enableCursor)
                 return false;
-            if (x >= X - size && x <= X + size 
-                && y >= Y - size && y <= Y + size)
+            if (x >= (X - size)*scale-xOffset && x <= (X + size)*scale-xOffset 
+                && y >= (Y - size)*scale-yOffset && y <= (Y + size)*scale-yOffset)
                 return true;
             return false;
         }
@@ -91,6 +91,8 @@ namespace TestEditor
             {
                 graph.DrawLine(Pen, (X - Size)*scale - xOffset, Y*scale - yOffset, (X + Size)*scale - xOffset, Y*scale - yOffset);
                 graph.DrawLine(Pen, X*scale - xOffset, (Y - Size)*scale - yOffset, X*scale - xOffset, (Y + Size)*scale - yOffset);
+                //graph.DrawLine(Pen, X - Size, Y, X + Size, Y);
+                //graph.DrawLine(Pen, X, Y - Size, X, Y + Size);
             }
         }
         #endregion

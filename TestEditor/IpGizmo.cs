@@ -157,10 +157,10 @@ namespace TestEditor
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
         }
 
-        public void DrawGizmo(Graphics graph,float coeff)
+        public void DrawGizmo(Graphics graph,float xoff,float yoff,float coeff)
         {
             if (showGizmo)
-                graph.DrawRectangle(gizmoPen, x1, y1, width, height);
+                graph.DrawRectangle(gizmoPen, x1*coeff-xoff, y1*coeff-yoff, width*coeff, height*coeff);
             if (showRotationTrack)
             {
 
@@ -178,17 +178,17 @@ namespace TestEditor
                     f1 = k - 90;
                     rotationAngle = 360 - l;
                 }
-                graph.DrawEllipse(gizmoPen, moveCursor.X - radius, moveCursor.Y - radius, radius * 2, radius * 2);
-                graph.FillPie(SectorBrush, moveCursor.X - radius, moveCursor.Y - radius, radius * 2, radius * 2, f1, rotationAngle);
-                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10), TextBrush, moveCursor.X, moveCursor.Y);
+                graph.DrawEllipse(gizmoPen, (moveCursor.X - radius)*coeff-xoff, (moveCursor.Y - radius)*coeff-yoff, radius * 2*coeff, radius * 2*coeff);
+                graph.FillPie(SectorBrush, (moveCursor.X - radius)*coeff-xoff, (moveCursor.Y - radius)*coeff-yoff, radius * 2*coeff, radius * 2*coeff, f1, rotationAngle);
+                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10), TextBrush, moveCursor.X*coeff-xoff, moveCursor.Y*coeff-yoff);
             }
-            moveCursor.DrawXCursor(graph,0,0,1);
-            xScaleR.DrawXCursor(graph, 0, 0, 1);
-            xScaleL.DrawXCursor(graph, 0, 0, 1);
-            yScaleU.DrawXCursor(graph, 0, 0, 1);
-            yScaleD.DrawXCursor(graph, 0, 0, 1);
-            xyScaleUR.DrawXCursor(graph, 0, 0, 1);
-            rotationCursor.DrawXCursor(graph, 0, 0, 1);
+            moveCursor.DrawXCursor(graph, xoff, yoff, coeff);
+            xScaleR.DrawXCursor(graph, xoff, yoff, coeff);
+            xScaleL.DrawXCursor(graph, xoff, yoff, coeff);
+            yScaleU.DrawXCursor(graph, xoff, yoff, coeff);
+            yScaleD.DrawXCursor(graph, xoff, yoff, coeff);
+            xyScaleUR.DrawXCursor(graph, xoff, yoff, coeff);
+            rotationCursor.DrawXCursor(graph, xoff, yoff, coeff);
         }
 
         public static bool operator !=(Gizmo c, int i)

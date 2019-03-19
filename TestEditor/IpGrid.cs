@@ -220,7 +220,6 @@ namespace TestEditor
                 }
             }
         }
-
         public float GridRotation(float alpha, int res)
         {
             float angle = 0;
