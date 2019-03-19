@@ -376,7 +376,7 @@ namespace TestEditor
             int res = 10;
             if (e.Delta > 0 && !ctrl)
             {
-                if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0)
+                if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0 && pictureEditor.ScaleCoeff != 1)
                 {
                     yOffsetB.Value = (yOffsetB.Value >= res) ? yOffsetB.Value- res : 0;
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
@@ -385,7 +385,7 @@ namespace TestEditor
             }
             if (e.Delta < 0 && !ctrl)
             {
-                if (yOffsetB.Value < yOffsetB.Maximum && yOffsetB.Value >= 0)
+                if (yOffsetB.Value < yOffsetB.Maximum && yOffsetB.Value >= 0 && pictureEditor.ScaleCoeff != 1)
                 {
                     yOffsetB.Value = (yOffsetB.Value <= yOffsetB.Maximum-10) ? yOffsetB.Value + 10 : yOffsetB.Maximum;
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
