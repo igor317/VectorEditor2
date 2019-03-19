@@ -55,7 +55,6 @@
             this.pMoveCenterPoint = new System.Windows.Forms.PictureBox();
             this.pStepBack = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -69,8 +68,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.yOffsetB);
-            this.panel1.Controls.Add(this.xOffsetB);
             this.panel1.Location = new System.Drawing.Point(153, 39);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(900, 600);
@@ -81,21 +78,23 @@
             // 
             // yOffsetB
             // 
+            this.yOffsetB.Enabled = false;
             this.yOffsetB.LargeChange = 1;
-            this.yOffsetB.Location = new System.Drawing.Point(880, 0);
+            this.yOffsetB.Location = new System.Drawing.Point(1047, 39);
             this.yOffsetB.Maximum = 0;
             this.yOffsetB.Name = "yOffsetB";
-            this.yOffsetB.Size = new System.Drawing.Size(20, 600);
+            this.yOffsetB.Size = new System.Drawing.Size(20, 616);
             this.yOffsetB.TabIndex = 1;
             this.yOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             // 
             // xOffsetB
             // 
+            this.xOffsetB.Enabled = false;
             this.xOffsetB.LargeChange = 1;
-            this.xOffsetB.Location = new System.Drawing.Point(0, 580);
+            this.xOffsetB.Location = new System.Drawing.Point(153, 635);
             this.xOffsetB.Maximum = 0;
             this.xOffsetB.Name = "xOffsetB";
-            this.xOffsetB.Size = new System.Drawing.Size(880, 20);
+            this.xOffsetB.Size = new System.Drawing.Size(894, 20);
             this.xOffsetB.TabIndex = 0;
             this.xOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
@@ -301,6 +300,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.xOffsetB);
+            this.Controls.Add(this.yOffsetB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pStepBack);
             this.Controls.Add(this.pMoveCenterPoint);
@@ -325,7 +326,6 @@
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
-            this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).EndInit();

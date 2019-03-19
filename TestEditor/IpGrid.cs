@@ -18,6 +18,7 @@ namespace TestEditor
         private bool rotationGrid = false;
         private int sizeX, sizeY;
         private IpPicture pic;
+        private int gridDegree = 15;
         private Pen gridPenLG = new Pen(Color.LightGray);
         private Pen gridPenDG = new Pen(Color.DarkGray);
 
@@ -39,6 +40,11 @@ namespace TestEditor
         {
             set { maxCountGridLines = value; }
             get { return maxCountGridLines; }
+        }
+        public int GridDegree
+        {
+            set { gridDegree = value; }
+            get { return gridDegree; }
         }
         public bool EnableGrid
         {
@@ -220,23 +226,23 @@ namespace TestEditor
                 }
             }
         }
-        public float GridRotation(float alpha, int res)
+        public float GridRotation(float alpha)
         {
             float angle = 0;
             float temp = 0;
             angle = alpha.Rad2Deg();
-            temp = angle % res;
+            temp = angle % gridDegree;
             if (angle > 0)
             {
-                if (Math.Abs(temp) >= res / 2)
-                    angle = Convert.ToInt16(angle - temp) + res;
+                if (Math.Abs(temp) >= gridDegree / 2)
+                    angle = Convert.ToInt16(angle - temp) + gridDegree;
                 else
                     angle = Convert.ToInt16(angle - temp);
             }
             else
             {
-                if (Math.Abs(temp) >= res / 2)
-                    angle = Convert.ToInt16(angle - temp) - res;
+                if (Math.Abs(temp) >= gridDegree / 2)
+                    angle = Convert.ToInt16(angle - temp) - gridDegree;
                 else
                     angle = Convert.ToInt16(angle - temp);
             }

@@ -297,13 +297,13 @@ namespace TestEditor
                 pic.Ellipses[i].selected = false;
         }
 
-        private void CalculateAngles(float xPos, float yPos, int res)
+        private void CalculateAngles(float xPos, float yPos)
         {
             float h = (gizmo.moveCursor.X*scaleCoeff-xOff) - xPos;
             float w = (gizmo.moveCursor.Y*scaleCoeff-yOff) - yPos;
             gizmo.cursorAngle = (float)Math.Atan2(-h, -w);
             if (grid.EnableRotationGrid)
-                gizmo.cursorAngle = grid.GridRotation(gizmo.cursorAngle, res);
+                gizmo.cursorAngle = grid.GridRotation(gizmo.cursorAngle);
         }
 
         private void RotateCursor()
@@ -487,7 +487,7 @@ namespace TestEditor
             }
             if (rotatePic)
             {
-                CalculateAngles(xPos, yPos,15);
+                CalculateAngles(xPos, yPos);
                 RotateCursor();
                 gizmo.showGizmo = false;
                 gizmo.showRotationTrack = true;

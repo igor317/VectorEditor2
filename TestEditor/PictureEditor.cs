@@ -37,6 +37,9 @@ namespace TestEditor
         private Bitmap bmp;                                                   // Изображения для буфера
         private float scaleCoeff = 1;
         private float xOffset = 0, yOffset = 0;
+        private float maxScale = 5;
+        private float minScale = 1;
+        private float deltaScale = 1;
 
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         #endregion
@@ -202,8 +205,8 @@ namespace TestEditor
 
         public void IncreaseScaleCoeff()
         {
-            if (scaleCoeff < 5)
-                scaleCoeff += 1f;
+            if (scaleCoeff < maxScale)
+                scaleCoeff += deltaScale;
             pic.ScaleCoefficient = scaleCoeff;
             gizmoEditor.ScaleCoefficient = scaleCoeff;
             Grid.ScaleCoeff = scaleCoeff;
@@ -211,8 +214,8 @@ namespace TestEditor
 
         public void ReduceScaleCoeff()
         {
-            if (scaleCoeff > 1)
-                scaleCoeff -= 1f;
+            if (scaleCoeff > minScale)
+                scaleCoeff -= deltaScale;
             pic.ScaleCoefficient = scaleCoeff;
             gizmoEditor.ScaleCoefficient = scaleCoeff;
             Grid.ScaleCoeff = scaleCoeff;
