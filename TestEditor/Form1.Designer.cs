@@ -55,6 +55,8 @@
             this.pMoveCenterPoint = new System.Windows.Forms.PictureBox();
             this.pStepBack = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblCoeff = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -294,12 +296,32 @@
             this.label2.TabIndex = 28;
             this.label2.Text = "State";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 626);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.TabIndex = 29;
+            this.label3.Text = "State";
+            // 
+            // lblCoeff
+            // 
+            this.lblCoeff.AutoSize = true;
+            this.lblCoeff.Location = new System.Drawing.Point(100, 589);
+            this.lblCoeff.Name = "lblCoeff";
+            this.lblCoeff.Size = new System.Drawing.Size(32, 13);
+            this.lblCoeff.TabIndex = 30;
+            this.lblCoeff.Text = "State";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.lblCoeff);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.xOffsetB);
             this.Controls.Add(this.yOffsetB);
             this.Controls.Add(this.label2);
@@ -368,6 +390,8 @@
         private System.Windows.Forms.HScrollBar xOffsetB;
         private System.Windows.Forms.VScrollBar yOffsetB;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblCoeff;
     }
 }
 

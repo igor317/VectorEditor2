@@ -17,6 +17,7 @@ namespace TestEditor
         SaveFileDialog saveFileDialog; // Тест2
         bool inSelect = false;
         bool ctrl = false;
+        bool alt = true;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,8 @@ namespace TestEditor
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
+            label2.Text = Convert.ToString(e.X + " " + (e.X+pictureEditor.XOffset)/(pictureEditor.ScaleCoeff));
+            label3.Text = Convert.ToString(e.X + " " + (e.X / (pictureEditor.ScaleCoeff)));
             if (inSelect)
             {
                 switch (e.Button)
@@ -231,6 +234,9 @@ namespace TestEditor
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Modifiers == Keys.Alt)
+                alt = false;
+
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
@@ -248,6 +254,8 @@ namespace TestEditor
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.Modifiers != Keys.Alt)
+                alt = true;
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
@@ -368,38 +376,54 @@ namespace TestEditor
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+            label2.Text = Convert.ToString(xOffsetB.Value);
             pictureEditor.Draw();
         }
 
         private void panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            int res = 10;
-            if (e.Delta > 0 && !ctrl)
+            int res = 40;
+            if (e.Delta > 0 && alt && !ctrl)       // Скролл вверх
             {
-                if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0 && pictureEditor.ScaleCoeff != 1)
+                if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0)
                 {
                     yOffsetB.Value = (yOffsetB.Value >= res) ? yOffsetB.Value- res : 0;
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
-                    pictureEditor.Draw();
                 }
             }
-            if (e.Delta < 0 && !ctrl)
+            if (e.Delta < 0 && alt && !ctrl)       // Скролл вниз
             {
                 if (yOffsetB.Value < yOffsetB.Maximum && yOffsetB.Value >= 0 && pictureEditor.ScaleCoeff != 1)
                 {
-                    yOffsetB.Value = (yOffsetB.Value <= yOffsetB.Maximum-10) ? yOffsetB.Value + 10 : yOffsetB.Maximum;
+                    yOffsetB.Value = (yOffsetB.Value <= yOffsetB.Maximum- res) ? yOffsetB.Value + res : yOffsetB.Maximum;
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
-                    pictureEditor.Draw();
                 }
             }
-            if (e.Delta > 0 && ctrl)
+            if (e.Delta > 0 && alt && ctrl)       // Скролл вправо
             {
-                pictureEditor.IncreaseScaleCoeff();
+                if (xOffsetB.Value <= xOffsetB.Maximum && xOffsetB.Value > 0)
+                {
+                    xOffsetB.Value = (xOffsetB.Value >= res) ? xOffsetB.Value - res : 0;
+                    pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+                }
             }
-            if (e.Delta < 0 && ctrl)
+            if (e.Delta < 0 && alt && ctrl)       // Скролл влево
             {
-                pictureEditor.ReduceScaleCoeff();
+                if (xOffsetB.Value < xOffsetB.Maximum && xOffsetB.Value >= 0 && pictureEditor.ScaleCoeff != 1)
+                {
+                    xOffsetB.Value = (xOffsetB.Value <= xOffsetB.Maximum - res) ? xOffsetB.Value + res : xOffsetB.Maximum;
+                    pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
+                }
             }
+            if (e.Delta > 0 && !alt)        // Увеличить масштаб
+            {
+                label1.Text = Convert.ToString(pictureEditor.IncreaseScaleCoeff(e.X,e.Y));
+            }
+            if (e.Delta < 0 && !alt)
+            {
+                pictureEditor.ReduceScaleCoeff(e.X,e.Y);
+            }
+            label3.Text = Convert.ToString(e.X + " " + e.Y);
             xOffsetB.Enabled = (pictureEditor.ScaleCoeff == 1) ? false : true;
             yOffsetB.Enabled = (pictureEditor.ScaleCoeff == 1) ? false : true;
 
@@ -407,6 +431,10 @@ namespace TestEditor
             {
                 xOffsetB.Maximum = (int)(panel1.Width * (pictureEditor.ScaleCoeff - 1));
                 yOffsetB.Maximum = (int)(panel1.Height * (pictureEditor.ScaleCoeff - 1));
+                if ((int)pictureEditor.XOffset >= 0 && (int)pictureEditor.XOffset < xOffsetB.Maximum)
+                    xOffsetB.Value = (int)pictureEditor.XOffset;
+                if ((int)pictureEditor.YOffset >= 0 && (int)pictureEditor.YOffset < yOffsetB.Maximum)
+                    yOffsetB.Value = (int)pictureEditor.YOffset;
 
             }
             else
@@ -415,6 +443,8 @@ namespace TestEditor
                 yOffsetB.Value = 0;
                 pictureEditor.SetOffsets(0, 0);
             }
+            lblCoeff.Text = Convert.ToString(pictureEditor.ScaleCoeff);
+            //label1.Text = Convert.ToString(pictureEditor.ScaleCoeff);
             pictureEditor.Draw();
         }
     }

@@ -39,8 +39,8 @@ namespace TestEditor
         private float xOffset = 0, yOffset = 0;
         private float maxScale = 5;
         private float minScale = 1;
-        private float deltaScale = 1;
-
+        private float deltaScale = 0.5f;
+        private float f1 = 0, f2 = 0,f3 = 0,f4 = 0,f5 = 0,f6 = 0,f7 = 0,f8 = 0;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         #endregion
 
@@ -73,10 +73,17 @@ namespace TestEditor
 
         public float ScaleCoeff
         {
-            set { scaleCoeff = value; }
             get { return scaleCoeff; }
         }
-        
+        public float XOffset
+        {
+            get { return xOffset; }
+        }
+        public float YOffset
+        {
+            get { return yOffset; }
+        }
+
         #endregion
 
         #region PRIVATE METHODS
@@ -203,22 +210,41 @@ namespace TestEditor
             gizmoEditor.yOffset = yOffset;
         }
 
-        public void IncreaseScaleCoeff()
+        public float IncreaseScaleCoeff(int xPos,int yPos)
         {
             if (scaleCoeff < maxScale)
+            {
                 scaleCoeff += deltaScale;
-            pic.ScaleCoefficient = scaleCoeff;
-            gizmoEditor.ScaleCoefficient = scaleCoeff;
-            Grid.ScaleCoeff = scaleCoeff;
+                pic.ScaleCoefficient = scaleCoeff;
+                gizmoEditor.ScaleCoefficient = scaleCoeff;
+                Grid.ScaleCoeff = scaleCoeff;
+                f6 = xPos * deltaScale;
+                f1 = xPos * deltaScale + xOffset;
+                f2 = yPos * deltaScale + yOffset;
+
+                //SetOffsets(f6, f2);
+                f5 = xOffset - f4;
+                f4 = xOffset;
+                f3 = xPos;
+
+
+            }
+            return f6;
         }
 
-        public void ReduceScaleCoeff()
+        public void ReduceScaleCoeff(int xPos, int yPos)
         {
-            if (scaleCoeff > minScale)
-                scaleCoeff -= deltaScale;
+            scaleCoeff -= deltaScale;
+            if (scaleCoeff < minScale)
+                scaleCoeff = minScale;
             pic.ScaleCoefficient = scaleCoeff;
             gizmoEditor.ScaleCoefficient = scaleCoeff;
             Grid.ScaleCoeff = scaleCoeff;
+            if (scaleCoeff == minScale)
+            {
+                f3 = xPos;
+                f4 = yPos;
+            }
         }
         public void RasterizeImage(string path)
         {
