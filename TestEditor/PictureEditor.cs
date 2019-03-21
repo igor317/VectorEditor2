@@ -42,6 +42,9 @@ namespace TestEditor
         private float deltaScale = 0.5f;
         private float f1 = 0, f2 = 0,f3 = 0,f4 = 0,f5 = 0,f6 = 0,f7 = 0,f8 = 0;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
+        private SolidBrush textBrush = new SolidBrush(Color.Black);
+        private Font textFont = new Font("Times New Roman", 20);
+        private bool drawScaleCoeff = true;
         #endregion
 
         #region SET&GET METHODS
@@ -167,6 +170,8 @@ namespace TestEditor
             DrawGizmo();
             DrawLines();
             DrawCircles();
+            if (drawScaleCoeff && scaleCoeff > minScale)
+                gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 

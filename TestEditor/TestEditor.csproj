@@ -46,14 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FSettings.Designer.cs">
+      <DependentUpon>FSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="GizmoEditor.cs" />
     <Compile Include="IpEllipse.cs" />
     <Compile Include="IpCursor.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="FMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FMain.Designer.cs">
+      <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
     <Compile Include="IpGizmo.cs" />
     <Compile Include="IpGrid.cs" />
@@ -69,8 +75,11 @@
     </Compile>
     <Compile Include="SelectRect.cs" />
     <Compile Include="VectorPicture.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="FMain.resx">
+      <DependentUpon>FMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FSettings.resx">
+      <DependentUpon>FSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

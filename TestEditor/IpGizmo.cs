@@ -25,8 +25,8 @@ namespace TestEditor
         public IpCursor rotationCursor;
         public Pen selectedControllerPen;
         public Pen controllerPen;
-        public SolidBrush SectorBrush;
-        public SolidBrush TextBrush;
+        public SolidBrush sectorBrush;
+        public SolidBrush textBrush;
         public bool showGizmo;
         public bool showRotationTrack;
         public float radius;
@@ -45,10 +45,10 @@ namespace TestEditor
             height = y2 - y1;
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
             gizmoPen = new Pen(Color.Green);
-            controllerPen = new Pen(Color.LightSkyBlue);
+            controllerPen = new Pen(Color.Violet);
             selectedControllerPen = new Pen(Color.Blue);
-            SectorBrush = new SolidBrush(Color.FromArgb(50, 150, 0, 150));
-            TextBrush = new SolidBrush(Color.Black);
+            sectorBrush = new SolidBrush(Color.FromArgb(50, 150, 0, 150));
+            textBrush = new SolidBrush(Color.Black);
             moveCursor = new IpCursor(5, controllerPen);
             xScaleR = new IpCursor(5, controllerPen);
             xScaleL = new IpCursor(5, controllerPen);
@@ -84,7 +84,7 @@ namespace TestEditor
                 rotationCursor.X = x2 - width / 2;
                 rotationCursor.Y = y2 - height / 2 - radius;
                 frsAngle = (float)Math.PI;
-                ResetRadius();
+                radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
             }
             ShowCursors();
         }
@@ -148,13 +148,8 @@ namespace TestEditor
             this.y2 = y2;
             width = x2 - x1;
             height = y2 - y1;
-            ResetRadius();
-            ResetControllers(false, false);
-        }
-
-        public void ResetRadius()
-        {
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
+            ResetControllers(false, false);
         }
 
         public void DrawGizmo(Graphics graph,float xoff,float yoff,float coeff)
@@ -179,8 +174,8 @@ namespace TestEditor
                     rotationAngle = 360 - l;
                 }
                 graph.DrawEllipse(gizmoPen, (moveCursor.X - radius)*coeff-xoff, (moveCursor.Y - radius)*coeff-yoff, radius * 2*coeff, radius * 2*coeff);
-                graph.FillPie(SectorBrush, (moveCursor.X - radius)*coeff-xoff, (moveCursor.Y - radius)*coeff-yoff, radius * 2*coeff, radius * 2*coeff, f1, rotationAngle);
-                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10), TextBrush, moveCursor.X*coeff-xoff, moveCursor.Y*coeff-yoff);
+                graph.FillPie(sectorBrush, (moveCursor.X - radius)*coeff-xoff, (moveCursor.Y - radius)*coeff-yoff, radius * 2*coeff, radius * 2*coeff, f1, rotationAngle);
+                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10*coeff), textBrush, moveCursor.X*coeff-xoff, moveCursor.Y*coeff-yoff);
             }
             moveCursor.DrawXCursor(graph, xoff, yoff, coeff);
             xScaleR.DrawXCursor(graph, xoff, yoff, coeff);

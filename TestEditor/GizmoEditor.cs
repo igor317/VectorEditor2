@@ -340,7 +340,7 @@ namespace TestEditor
         #region PUBLIC METHODS
         public GizmoEditor(IpPicture pic,IpGrid grid,IpCursor selectCursor,IpCursor lastCursor)
         {
-            Color color = Color.FromArgb(50, 50, 200, 200);
+            Color color = Color.FromArgb(50, 0, 250, 50);
             SolidBrush brush = new SolidBrush(color);
             gizmo = new Gizmo(0, 0, 0, 0);
             selectRect = new SelectRect(brush);
