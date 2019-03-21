@@ -195,6 +195,8 @@ namespace TestEditor
             CleanImages(pMagnet);
             CleanImages(pMoveCenterPoint);
             CleanImages(pStepBack);
+            CleanImages(pMirrorX);
+            CleanImages(pMirrorY);
             if (!pictureEditor.Grid.EnableGrid)
                 toolTip1.SetToolTip(pGrid, "Show Grid");
             else
@@ -210,6 +212,8 @@ namespace TestEditor
             else
                 toolTip1.SetToolTip(pRotationMagnet, "Disactivate Rotation Grid (Shift)");
 
+            pMirrorX.Image = ImageList.Images[15];
+            pMirrorY.Image = ImageList.Images[16];
             pStepBack.Image = ImageList.Images[14];
             pLine.Image =       (pictureEditor.EditMode == EditMode.LineModeM || pictureEditor.EditMode == EditMode.LineModeD) ? ImageList.Images[3] : ImageList.Images[2];
             pCircle.Image = (pictureEditor.EditMode == EditMode.CircleModeM || pictureEditor.EditMode == EditMode.CircleModeD) ? ImageList.Images[5] : ImageList.Images[4];
@@ -218,6 +222,7 @@ namespace TestEditor
             pGrid.Image = (pictureEditor.Grid.EnableGrid) ? ImageList.Images[11] : ImageList.Images[10];
             pMoveCenterPoint.Image = (pictureEditor.GizmoEditor.mCenterPoint) ? ImageList.Images[13] : ImageList.Images[12];
             pSelectMode.Image = (pictureEditor.EditMode == EditMode.ReadyToSelect) ? ImageList.Images[1] : ImageList.Images[0];
+
 
             pictureEditor.Draw();
             CheckState();
@@ -445,6 +450,24 @@ namespace TestEditor
             }
             lblCoeff.Text = Convert.ToString(pictureEditor.ScaleCoeff);
             //label1.Text = Convert.ToString(pictureEditor.ScaleCoeff);
+            pictureEditor.Draw();
+        }
+
+        private void btnMirror_Click(object sender, EventArgs e)
+        {
+            pictureEditor.GizmoEditor.MirrorSelectedY();
+            pictureEditor.Draw();
+        }
+
+        private void pMirrorX_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.GizmoEditor.MirrorSelectedX();
+            pictureEditor.Draw();
+        }
+
+        private void pMirrorY_MouseClick(object sender, MouseEventArgs e)
+        {
+            pictureEditor.GizmoEditor.MirrorSelectedY();
             pictureEditor.Draw();
         }
     }

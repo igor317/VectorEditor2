@@ -548,6 +548,58 @@ namespace TestEditor
             CalculateNormals();
         }
 
+        public void MirrorSelectedX()
+        {
+            bool f = false;
+            for (int i = 0;i<pic.CounterLines;++i)
+            {
+                if (pic.Lines[i].selected)
+                {
+                    if (pic.Lines[i].x1 < gizmo.moveCursor.X)
+                        pic.Lines[i].x1 = pic.Lines[i].x1 + Math.Abs(gizmo.moveCursor.X - pic.Lines[i].x1)*2;
+                    else
+                        pic.Lines[i].x1 = pic.Lines[i].x1 - Math.Abs(gizmo.moveCursor.X - pic.Lines[i].x1)*2;
+                    if (pic.Lines[i].x2 > gizmo.moveCursor.X)
+                        pic.Lines[i].x2 = pic.Lines[i].x2 - Math.Abs(pic.Lines[i].x2 - gizmo.moveCursor.X)*2;
+                    else
+                        pic.Lines[i].x2 = pic.Lines[i].x2 + Math.Abs(gizmo.moveCursor.X - pic.Lines[i].x2) * 2;
+                    f = true;
+                }
+            }
+            if (f)
+            {
+                CalcGizmo();
+                CreateGizmo();
+                CalculateNormals();
+            }
+        }
+
+        public void MirrorSelectedY()
+        {
+            bool f = false;
+            for (int i = 0; i < pic.CounterLines; ++i)
+            {
+                if (pic.Lines[i].selected)
+                {
+                    if (pic.Lines[i].y1 < gizmo.moveCursor.Y)
+                        pic.Lines[i].y1 = pic.Lines[i].y1 + Math.Abs(gizmo.moveCursor.Y - pic.Lines[i].y1) * 2;
+                    else
+                        pic.Lines[i].y1 = pic.Lines[i].y1 - Math.Abs(gizmo.moveCursor.Y - pic.Lines[i].y1) * 2;
+                    if (pic.Lines[i].y2 > gizmo.moveCursor.Y)
+                        pic.Lines[i].y2 = pic.Lines[i].y2 - Math.Abs(pic.Lines[i].y2 - gizmo.moveCursor.Y) * 2;
+                    else
+                        pic.Lines[i].y2 = pic.Lines[i].y2 + Math.Abs(gizmo.moveCursor.Y - pic.Lines[i].y2) * 2;
+                    f = true;
+                }
+            }
+            if (f)
+            {
+                CalcGizmo();
+                CreateGizmo();
+                CalculateNormals();
+            }
+        }
+
         public void DeleteSelected()
         {
             pic.DeleteSelectedLines();

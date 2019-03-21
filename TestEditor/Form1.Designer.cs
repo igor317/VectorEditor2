@@ -57,6 +57,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblCoeff = new System.Windows.Forms.Label();
+            this.pMirrorY = new System.Windows.Forms.PictureBox();
+            this.pMirrorX = new System.Windows.Forms.PictureBox();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -66,6 +69,8 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pMoveCenterPoint)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMirrorY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMirrorX)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -167,6 +172,8 @@
             this.ImageList.Images.SetKeyName(12, "MoveCenterPoint.bmp");
             this.ImageList.Images.SetKeyName(13, "MoveCenterPointSelected.bmp");
             this.ImageList.Images.SetKeyName(14, "Back.bmp");
+            this.ImageList.Images.SetKeyName(15, "MirrorX.bmp");
+            this.ImageList.Images.SetKeyName(16, "MirrorY.bmp");
             // 
             // pCircle
             // 
@@ -225,7 +232,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1131, 24);
@@ -314,12 +322,38 @@
             this.lblCoeff.TabIndex = 30;
             this.lblCoeff.Text = "State";
             // 
+            // pMirrorY
+            // 
+            this.pMirrorY.Location = new System.Drawing.Point(107, 489);
+            this.pMirrorY.Name = "pMirrorY";
+            this.pMirrorY.Size = new System.Drawing.Size(25, 25);
+            this.pMirrorY.TabIndex = 33;
+            this.pMirrorY.TabStop = false;
+            this.pMirrorY.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMirrorY_MouseClick);
+            // 
+            // pMirrorX
+            // 
+            this.pMirrorX.Location = new System.Drawing.Point(72, 489);
+            this.pMirrorX.Name = "pMirrorX";
+            this.pMirrorX.Size = new System.Drawing.Size(25, 25);
+            this.pMirrorX.TabIndex = 34;
+            this.pMirrorX.TabStop = false;
+            this.pMirrorX.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMirrorX_MouseClick);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.pMirrorX);
+            this.Controls.Add(this.pMirrorY);
             this.Controls.Add(this.lblCoeff);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.xOffsetB);
@@ -358,6 +392,8 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pMoveCenterPoint)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMirrorY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pMirrorX)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -392,6 +428,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblCoeff;
+        private System.Windows.Forms.PictureBox pMirrorY;
+        private System.Windows.Forms.PictureBox pMirrorX;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
 
