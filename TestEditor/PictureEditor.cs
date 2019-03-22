@@ -232,7 +232,6 @@ namespace TestEditor
                 f4 = xOffset;
                 f3 = xPos;
 
-
             }
             return f6;
         }
