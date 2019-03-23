@@ -16,6 +16,8 @@ namespace TestEditor
         private bool enableGrid = false;                                      // Включить\выключить сетку
         private bool enableMagnet = false;
         private bool rotationGrid = false;
+        private bool magnetCenter = true;
+        private bool magnetCross = true;
         private int sizeX, sizeY;
         private IpPicture pic;
         private int gridDegree = 15;
@@ -122,6 +124,13 @@ namespace TestEditor
                         cursor.Y = pic.Lines[i].y2;
                         break;
                     }
+                    if (magnetCenter)
+                        if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2)/2 - xPos) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2)/2 - yPos) <= res)
+                        {
+                            cursor.X = (pic.Lines[i].x1 + pic.Lines[i].x2) / 2;
+                            cursor.Y = (pic.Lines[i].y1 + pic.Lines[i].y2) / 2;
+                            break;
+                        }
                 }
                 else
                     break;

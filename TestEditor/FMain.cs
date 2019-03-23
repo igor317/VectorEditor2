@@ -55,14 +55,13 @@ namespace TestEditor
                                 break;
                             case EditMode.LineModeD:    // Двигаем selectPoint и рисуем LINE
                                 pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
-                                //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
                                 pictureEditor.Picture.AddLine(new Pen(Color.Black), false);
                                 break;
                             case EditMode.CircleModeM:  // Двигаем lastPoint ELLIPSE
                                 pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
                                 break;
                             case EditMode.CircleModeD:  // Двигаем selectPoint и рисуем ELLIPSE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
                                 pictureEditor.Picture.AddCircle(new Pen(Color.Black),false);
                                 break;
                             case EditMode.SelectionMode: // Двигаем selectPoint SelectionMode
