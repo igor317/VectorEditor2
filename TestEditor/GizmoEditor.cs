@@ -123,7 +123,7 @@ namespace TestEditor
 
         private void MoveCenterPoint(int xPos, int yPos)
         {
-            grid.MoveCursor(gizmo.moveCursor, xPos, yPos,false);
+            grid.MoveCursor(gizmo.moveCursor, xPos, yPos,false,null);
             CalculateNormals();
         }
 
@@ -135,10 +135,10 @@ namespace TestEditor
             float m2 = gizmo.moveCursor.Y;
             IpCursor pos = new IpCursor();
 
-            grid.MoveCursor(pos, xPos, yPos,true);
+            grid.MoveCursor(pos, xPos, yPos,true,null);
             k1 = pos.X;
             k2 = pos.Y;
-            grid.MoveCursor(gizmo.moveCursor, xPos,yPos,true);
+            grid.MoveCursor(gizmo.moveCursor, xPos,yPos,true,null);
 
             gizmo.x1 += k1 - m1;
             gizmo.x2 += k1 - m1;
@@ -179,7 +179,7 @@ namespace TestEditor
             float mR = gizmo.xScaleR.X;
             float mL = gizmo.xScaleL.X;
             IpCursor pos = new IpCursor();
-            grid.MoveCursor(pos, xPos, -1,true);
+            grid.MoveCursor(pos, xPos, -1,true,null);
             kX = pos.X;
 
             for (int i = 0; i < pic.CounterLines; ++i)
@@ -230,13 +230,13 @@ namespace TestEditor
             {
                 gizmo.width += kX - mR;
                 gizmo.x2 = gizmo.x1 + gizmo.width;
-                grid.MoveCursor(gizmo.xScaleR, xPos, -1, true);
+                grid.MoveCursor(gizmo.xScaleR, xPos, -1, true,null);
             }
             else
             {
                 gizmo.x1 += kX - mL;
                 gizmo.width = gizmo.x2 - gizmo.x1;
-                grid.MoveCursor(gizmo.xScaleL, xPos, -1, true);
+                grid.MoveCursor(gizmo.xScaleL, xPos, -1, true,null);
             }
             gizmo.ResetControllers(true, true);
         }
@@ -247,7 +247,7 @@ namespace TestEditor
             float mU = gizmo.yScaleU.Y;
             float mD = gizmo.yScaleD.Y;
             IpCursor pos = new IpCursor();
-            grid.MoveCursor(pos, -1, yPos, true);
+            grid.MoveCursor(pos, -1, yPos, true,null);
             kY = pos.Y;
 
             for (int i = 0; i < pic.CounterLines; ++i)
@@ -278,13 +278,13 @@ namespace TestEditor
             {
                 gizmo.y1 += kY - mU;
                 gizmo.height += mU - kY;
-                grid.MoveCursor(gizmo.yScaleU, -1, yPos, true);
+                grid.MoveCursor(gizmo.yScaleU, -1, yPos, true,null);
             }
             else
             {
                 gizmo.height += kY - mD;
                 gizmo.y2 = gizmo.y1 + gizmo.height;
-                grid.MoveCursor(gizmo.yScaleD, -1, yPos, true);
+                grid.MoveCursor(gizmo.yScaleD, -1, yPos, true,null);
             }
             gizmo.ResetControllers(true,true);
         }
@@ -299,9 +299,9 @@ namespace TestEditor
 
         private void CalculateAngles(float xPos, float yPos)
         {
-            float h = (gizmo.moveCursor.X*scaleCoeff-xOff) - xPos;
-            float w = (gizmo.moveCursor.Y*scaleCoeff-yOff) - yPos;
-            gizmo.cursorAngle = (float)Math.Atan2(-h, -w);
+            float w = (gizmo.moveCursor.X*scaleCoeff-xOff) - xPos;
+            float h = (gizmo.moveCursor.Y*scaleCoeff-yOff) - yPos;
+            gizmo.cursorAngle = (float)Math.Atan2(-w, -h);
             if (grid.EnableRotationGrid)
                 gizmo.cursorAngle = grid.GridRotation(gizmo.cursorAngle);
         }

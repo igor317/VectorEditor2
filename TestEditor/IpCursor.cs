@@ -99,12 +99,21 @@ namespace TestEditor
 
         public static bool operator !=(IpCursor c1, IpCursor c2)
         {
+            if (ReferenceEquals(c1, null) && ReferenceEquals(c2, null))
+                return false;
+            else
+                if (ReferenceEquals(c1, null) || ReferenceEquals(c2, null))
+                    return true;
             if (c1.X != c2.X && c1.Y != c2.Y)
                 return true;
             return false;
         }
         public static bool operator ==(IpCursor c1, IpCursor c2)
         {
+            if (ReferenceEquals(c1, null) && ReferenceEquals(c2, null))
+                return true;
+            if ((object)c2 == null && (object)c1 == null)
+                return true;
             if (c1.X == c2.X && c1.Y != c2.Y)
                 return true;
             return false;

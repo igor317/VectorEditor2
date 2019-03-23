@@ -65,7 +65,6 @@ namespace TestEditor
         {
             x = new float[res];
             y = new float[res];
-            //ReCalculatePoints();
             float delta = (float)Math.PI * 2 / res;
             float t = 0;
             float xMin = 9999;

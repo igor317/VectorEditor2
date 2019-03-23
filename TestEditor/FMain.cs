@@ -50,22 +50,23 @@ namespace TestEditor
                     case MouseButtons.Left:
                         switch (pictureEditor.EditMode)
                         {
-                            case EditMode.LineModeM:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
+                            case EditMode.LineModeM:    // Двигаем lastPoint LINE
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
                                 break;
-                            case EditMode.LineModeD:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
+                            case EditMode.LineModeD:    // Двигаем selectPoint и рисуем LINE
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
+                                //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
                                 pictureEditor.Picture.AddLine(new Pen(Color.Black), false);
                                 break;
-                            case EditMode.CircleModeM:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
+                            case EditMode.CircleModeM:  // Двигаем lastPoint ELLIPSE
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
                                 break;
-                            case EditMode.CircleModeD:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
+                            case EditMode.CircleModeD:  // Двигаем selectPoint и рисуем ELLIPSE
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
                                 pictureEditor.Picture.AddCircle(new Pen(Color.Black),false);
                                 break;
-                            case EditMode.SelectionMode:
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false);
+                            case EditMode.SelectionMode: // Двигаем selectPoint SelectionMode
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false,null);
                                 pictureEditor.GizmoEditor.FindSelectionLines();
                                 break;
                         }
@@ -94,7 +95,7 @@ namespace TestEditor
                     {
                         case EditMode.ReadyToSelect:
                             pictureEditor.SetEditMode(EditMode.SelectionMode);
-                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false);
+                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
                             break;
                     }
                     break;
@@ -134,7 +135,6 @@ namespace TestEditor
                     switch (pictureEditor.EditMode)
                     {
                         case EditMode.LineModeM:
-                            //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y,false);
                             pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
                             pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
                             pictureEditor.SetEditMode(EditMode.LineModeD);
@@ -143,7 +143,6 @@ namespace TestEditor
                             pictureEditor.SetEditMode(EditMode.LineModeM);
                             break;
                         case EditMode.CircleModeM:
-                            //pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, pictureEditor.LastCursor.X, pictureEditor.LastCursor.Y, false);
                             pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
                             pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
                             pictureEditor.SetEditMode(EditMode.CircleModeD);

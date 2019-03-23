@@ -190,42 +190,56 @@ namespace TestEditor
             }
         }
 
-        public void MoveCursor(IpCursor cursor, float xPos, float yPos, bool ignoreSelected)
+        public void MoveCursor(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, IpCursor pivot)
         {
             if (EnableMagnet)
+            {
                 if (ignoreSelected)
                     MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, true, 5);
                 else
                     MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, false, 5);
+                return;
+            }
             if (EnableGrid)
             {
                 if (xPos != -1)
                     GridXPosition(cursor, (xPos + xOffset) / ScaleCoeff);
                 if (yPos != -1)
                     GridYPosition(cursor, (yPos + yOffset) / ScaleCoeff);
+                return;
             }
-            if (!EnableMagnet && !EnableGrid)
+
+            if (rotationGrid && pivot != null)
             {
-                if (xPos != -1)
-                {
-                    if (xPos < sizeX)
-                        cursor.X = (xPos+ xOffset) /ScaleCoeff;
-                    if (xPos >= sizeX)
-                        cursor.X = (sizeX+ xOffset) / ScaleCoeff;
-                    if (xPos < 0)
-                        cursor.X = 0;
-                }
-                if (yPos != -1)
-                {
-                    if (yPos < sizeY)
-                        cursor.Y = (yPos+ yOffset) / ScaleCoeff;
-                    if (yPos >= sizeY)
-                        cursor.Y = (sizeY+ yOffset) / ScaleCoeff;
-                    if (yPos < 0)
-                        cursor.Y = 0;
-                }
+                float xp = pivot.X * ScaleCoeff - xOff - xPos;
+                float yp = pivot.Y * ScaleCoeff - yoff - yPos;
+                float raduis = (float)Math.Sqrt(Math.Pow(xp, 2) + Math.Pow(yp, 2));
+                float angle = (float)Math.Atan2(-xp, -yp);
+                angle = GridRotation(angle);
+                cursor.X = pivot.X + raduis / ScaleCoeff * (float)Math.Sin(angle);
+                cursor.Y = pivot.Y + raduis / ScaleCoeff * (float)Math.Cos(angle);
+                return;
+            }
+            if (xPos != -1)
+            {
+                if (xPos < sizeX)
+                    cursor.X = (xPos + xOffset) / ScaleCoeff;
+                if (xPos >= sizeX)
+                    cursor.X = (sizeX + xOffset) / ScaleCoeff;
+                if (xPos < 0)
+                    cursor.X = 0;
+            }
+            if (yPos != -1)
+            {
+                if (yPos < sizeY)
+                    cursor.Y = (yPos + yOffset) / ScaleCoeff;
+                if (yPos >= sizeY)
+                    cursor.Y = (sizeY + yOffset) / ScaleCoeff;
+                if (yPos < 0)
+                    cursor.Y = 0;
             }
         }
+
         public float GridRotation(float alpha)
         {
             float angle = 0;
