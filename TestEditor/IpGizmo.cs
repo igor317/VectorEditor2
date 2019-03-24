@@ -43,7 +43,6 @@ namespace TestEditor
         private bool scaleXYUR = false;
         private bool rotatePic = false;
         private bool mCenterPoint = false;
-        private bool zeroGizmo = false;
         private IpPicture pic;
         private IpGrid grid;
         #endregion
@@ -146,10 +145,10 @@ namespace TestEditor
                 x2 = maxX;
                 y1 = minY;
                 y2 = maxY;
-                zeroGizmo = false;
+                //zeroGizmo = false;
             }
-            else
-                zeroGizmo = true;
+            //else
+                //zeroGizmo = true;
         }
 
         private void MoveCenterPoint(int xPos, int yPos)
@@ -453,7 +452,6 @@ namespace TestEditor
             height = 0;
             radius = 0;
             DefaultControllerPosition(true, true);
-            zeroGizmo = true;
         }
 
         public void ResetGizmo()
@@ -467,8 +465,6 @@ namespace TestEditor
 
         public void DrawGizmo(Graphics graph)
         {
-            if (zeroGizmo)
-                return;
             if (showGizmo)
                 graph.DrawRectangle(gizmoPen, x1 * pic.ScaleCoefficient - pic.XOffset, y1 * pic.ScaleCoefficient - pic.YOffset, width * pic.ScaleCoefficient, height * pic.ScaleCoefficient);
 

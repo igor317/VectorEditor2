@@ -19,7 +19,8 @@ namespace TestEditor
         #region VARIABLES
         private Pen selectionPen = new Pen(Color.Red);
         private GizmoMode gizmoMode;
-        private Gizmo gizmo;
+        private Gizmo gizmoMixed;
+        private GizmoLine gizmoLine;
         private SelectRect selectRect;
         private IpGrid grid;
         private IpPicture pic;
@@ -39,13 +40,13 @@ namespace TestEditor
         }
         public bool MoveCenterPointCursor
         {
-            set { gizmo.MoveCenterPointCursor = value; }
+            set { gizmoMixed.MoveCenterPointCursor = value; }
             get
             {
                 switch (gizmoMode)
                 {
                     case GizmoMode.MixedGizmo:
-                        return gizmo.MoveCenterPointCursor;
+                        return gizmoMixed.MoveCenterPointCursor;
                 }
                 return false;
             }
@@ -87,7 +88,8 @@ namespace TestEditor
         {
             Color color = Color.FromArgb(50, 0, 250, 50);
             SolidBrush brush = new SolidBrush(color);
-            gizmo = new Gizmo(pic,grid);
+            gizmoMixed = new Gizmo(pic,grid);
+            gizmoLine = new GizmoLine(pic, grid);
             selectRect = new SelectRect(pic,brush);
             this.pic = pic;
             this.grid = grid;
@@ -98,19 +100,26 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.DrawGizmo(graph);
+                    gizmoMixed.DrawGizmo(graph);
+                    break;
+                case GizmoMode.LineGizmo:
+                    gizmoLine.DrawGizmo(graph);
                     break;
             }
         }
 
         public void CreateGizmo()
         {
-            gizmo.Reset();
+            gizmoMixed.Reset();
+            gizmoLine.Reset();
             DefineGizmoMode();
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.CreateGizmo();
+                    gizmoMixed.CreateGizmo();
+                    break;
+                case GizmoMode.LineGizmo:
+                    gizmoLine.CreateGizmo();
                     break;
             }
 
@@ -121,7 +130,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.Control(xPos, yPos);
+                    gizmoMixed.Control(xPos, yPos);
                     break;
             }
         }
@@ -131,7 +140,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.CheckSelectedController(xPos, yPos);
+                    gizmoMixed.CheckSelectedController(xPos, yPos);
                     break;
             }
         }
@@ -143,7 +152,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.ResetGizmo();
+                    gizmoMixed.ResetGizmo();
                     break;
             }
         }
@@ -153,7 +162,7 @@ namespace TestEditor
             switch(gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.DefaultControllerPosition(true, true);
+                    gizmoMixed.DefaultControllerPosition(true, true);
                     break;
             }
 
@@ -164,7 +173,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.MirrorSelectedX();
+                    gizmoMixed.MirrorSelectedX();
                     break;
             }
         }
@@ -173,7 +182,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.MirrorSelectedY();
+                    gizmoMixed.MirrorSelectedY();
                     break;
             }
         }
@@ -182,7 +191,7 @@ namespace TestEditor
             switch (gizmoMode)
             {
                 case GizmoMode.MixedGizmo:
-                    gizmo.ResetControllers();
+                    gizmoMixed.ResetControllers();
                     break;
             }
         }
@@ -190,7 +199,7 @@ namespace TestEditor
         {
             pic.DeleteSelectedLines();
             pic.DeleteSelectedCircles();
-            ResetGizmo();
+            gizmoMixed.Reset();
         }
 
         #endregion
