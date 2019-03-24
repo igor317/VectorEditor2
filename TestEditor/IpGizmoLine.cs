@@ -44,7 +44,7 @@ namespace TestEditor
             this.pic = pic;
             this.grid = grid;
             gizmoPen = new Pen(Color.Green);
-            controllerPen = new Pen(Color.Violet);
+            controllerPen = new Pen(Color.Blue);
             moveCursor = new IpCursor(5, controllerPen);
             p1Cursor = new IpCursor(5, controllerPen);
             p2Cursor = new IpCursor(5, controllerPen);
@@ -74,9 +74,12 @@ namespace TestEditor
 
         public void DrawGizmo(Graphics graph)
         {
-            moveCursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-            p1Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-            p2Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+            if (showGizmo)
+            {
+                moveCursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+                p1Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+                p2Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+            }
         }
 
         public void Reset()

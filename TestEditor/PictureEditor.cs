@@ -191,7 +191,10 @@ namespace TestEditor
         {
             editMode = mode;
             if (mode != EditMode.ReadyToSelect)
+            {
                 gizmoEditor.ResetGizmo();
+            }
+
             if (mode == EditMode.CircleModeM || mode == EditMode.LineModeM)
                 SetCursorSettings(lastCursor, 5, new Pen(Color.Green));
             if (mode == EditMode.CircleModeD || mode == EditMode.LineModeD)
