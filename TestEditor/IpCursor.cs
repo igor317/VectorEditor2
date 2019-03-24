@@ -91,8 +91,6 @@ namespace TestEditor
             {
                 graph.DrawLine(Pen, (X - Size)*scale - xOffset, Y*scale - yOffset, (X + Size)*scale - xOffset, Y*scale - yOffset);
                 graph.DrawLine(Pen, X*scale - xOffset, (Y - Size)*scale - yOffset, X*scale - xOffset, (Y + Size)*scale - yOffset);
-                //graph.DrawLine(Pen, X - Size, Y, X + Size, Y);
-                //graph.DrawLine(Pen, X, Y - Size, X, Y + Size);
             }
         }
         #endregion

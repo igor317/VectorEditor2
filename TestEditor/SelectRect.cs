@@ -7,17 +7,37 @@ using System.Drawing;
 
 namespace TestEditor
 {
-    public struct SelectRect
+    class SelectRect
     {
-        public float x1;
-        public float y1;
-        public float x2;
-        public float y2;
-        public float width;
-        public float height;
-        public SolidBrush brush;
+        private float x1;
+        private float y1;
+        private float x2;
+        private float y2;
+        private float width;
+        private float height;
+        private SolidBrush brush;
+        private IpPicture pic;
 
-        public SelectRect(SolidBrush brush)
+        private void ClearSelectionArray()
+        {
+            for (int i = 0; i < pic.CounterLines; ++i)
+                pic.Lines[i].selected = false;
+            for (int i = 0; i < pic.CounterEllipses; ++i)
+                pic.Ellipses[i].selected = false;
+        }
+
+        public void ResetRect()
+        {
+            x1 = 0;
+            y1 = 0;
+            x2 = 0;
+            y2 = 0;
+            width = 0;
+            height = 0;
+            ClearSelectionArray();
+        }
+
+        public SelectRect(IpPicture pic,SolidBrush brush)
         {
             x1 = 0;
             y1 = 0;
@@ -26,16 +46,75 @@ namespace TestEditor
             width = 0;
             height = 0;
             this.brush = brush;
+            this.pic = pic;
         }
 
-        public void ResetSelectRect()
+        public void DrawSelectionRectangle(Graphics graph,IpCursor selectCursor,IpCursor lastCursor)
         {
-            x1 = 0;
-            y1 = 0;
-            x2 = 0;
-            y2 = 0;
-            width = 0;
-            height = 0;
+            if (selectCursor.X >= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Правый нижний
+            {
+                x1 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y1 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x2 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y2 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+            }
+            if (selectCursor.X <= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Левый нижний
+            {
+                x1 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y1 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x2 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y2 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+
+            }
+            if (selectCursor.X >= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Правый верхний
+            {
+                x1 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y1 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x2 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y2 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+            }
+            if (selectCursor.X <= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Левый верхний
+            {
+                x1 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y1 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x2 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
+                y2 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+            }
+            width = x2 - x1;
+            height = y2 - y1;
+
+            graph.FillRectangle(brush, x1, y1, width, height);
         }
+
+        public void SelectLines()
+        {
+            ClearSelectionArray();
+            for (int i = 0; i < pic.CounterLines + 1; ++i)
+            {
+                if (pic.Lines[i] == 0)
+                    break;
+                if (pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
+                    && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
+                {
+                    pic.Lines[i].selected = true;
+                }
+            }
+            for (int i = 0; i < pic.CounterEllipses + 1; ++i)
+            {
+                if (pic.Ellipses[i] == 0)
+                    break;
+                if (pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
+                    && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
+                {
+                    pic.Ellipses[i].selected = true;
+                }
+            }
+
+        }
+
     }
 }

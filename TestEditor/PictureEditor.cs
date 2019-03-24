@@ -111,7 +111,7 @@ namespace TestEditor
         {
             if (editMode == EditMode.SelectionMode)
             {
-                gizmoEditor.DrawSelectionRectangle(gBuff);
+                gizmoEditor.SelectRect.DrawSelectionRectangle(gBuff,selectCursor,lastCursor);
             }
         }
 
@@ -152,7 +152,7 @@ namespace TestEditor
 
             pic = new IpPicture(SelectCursor, LastCursor, sizeX,sizeY);
             ipGrid = new IpGrid(sizeX, sizeY, Picture);
-            gizmoEditor = new GizmoEditor(Picture,Grid, SelectCursor, LastCursor);
+            gizmoEditor = new GizmoEditor(Picture,Grid);
 
             ClearPicture();
             bmp = new Bitmap(sizeX, sizeY, graph);
@@ -187,14 +187,6 @@ namespace TestEditor
             gizmoEditor.ResetGizmo();
         }
 
-        public void FindSelectionLines()
-        {
-            if (editMode == EditMode.SelectionMode)
-            {
-                gizmoEditor.FindSelectionLines();
-            }
-        }
-
         public void SetEditMode(EditMode mode)
         {
             editMode = mode;
@@ -211,8 +203,8 @@ namespace TestEditor
             this.yOffset = yOffset;
             Grid.xOffset = xOffset;
             Grid.yOffset = yOffset;
-            gizmoEditor.xOffset = xOffset;
-            gizmoEditor.yOffset = yOffset;
+            pic.XOffset = xOffset;
+            pic.YOffset = yOffset;
         }
 
         public float IncreaseScaleCoeff(int xPos,int yPos)
@@ -221,7 +213,6 @@ namespace TestEditor
             {
                 scaleCoeff += deltaScale;
                 pic.ScaleCoefficient = scaleCoeff;
-                gizmoEditor.ScaleCoefficient = scaleCoeff;
                 Grid.ScaleCoeff = scaleCoeff;
                 f6 = xPos * deltaScale;
                 f1 = xPos * deltaScale + xOffset;
@@ -242,7 +233,6 @@ namespace TestEditor
             if (scaleCoeff < minScale)
                 scaleCoeff = minScale;
             pic.ScaleCoefficient = scaleCoeff;
-            gizmoEditor.ScaleCoefficient = scaleCoeff;
             Grid.ScaleCoeff = scaleCoeff;
             if (scaleCoeff == minScale)
             {

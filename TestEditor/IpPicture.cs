@@ -26,6 +26,8 @@ namespace TestEditor
         private VectorPicture vectorPicture;
         private int sizeX, sizeY;
         private float scaleCoeff = 1;
+        private float xOffset = 0;
+        private float yOffset = 0;
 
         #endregion
 
@@ -52,6 +54,17 @@ namespace TestEditor
             set { scaleCoeff = value; }
             get { return scaleCoeff; }
         }
+        public float XOffset
+        {
+            set { xOffset = value; }
+            get { return xOffset; }
+        }
+        public float YOffset
+        {
+            set { yOffset = value; }
+            get { return yOffset; }
+        }
+
         #endregion
 
         #region PUBLIC METHODS
