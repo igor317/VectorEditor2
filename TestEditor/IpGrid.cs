@@ -16,9 +16,9 @@ namespace TestEditor
         private bool enableGrid = false;                                      // Включить\выключить сетку
         private bool enableMagnet = false;
         private bool rotationGrid = false;
-        private bool magnetCenter = true;
+        private bool magnetCenter = false;
         private bool magnetCross = true;
-        private bool magnetPoints = true;
+        private bool magnetPoints = false;
         private int sizeX, sizeY;
         private IpPicture pic;
         private int gridDegree = 15;
@@ -142,7 +142,6 @@ namespace TestEditor
                         float y2 = pic.Lines[i].y2;
                         for (int k = i + 1; k < pic.CounterLines; ++k)
                         {
-
                             float x3 = pic.Lines[k].x1;
                             float x4 = pic.Lines[k].x2;
                             float y3 = pic.Lines[k].y1;
@@ -152,6 +151,11 @@ namespace TestEditor
                             {
                                 float xP = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / delta;
                                 float yP = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / delta;
+                                float t1 = (x2 - x1 != 0) ? Math.Abs((xP - x1) / (x2 - x1)) : 0;
+                                float t2 = (x4 - x3 != 0) ? Math.Abs((xP - x3) / (x4 - x3)) : 0;
+                                float t3 = (y2 - y1 != 0) ? Math.Abs((yP - y1) / (y2 - y1)) : 0;
+                                float t4 = (y4 - y3 != 0) ? Math.Abs((yP - y3) / (y4 - y3)) : 0;
+                                if (t1 <= 1 && t2 <= 1 && t3 <= 1 && t4 <= 1)
                                 if (Math.Abs(xP - xPos) <= res && Math.Abs(yP - yPos) <= res)
                                 {
                                     cursor.X = xP;
@@ -159,8 +163,6 @@ namespace TestEditor
                                     break;
                                 }
                             }
-                            else
-                                continue;
                         }
 
                     }
