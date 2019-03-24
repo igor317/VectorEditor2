@@ -18,6 +18,7 @@ namespace TestEditor
         private bool rotationGrid = false;
         private bool magnetCenter = true;
         private bool magnetCross = true;
+        private bool magnetPoints = true;
         private int sizeX, sizeY;
         private IpPicture pic;
         private int gridDegree = 15;
@@ -111,18 +112,20 @@ namespace TestEditor
                         if (pic.Lines[i].selected)
                             continue;
                     }
-                    
-                    if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
+                    if (magnetPoints)
                     {
-                        cursor.X = pic.Lines[i].x1;
-                        cursor.Y = pic.Lines[i].y1;
-                        break;
-                    }
-                    if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
-                    {
-                        cursor.X = pic.Lines[i].x2;
-                        cursor.Y = pic.Lines[i].y2;
-                        break;
+                        if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
+                        {
+                            cursor.X = pic.Lines[i].x1;
+                            cursor.Y = pic.Lines[i].y1;
+                            break;
+                        }
+                        if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
+                        {
+                            cursor.X = pic.Lines[i].x2;
+                            cursor.Y = pic.Lines[i].y2;
+                            break;
+                        }
                     }
                     if (magnetCenter)
                         if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2)/2 - xPos) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2)/2 - yPos) <= res)
@@ -131,6 +134,36 @@ namespace TestEditor
                             cursor.Y = (pic.Lines[i].y1 + pic.Lines[i].y2) / 2;
                             break;
                         }
+                    if (magnetCross && pic.CounterLines > 1)
+                    {
+                        float x1 = pic.Lines[i].x1;
+                        float x2 = pic.Lines[i].x2;
+                        float y1 = pic.Lines[i].y1;
+                        float y2 = pic.Lines[i].y2;
+                        for (int k = i + 1; k < pic.CounterLines; ++k)
+                        {
+
+                            float x3 = pic.Lines[k].x1;
+                            float x4 = pic.Lines[k].x2;
+                            float y3 = pic.Lines[k].y1;
+                            float y4 = pic.Lines[k].y2;
+                            float delta = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+                            if (delta != 0)
+                            {
+                                float xP = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / delta;
+                                float yP = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / delta;
+                                if (Math.Abs(xP - xPos) <= res && Math.Abs(yP - yPos) <= res)
+                                {
+                                    cursor.X = xP;
+                                    cursor.Y = yP;
+                                    break;
+                                }
+                            }
+                            else
+                                continue;
+                        }
+
+                    }
                 }
                 else
                     break;
