@@ -31,6 +31,7 @@ namespace TestEditor
         private bool rotatePic = false;
         private float scaleCoeff = 1;
         private float xOff = 0,yOff = 0;
+        private int countSelected = 0;
         #endregion
 
         #region GET&GET METHODS
@@ -68,6 +69,7 @@ namespace TestEditor
     
         private void CalcGizmo()
         {
+            countSelected = 0;
             minX = 10000;
             maxX = 0;
             minY = 10000;
@@ -76,6 +78,7 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i].selected)
                 {
+                    countSelected++;
                     if (pic.Ellipses[i].x1 < minX)
                         minX = pic.Ellipses[i].x1;
                     if (pic.Ellipses[i].x2 < minX)
@@ -99,6 +102,7 @@ namespace TestEditor
             {
                 if (pic.Lines[i].selected)
                 {
+                    countSelected++;
                     if (pic.Lines[i].x1 < minX)
                         minX = pic.Lines[i].x1;
                     if (pic.Lines[i].x2 < minX)
@@ -445,8 +449,11 @@ namespace TestEditor
             if (!f && !k)
                 return;
             CalcGizmo();
-            gizmo = new Gizmo(minX, minY, maxX, maxY);
-            CalculateNormals();
+            if (countSelected > 1)
+            {
+                gizmo = new Gizmo(minX, minY, maxX, maxY);
+                CalculateNormals();
+            }
         }
 
         public void ControlGizmo(int xPos,int yPos)

@@ -62,6 +62,7 @@
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
     <Compile Include="IpGizmo.cs" />
+    <Compile Include="IpGizmoLine.cs" />
     <Compile Include="IpGrid.cs" />
     <Compile Include="IpLine.cs" />
     <Compile Include="IpPicture.cs" />

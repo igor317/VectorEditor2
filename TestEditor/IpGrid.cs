@@ -14,11 +14,11 @@ namespace TestEditor
         private int minCountGridLines = 2;                                    // Минимальное количество линий в сетке
         private int maxCountGridLines = 50;                                   // Максимальное количество линий в сетке
         private bool enableGrid = false;                                      // Включить\выключить сетку
-        private bool enableMagnet = false;
-        private bool rotationGrid = false;
-        private bool magnetCenter = false;
-        private bool magnetCross = true;
-        private bool magnetPoints = false;
+        private bool enableMagnet = false;                                    // Включить\выключить магнит
+        private bool rotationGrid = false;                                    // Включить\выключить магнит поворота
+        private bool magnetCenter = true;                                     // Включить\выключить магнит к центру линии
+        private bool magnetCross = true;                                      // Включить\выключить магнит к пересечениям линий
+        private bool magnetPoints = true;                                     // Включить\выключить магнит к точкам линий
         private int sizeX, sizeY;
         private IpPicture pic;
         private int gridDegree = 15;
