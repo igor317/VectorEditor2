@@ -9,24 +9,12 @@ namespace TestEditor
 {
     class GizmoEditor
     {
-        private enum GizmoMode
-        {
-            LineGizmo = 0,
-            EllipseGizmo,
-            MixedGizmo,
-        }
-
         #region VARIABLES
         private Pen selectionPen = new Pen(Color.Red);
-        private GizmoMode gizmoMode;
-        private Gizmo gizmoMixed;
-        private GizmoLine gizmoLine;
+        private IpGizmo gizmo;
         private SelectRect selectRect;
         private IpGrid grid;
         private IpPicture pic;
-
-        private int countSelectedLines = 0;
-        private int countSelectedEllipses = 0;
         #endregion
 
         #region GET&GET METHODS
@@ -38,45 +26,31 @@ namespace TestEditor
         {
             get { return selectRect; }
         }
-        public bool MoveCenterPointCursor
-        {
-            set { gizmoMixed.MoveCenterPointCursor = value; }
-            get
-            {
-                switch (gizmoMode)
-                {
-                    case GizmoMode.MixedGizmo:
-                        return gizmoMixed.MoveCenterPointCursor;
-                }
-                return false;
-            }
-        }
         #endregion
 
         #region PRIVATE METHODS
         private void DefineGizmoMode()
         {
-            countSelectedLines = 0;
-            countSelectedEllipses = 0;
+            int countSelectedLines = 0;
+            int countSelectedEllipses = 0;
             for (int i = 0; i < pic.CounterLines; ++i)
                 if (pic.Lines[i].selected)
                     countSelectedLines++;
             for (int i = 0; i < pic.CounterEllipses; ++i)
                 if (pic.Ellipses[i].selected)
                     countSelectedEllipses++;
-            if ((countSelectedLines == 1 && countSelectedEllipses == 1) || countSelectedLines > 1 || countSelectedEllipses > 1)
+            if ((countSelectedLines == 1 && countSelectedEllipses == 1) || countSelectedLines > 1 || countSelectedEllipses > 1) // GIZMO MIXED
             {
-                gizmoMode = GizmoMode.MixedGizmo;
+                gizmo = new GizmoMixed(pic, grid);
                 return;
             }
-            if (countSelectedLines == 1 && countSelectedEllipses == 0)
+            if (countSelectedLines == 1 && countSelectedEllipses == 0) // GIZMO LINE
             {
-                gizmoMode = GizmoMode.LineGizmo;
+                gizmo = new GizmoLine(pic, grid);
                 return;
             }
-            if (countSelectedLines == 0 && countSelectedEllipses == 1)
+            if (countSelectedLines == 0 && countSelectedEllipses == 1)  // GIZMO ELLIPSE
             {
-                gizmoMode = GizmoMode.EllipseGizmo;
                 return;
             }
 
@@ -88,8 +62,6 @@ namespace TestEditor
         {
             Color color = Color.FromArgb(50, 0, 250, 50);
             SolidBrush brush = new SolidBrush(color);
-            gizmoMixed = new Gizmo(pic,grid);
-            gizmoLine = new GizmoLine(pic, grid);
             selectRect = new SelectRect(pic,brush);
             this.pic = pic;
             this.grid = grid;
@@ -97,109 +69,53 @@ namespace TestEditor
 
         public void DrawGizmo(Graphics graph)
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.DrawGizmo(graph);
-                    break;
-                case GizmoMode.LineGizmo:
-                    gizmoLine.DrawGizmo(graph);
-                    break;
-            }
+            if (gizmo != null)
+                gizmo.DrawGizmo(graph);
         }
 
         public void CreateGizmo()
         {
-            gizmoMixed.Reset();
-            gizmoLine.Reset();
             DefineGizmoMode();
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.CreateGizmo();
-                    break;
-                case GizmoMode.LineGizmo:
-                    gizmoLine.CreateGizmo();
-                    break;
-            }
-
         }
 
         public void ControlGizmo(int xPos, int yPos)
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.Control(xPos, yPos);
-                    break;
-            }
+            gizmo.Control(xPos, yPos);
         }
 
         public void CheckSelectedController(int xPos, int yPos)
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.CheckSelectedController(xPos, yPos);
-                    break;
-            }
+            gizmo.CheckSelectedController(xPos, yPos);
         }
-
         
         public void ResetGizmo()
         {
             selectRect.ResetRect();
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.ResetGizmo();
-                    break;
-            }
+            gizmo = null;
         }
 
         public void ResetCenterPoint()
         {
-            switch(gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.DefaultControllerPosition(true, true);
-                    break;
-            }
-
+            gizmo.DefaultControllerPosition();
         }
 
         public void MirrorSelectedX()
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.MirrorSelectedX();
-                    break;
-            }
+            gizmo.MirrorSelectedX();
         }
         public void MirrorSelectedY()
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.MirrorSelectedY();
-                    break;
-            }
+            gizmo.MirrorSelectedY();
         }
         public void ResetControllers()
         {
-            switch (gizmoMode)
-            {
-                case GizmoMode.MixedGizmo:
-                    gizmoMixed.ResetControllers();
-                    break;
-            }
+            gizmo.ResetControllers();
         }
         public void DeleteSelected()
         {
             pic.DeleteSelectedLines();
             pic.DeleteSelectedCircles();
-            gizmoMixed.Reset();
+            gizmo = null;
         }
 
         #endregion

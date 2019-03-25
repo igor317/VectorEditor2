@@ -218,7 +218,7 @@ namespace TestEditor
             pRotationMagnet.Image = (pictureEditor.Grid.EnableRotationGrid) ? ImageList.Images[9] : ImageList.Images[8];
             pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
             pGrid.Image = (pictureEditor.Grid.EnableGrid) ? ImageList.Images[11] : ImageList.Images[10];
-            pMoveCenterPoint.Image = (pictureEditor.GizmoEditor.MoveCenterPointCursor) ? ImageList.Images[13] : ImageList.Images[12];
+            //pMoveCenterPoint.Image = (pictureEditor.GizmoEditor.MoveCenterPointCursor) ? ImageList.Images[13] : ImageList.Images[12];
             pSelectMode.Image = (pictureEditor.EditMode == EditMode.ReadyToSelect) ? ImageList.Images[1] : ImageList.Images[0];
 
 
@@ -366,8 +366,8 @@ namespace TestEditor
 
         private void pMoveCenterPoint_MouseClick(object sender, MouseEventArgs e)
         {
-            pictureEditor.GizmoEditor.MoveCenterPointCursor = (!pictureEditor.GizmoEditor.MoveCenterPointCursor) ? pictureEditor.GizmoEditor.MoveCenterPointCursor = true
-                : pictureEditor.GizmoEditor.MoveCenterPointCursor = false;
+            //pictureEditor.GizmoEditor.MoveCenterPointCursor = (!pictureEditor.GizmoEditor.MoveCenterPointCursor) ? pictureEditor.GizmoEditor.MoveCenterPointCursor = true
+            //    : pictureEditor.GizmoEditor.MoveCenterPointCursor = false;
             DrawMode();
         }
 

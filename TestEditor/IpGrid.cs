@@ -142,6 +142,8 @@ namespace TestEditor
                         float y2 = pic.Lines[i].y2;
                         for (int k = i + 1; k < pic.CounterLines; ++k)
                         {
+                            if (pic.Lines[k].selected && ignoreSelected)
+                                continue;
                             float x3 = pic.Lines[k].x1;
                             float x4 = pic.Lines[k].x2;
                             float y3 = pic.Lines[k].y1;
