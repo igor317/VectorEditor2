@@ -63,35 +63,42 @@ namespace TestEditor
             k2 = pos.Y;
             grid.MoveCursor(moveCursor, xPos, yPos, true, null);
 
+
             pic.Lines[index].x1 += k1 - m1;
             pic.Lines[index].x2 += k1 - m1;
             pic.Lines[index].y1 += k2 - m2;
             pic.Lines[index].y2 += k2 - m2;
             DefaultControllerPosition();
         }
-        private void MovePoint(float xPos,float yPos,IpCursor cursor,bool fstPoint)
+        private void MovePoint1(float xPos,float yPos)
         {
             float k1 = xPos;
             float k2 = yPos;
-            float m1 = cursor.X;
-            float m2 = cursor.Y;
-            IpCursor pos = new IpCursor();
+            float m1 = p1Cursor.X;
+            float m2 = p1Cursor.Y;
 
-            grid.MoveCursor(pos, xPos, yPos, true, null);
-            k1 = pos.X;
-            k2 = pos.Y;
-            grid.MoveCursor(cursor, xPos, yPos, true, null);
+            grid.MoveCursor(p1Cursor, xPos, yPos, true, p2Cursor);
+            k1 = p1Cursor.X;
+            k2 = p1Cursor.Y;
 
-            if (fstPoint)
-            {
-                pic.Lines[index].x1 += k1 - m1;
-                pic.Lines[index].y1 += k2 - m2;
-            }
-            else
-            {
-                pic.Lines[index].x2 += k1 - m1;
-                pic.Lines[index].y2 += k2 - m2;
-            }
+            pic.Lines[index].x1 += k1 - m1;
+            pic.Lines[index].y1 += k2 - m2;
+            DefaultControllerPosition();
+        }
+
+        private void MovePoint2(float xPos, float yPos)
+        {
+            float k1 = xPos;
+            float k2 = yPos;
+            float m1 = p2Cursor.X;
+            float m2 = p2Cursor.Y;
+
+            grid.MoveCursor(p2Cursor, xPos, yPos, true, p1Cursor);
+            k1 = p2Cursor.X;
+            k2 = p2Cursor.Y;
+
+            pic.Lines[index].x2 += k1 - m1;
+            pic.Lines[index].y2 += k2 - m2;
             DefaultControllerPosition();
         }
 
@@ -146,9 +153,9 @@ namespace TestEditor
             if (dragSelected)
                 MoveSelected(xPos, yPos);
             if (p1CursorSelected)
-                MovePoint(xPos, yPos, p1Cursor, true);
+                MovePoint1(xPos, yPos);
             if (p2CursorSelected)
-                MovePoint(xPos, yPos, p2Cursor, false);
+                MovePoint2(xPos, yPos);
         }
 
         public override void CheckSelectedController(int xPos, int yPos)
