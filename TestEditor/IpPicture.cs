@@ -16,8 +16,10 @@ namespace TestEditor
         private LinePic[] lines;
         private IpSpline[] splines;
         private Ellipse[] circles;
+
         private LinePic[] bufferLines;
         private Ellipse[] bufferCircles;
+        private IpSpline[] bufferSplines;
         private int counterLines = countAddingLines;
         private int counterCircles = countAddingLines;
         private int counterSplines = countAddingLines;
@@ -265,7 +267,7 @@ namespace TestEditor
 
             for (int i = 0; i < lines.Length; ++i)
             {
-                if (counterLines >= counterLines - 1)
+                if (counter >= counterLines - 1)
                 {
                     counterLines += countAddingLines;
                     Array.Resize(ref bufferLines, counterLines);
@@ -303,7 +305,7 @@ namespace TestEditor
 
             for (int i = 0; i < circles.Length; ++i)
             {
-                if (counterCircles >= counterCircles - 1)
+                if (counterC >= counterCircles - 1)
                 {
                     counterCircles += countAddingLines;
                     Array.Resize(ref bufferCircles, counterCircles);
@@ -322,6 +324,44 @@ namespace TestEditor
             Array.Copy(bufferCircles, circles, bufferCircles.Length);
             Array.Clear(circles, counterC, countAddingLines);
             bufferCircles = null;
+        }
+
+        public void DeleteSelectedSpline()
+        {
+            bool f = false;
+            for (int i = 0; i < CounterSplines; ++i)
+                if (splines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            if (!f)
+                return;
+            counterS = 0;
+            counterSplines = countAddingLines;
+            bufferSplines = new IpSpline[counterSplines];
+
+            for (int i = 0; i < splines.Length; ++i)
+            {
+                if (counterS >= counterSplines - 1)
+                {
+                    counterSplines += countAddingLines;
+                    Array.Resize(ref bufferSplines, counterSplines);
+                }
+                if (splines[i] != 0)
+                {
+                    if (!splines[i].selected)
+                    {
+                        bufferSplines[counterS] = splines[i];
+                        counterS++;
+                    }
+                }
+            }
+
+            Array.Resize(ref splines, counterSplines);
+            Array.Copy(bufferSplines, splines, bufferSplines.Length);
+            Array.Clear(splines, counterS, countAddingLines);
+            bufferSplines = null;
         }
         #endregion
     }

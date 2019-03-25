@@ -21,6 +21,7 @@ namespace TestEditor
         public float y4;
         public Pen pen;
         public bool selected;
+        public float xSmin,ySmin,xSmax,ySmax;
 
         private float angle1, angle2, angle3;
         private float radius1, radius2, radius3;
@@ -93,20 +94,51 @@ namespace TestEditor
 
         public void CalculatePoints()
         {
+            xSmin = 9999;
+            ySmin = 9999;
+            xSmax = 0;
+            ySmax = 0;
             x = new float[res];
             y = new float[res];
             float delta = 1 / (float)res;
             float t = 0;
             x[0] = x1;
             y[0] = y1;
+
+            if (x[0] > xSmax)
+                xSmax = x[0];
+            if (x[0] < xSmin)
+                xSmin = x[0];
+            if (y[0] > ySmax)
+                ySmax = y[0];
+            if (y[0] < ySmin)
+                ySmin = y[0];
             for (int i = 1; i < res-1; ++i)
             {
                 t += delta;
                 x[i] = Convert.ToSingle(Math.Pow(1 - t, 3) * x1 + 3 * t * Math.Pow(1 - t, 2) * x2 + 3 * t * t * (1 - t) * x3 + t * t * t * x4);
                 y[i] = Convert.ToSingle(Math.Pow(1 - t, 3) * y1 + 3 * t * Math.Pow(1 - t, 2) * y2 + 3 * t * t * (1 - t) * y3 + t * t * t * y4);
+
+                if (x[i] > xSmax)
+                    xSmax = x[i];
+                if (x[i] < xSmin)
+                    xSmin = x[i];
+                if (y[i] > ySmax)
+                    ySmax = y[i];
+                if (y[i] < ySmin)
+                    ySmin = y[i];
             }
             x[res - 1] = x4;
             y[res - 1] = y4;
+
+            if (x[res - 1] > xSmax)
+                xSmax = x[res - 1];
+            if (x[res - 1] < xSmin)
+                xSmin = x[res - 1];
+            if (y[res - 1] > ySmax)
+                ySmax = y[res - 1];
+            if (y[res - 1] < ySmin)
+                ySmin = y[res - 1];
         }
 
 

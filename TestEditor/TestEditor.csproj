@@ -64,6 +64,7 @@
     <Compile Include="IpGizmo.cs" />
     <Compile Include="IpGizmoMixed.cs" />
     <Compile Include="IpGizmoLine.cs" />
+    <Compile Include="IpGizmoSpline.cs" />
     <Compile Include="IpGrid.cs" />
     <Compile Include="IpLine.cs" />
     <Compile Include="IpPicture.cs" />

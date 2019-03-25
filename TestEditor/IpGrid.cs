@@ -99,79 +99,106 @@ namespace TestEditor
             cursor.Y = (yR >= 0.5f) ? yT : yT + 1;
         }
 
-        private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos,bool ignoreSelected, float res)
+        private void MagnetLines(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, float res)
         {
-            cursor.X = xPos;
-            cursor.Y = yPos;
             for (int i = 0; i < pic.CounterLines; ++i)
             {
-                if (pic.Lines[i] != 0)
+                if (ignoreSelected)
                 {
-                    if (ignoreSelected)
+                    if (pic.Lines[i].selected)
+                        continue;
+                }
+                if (magnetPoints)
+                {
+                    if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
                     {
-                        if (pic.Lines[i].selected)
+                        cursor.X = pic.Lines[i].x1;
+                        cursor.Y = pic.Lines[i].y1;
+                        break;
+                    }
+                    if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
+                    {
+                        cursor.X = pic.Lines[i].x2;
+                        cursor.Y = pic.Lines[i].y2;
+                        break;
+                    }
+                }
+                if (magnetCenter)
+                    if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2) / 2 - xPos) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2) / 2 - yPos) <= res)
+                    {
+                        cursor.X = (pic.Lines[i].x1 + pic.Lines[i].x2) / 2;
+                        cursor.Y = (pic.Lines[i].y1 + pic.Lines[i].y2) / 2;
+                        break;
+                    }
+                if (magnetCross && pic.CounterLines > 1)
+                {
+                    float x1 = pic.Lines[i].x1;
+                    float x2 = pic.Lines[i].x2;
+                    float y1 = pic.Lines[i].y1;
+                    float y2 = pic.Lines[i].y2;
+                    for (int k = i + 1; k < pic.CounterLines; ++k)
+                    {
+                        if (pic.Lines[k].selected && ignoreSelected)
                             continue;
-                    }
-                    if (magnetPoints)
-                    {
-                        if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
+                        float x3 = pic.Lines[k].x1;
+                        float x4 = pic.Lines[k].x2;
+                        float y3 = pic.Lines[k].y1;
+                        float y4 = pic.Lines[k].y2;
+                        float delta = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+                        if (delta != 0)
                         {
-                            cursor.X = pic.Lines[i].x1;
-                            cursor.Y = pic.Lines[i].y1;
-                            break;
-                        }
-                        if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
-                        {
-                            cursor.X = pic.Lines[i].x2;
-                            cursor.Y = pic.Lines[i].y2;
-                            break;
-                        }
-                    }
-                    if (magnetCenter)
-                        if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2)/2 - xPos) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2)/2 - yPos) <= res)
-                        {
-                            cursor.X = (pic.Lines[i].x1 + pic.Lines[i].x2) / 2;
-                            cursor.Y = (pic.Lines[i].y1 + pic.Lines[i].y2) / 2;
-                            break;
-                        }
-                    if (magnetCross && pic.CounterLines > 1)
-                    {
-                        float x1 = pic.Lines[i].x1;
-                        float x2 = pic.Lines[i].x2;
-                        float y1 = pic.Lines[i].y1;
-                        float y2 = pic.Lines[i].y2;
-                        for (int k = i + 1; k < pic.CounterLines; ++k)
-                        {
-                            if (pic.Lines[k].selected && ignoreSelected)
-                                continue;
-                            float x3 = pic.Lines[k].x1;
-                            float x4 = pic.Lines[k].x2;
-                            float y3 = pic.Lines[k].y1;
-                            float y4 = pic.Lines[k].y2;
-                            float delta = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-                            if (delta != 0)
-                            {
-                                float xP = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / delta;
-                                float yP = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / delta;
-                                float t1 = (x2 - x1 != 0) ? Math.Abs((xP - x1) / (x2 - x1)) : 0;
-                                float t2 = (x4 - x3 != 0) ? Math.Abs((xP - x3) / (x4 - x3)) : 0;
-                                float t3 = (y2 - y1 != 0) ? Math.Abs((yP - y1) / (y2 - y1)) : 0;
-                                float t4 = (y4 - y3 != 0) ? Math.Abs((yP - y3) / (y4 - y3)) : 0;
-                                if (t1 <= 1 && t2 <= 1 && t3 <= 1 && t4 <= 1)
+                            float xP = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / delta;
+                            float yP = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / delta;
+                            float t1 = (x2 - x1 != 0) ? Math.Abs((xP - x1) / (x2 - x1)) : 0;
+                            float t2 = (x4 - x3 != 0) ? Math.Abs((xP - x3) / (x4 - x3)) : 0;
+                            float t3 = (y2 - y1 != 0) ? Math.Abs((yP - y1) / (y2 - y1)) : 0;
+                            float t4 = (y4 - y3 != 0) ? Math.Abs((yP - y3) / (y4 - y3)) : 0;
+                            if (t1 <= 1 && t2 <= 1 && t3 <= 1 && t4 <= 1)
                                 if (Math.Abs(xP - xPos) <= res && Math.Abs(yP - yPos) <= res)
                                 {
                                     cursor.X = xP;
                                     cursor.Y = yP;
                                     break;
                                 }
-                            }
                         }
-
                     }
                 }
-                else
-                    break;
             }
+        }
+
+        private void MagnetSplines(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, float res)
+        {
+            for (int i = 0; i < pic.CounterSplines; ++i)
+            {
+                if (ignoreSelected)
+                {
+                    if (pic.Splines[i].selected)
+                        continue;
+                }
+                if (magnetPoints)
+                {
+                    if (Math.Abs(pic.Splines[i].x1 - xPos) <= res && Math.Abs(pic.Splines[i].y1 - yPos) <= res)
+                    {
+                        cursor.X = pic.Splines[i].x1;
+                        cursor.Y = pic.Splines[i].y1;
+                        break;
+                    }
+                    if (Math.Abs(pic.Splines[i].x4 - xPos) <= res && Math.Abs(pic.Splines[i].y4 - yPos) <= res)
+                    {
+                        cursor.X = pic.Splines[i].x4;
+                        cursor.Y = pic.Splines[i].y4;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos,bool ignoreSelected, float res)
+        {
+            cursor.X = xPos;
+            cursor.Y = yPos;
+            MagnetLines(cursor, xPos, yPos, ignoreSelected, res);
+            MagnetSplines(cursor, xPos, yPos, ignoreSelected, res);
         }
         #endregion
 

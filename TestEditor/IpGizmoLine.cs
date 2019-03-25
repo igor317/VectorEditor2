@@ -11,7 +11,6 @@ namespace TestEditor
     {
         #region VARIABLES
         private int index;
-        private Pen gizmoPen;
         private bool showGizmo;
         private IpCursor moveCursor;
         private IpCursor p1Cursor;
@@ -70,6 +69,7 @@ namespace TestEditor
             pic.Lines[index].y2 += k2 - m2;
             DefaultControllerPosition();
         }
+
         private void MovePoint1(float xPos,float yPos)
         {
             float k1 = xPos;
@@ -118,7 +118,6 @@ namespace TestEditor
         #region PUBLIC METHODS
         public GizmoLine(IpPicture pic, IpGrid grid) : base(pic,grid)
         {
-            gizmoPen = new Pen(Color.Green);
             controllerPen = new Pen(Color.Blue);
             selectedControllerPen = new Pen(Color.Violet);
             moveCursor = new IpCursor(5, controllerPen);

@@ -24,6 +24,8 @@ namespace TestEditor
                 pic.Lines[i].selected = false;
             for (int i = 0; i < pic.CounterEllipses; ++i)
                 pic.Ellipses[i].selected = false;
+            for (int i = 0; i < pic.CounterSplines; ++i)
+                pic.Splines[i].selected = false;
         }
 
         public void ResetRect()
@@ -91,8 +93,6 @@ namespace TestEditor
             ClearSelectionArray();
             for (int i = 0; i < pic.CounterLines + 1; ++i)
             {
-                if (pic.Lines[i] == 0)
-                    break;
                 if (pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
                     && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
@@ -103,14 +103,22 @@ namespace TestEditor
             }
             for (int i = 0; i < pic.CounterEllipses + 1; ++i)
             {
-                if (pic.Ellipses[i] == 0)
-                    break;
                 if (pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
                     && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
                     pic.Ellipses[i].selected = true;
+                }
+            }
+            for (int i = 0; i < pic.CounterSplines + 1; ++i)
+            {
+                if (pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset <= y2
+                    && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset <= x2
+                    && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset <= y2)
+                {
+                    pic.Splines[i].selected = true;
                 }
             }
 

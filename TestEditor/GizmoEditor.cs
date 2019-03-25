@@ -48,24 +48,33 @@ namespace TestEditor
         {
             int countSelectedLines = 0;
             int countSelectedEllipses = 0;
+            int countSelectedSplines = 0;
             for (int i = 0; i < pic.CounterLines; ++i)
                 if (pic.Lines[i].selected)
                     countSelectedLines++;
             for (int i = 0; i < pic.CounterEllipses; ++i)
                 if (pic.Ellipses[i].selected)
                     countSelectedEllipses++;
-            if ((countSelectedLines == 1 && countSelectedEllipses == 1) || countSelectedLines > 1 || countSelectedEllipses > 1) // GIZMO MIXED
+            for (int i = 0; i < pic.CounterSplines; ++i)
+                if (pic.Splines[i].selected)
+                    countSelectedSplines++;
+            if ((countSelectedLines == 1 && countSelectedEllipses == 1 && countSelectedSplines == 1) || countSelectedLines > 1 || countSelectedEllipses > 1 || countSelectedSplines > 1) // GIZMO MIXED
             {
                 gizmo = new GizmoMixed(pic, grid);
                 return;
             }
-            if (countSelectedLines == 1 && countSelectedEllipses == 0) // GIZMO LINE
+            if (countSelectedLines == 1 && countSelectedEllipses == 0 && countSelectedSplines == 0) // GIZMO LINE
             {
                 gizmo = new GizmoLine(pic, grid);
                 return;
             }
-            if (countSelectedLines == 0 && countSelectedEllipses == 1)  // GIZMO ELLIPSE
+            if (countSelectedLines == 0 && countSelectedEllipses == 1 && countSelectedSplines == 0)  // GIZMO ELLIPSE
             {
+                return;
+            }
+            if (countSelectedLines == 0 && countSelectedEllipses == 0 && countSelectedSplines == 1)
+            {
+                gizmo = new GizmoSpline(pic, grid);
                 return;
             }
 
@@ -95,12 +104,14 @@ namespace TestEditor
 
         public void ControlGizmo(int xPos, int yPos)
         {
-            gizmo.Control(xPos, yPos);
+            if (gizmo != null)
+                gizmo.Control(xPos, yPos);
         }
 
         public void CheckSelectedController(int xPos, int yPos)
         {
-            gizmo.CheckSelectedController(xPos, yPos);
+            if (gizmo != null)
+                gizmo.CheckSelectedController(xPos, yPos);
         }
         
         public void ResetGizmo()
@@ -111,25 +122,30 @@ namespace TestEditor
 
         public void ResetCenterPoint()
         {
-            gizmo.DefaultControllerPosition();
+            if (gizmo != null)
+                gizmo.DefaultControllerPosition();
         }
 
         public void MirrorSelectedX()
         {
-            gizmo.MirrorSelectedX();
+            if (gizmo != null)
+                gizmo.MirrorSelectedX();
         }
         public void MirrorSelectedY()
         {
-            gizmo.MirrorSelectedY();
+            if (gizmo != null)
+                gizmo.MirrorSelectedY();
         }
         public void ResetControllers()
         {
-            gizmo.ResetControllers();
+            if (gizmo != null)
+                gizmo.ResetControllers();
         }
         public void DeleteSelected()
         {
             pic.DeleteSelectedLines();
             pic.DeleteSelectedCircles();
+            pic.DeleteSelectedSpline();
             gizmo = null;
         }
 
