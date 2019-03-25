@@ -17,9 +17,10 @@ namespace TestEditor
         SelectionMode,
         CircleModeM,
         CircleModeD,
-        Spline2M,
-        Spline2D,
-        Spline2C,
+        SplineM,
+        SplineD,
+        Spline1,
+        Spline2,
     };
 
     class PictureEditor
@@ -95,9 +96,9 @@ namespace TestEditor
 
         private void DrawCursor()
         {
-            if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD || editMode == EditMode.Spline2D || editMode == EditMode.Spline2C)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD || editMode == EditMode.SplineD || editMode == EditMode.Spline1 || editMode == EditMode.Spline2)
                 SelectCursor.DrawXCursor(gBuff,xOffset,yOffset,scaleCoeff);
-            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD || editMode == EditMode.Spline2M)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD || editMode == EditMode.SplineM)
                 LastCursor.DrawXCursor(gBuff, xOffset, yOffset, scaleCoeff);
         }
 
@@ -145,14 +146,14 @@ namespace TestEditor
 
         private void DrawSplines2()
         {
-            int count = pic.CounterSplines2;
-            if (editMode == EditMode.Spline2D)
+            int count = pic.CounterSplines;
+            if (editMode == EditMode.SplineD)
                 count++;
             for (int i = 0;i<count;++i)
             {
-                if (pic.Splines2[i] == 0)
+                if (pic.Splines[i] == 0)
                     return;
-                pic.Splines2[i].DrawSpline2(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
             }
         }
         #endregion

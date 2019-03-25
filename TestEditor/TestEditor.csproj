@@ -67,7 +67,7 @@
     <Compile Include="IpGrid.cs" />
     <Compile Include="IpLine.cs" />
     <Compile Include="IpPicture.cs" />
-    <Compile Include="IpSpline2.cs" />
+    <Compile Include="IpSpline.cs" />
     <Compile Include="PictureEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

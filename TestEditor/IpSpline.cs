@@ -7,16 +7,18 @@ using System.Drawing;
 
 namespace TestEditor
 {
-    public struct IpSpline2
+    public struct IpSpline
     {
         private float[] x, y;
-        public static int res = 10;
+        public static int res = 30;
         public float x1;
         public float y1;
         public float x2;
         public float y2;
         public float x3;
         public float y3;
+        public float x4;
+        public float y4;
         public Pen pen;
         public bool selected;
 
@@ -48,7 +50,7 @@ namespace TestEditor
             angle3 = (float)Math.Atan2(hc3, wc3);
         }
 
-        public void RotateSpline2(float angle)
+        public void RotateSpline(float angle)
         {
             double radAngle1 = Math.PI / 2 + angle + angle1;
             double radAngle2 = Math.PI / 2 + angle + angle2;
@@ -65,17 +67,27 @@ namespace TestEditor
         {
             x1 = lastCursor.X;
             y1 = lastCursor.Y;
-            x3 = selectCursor.X;
-            y3 = selectCursor.Y;
-            x2 = (x1+x3)/2;
-            y2 = (y1+y3)/2;
+            x4 = selectCursor.X;
+            y4 = selectCursor.Y;
+            x2 = (x1 + x4) / 2;
+            y2 = (y1 + y4) / 2;
+            x3 = (x1 + x4) / 2;
+            y3 = (y1 + y4) / 2;
             this.pen = pen;
             CalculatePoints();
         }
-        public void AddCurve(IpCursor selectCursor)
+        public void Curve1(IpCursor selectCursor)
         {
             x2 = selectCursor.X;
             y2 = selectCursor.Y;
+            x3 = selectCursor.X;
+            y3 = selectCursor.Y;
+            CalculatePoints();
+        }
+        public void Curve2(IpCursor selectCursor)
+        {
+            x3 = selectCursor.X;
+            y3 = selectCursor.Y;
             CalculatePoints();
         }
 
@@ -90,15 +102,15 @@ namespace TestEditor
             for (int i = 1; i < res-1; ++i)
             {
                 t += delta;
-                x[i] = (1 - 2 * t + t * t) * x1 + (2 * t - 2 * t * t) * x2 + t * t * x3;
-                y[i] = (1 - 2 * t + t * t) * y1 + (2 * t - 2 * t * t) * y2 + t * t * y3;
+                x[i] = Convert.ToSingle(Math.Pow(1 - t, 3) * x1 + 3 * t * Math.Pow(1 - t, 2) * x2 + 3 * t * t * (1 - t) * x3 + t * t * t * x4);
+                y[i] = Convert.ToSingle(Math.Pow(1 - t, 3) * y1 + 3 * t * Math.Pow(1 - t, 2) * y2 + 3 * t * t * (1 - t) * y3 + t * t * t * y4);
             }
-            x[res - 1] = x3;
-            y[res - 1] = y3;
+            x[res - 1] = x4;
+            y[res - 1] = y4;
         }
 
 
-        public void DrawSpline2(Graphics buff, float xf, float yf, float coeff, Pen selectedPen)
+        public void DrawSpline(Graphics buff, float xf, float yf, float coeff, Pen selectedPen)
         {
             Pen sPen;
             if (selected)
@@ -111,26 +123,26 @@ namespace TestEditor
             }
         }
 
-        public static bool operator !=(IpSpline2 s1, IpSpline2 s2)
+        public static bool operator !=(IpSpline s1, IpSpline s2)
         {
             if ((s1.x1 != s2.x1) || (s1.y1 != s2.y1) || (s1.x2 != s2.x2) || (s1.y2 != s2.y2) || (s1.x3 != s2.x3) || (s1.y3 != s2.y3))
                 return true;
             return false;
         }
-        public static bool operator ==(IpSpline2 s1, IpSpline2 s2)
+        public static bool operator ==(IpSpline s1, IpSpline s2)
         {
             if ((s1.x1 == s2.x1) && (s1.y1 == s2.y1) && (s1.x2 == s2.x2) && (s1.y2 == s2.y2) && (s1.x3 == s2.x3) && (s1.y3 == s2.y3))
                 return true;
             return false;
         }
 
-        public static bool operator !=(IpSpline2 s1, int i2)
+        public static bool operator !=(IpSpline s1, int i2)
         {
             if ((s1.x1 != i2) || (s1.y1 != i2) || (s1.x2 != i2) || (s1.y2 != i2) || (s1.x3 != i2) || (s1.y3 != i2))
                 return true;
             return false;
         }
-        public static bool operator ==(IpSpline2 s1, int i2)
+        public static bool operator ==(IpSpline s1, int i2)
         {
             if ((s1.x1 == i2) && (s1.y1 == i2) && (s1.x2 == i2) && (s1.y2 == i2) && (s1.x3 == i2) && (s1.y3 == i2))
                 return true;
