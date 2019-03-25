@@ -22,6 +22,21 @@ namespace TestEditor
         {
             get { return selectionPen; }
         }
+        public bool MoveCenterPointCursor
+        {
+            set
+            {
+                if (gizmo != null)
+                    gizmo.MoveCenterPointCursor = value;
+            }
+            get
+            {
+                if (gizmo != null)
+                    return gizmo.MoveCenterPointCursor;
+                return false;
+            }
+        }
+
         public SelectRect SelectRect
         {
             get { return selectRect; }

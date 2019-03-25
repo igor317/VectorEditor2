@@ -9,7 +9,6 @@ namespace TestEditor
 {
     class GizmoLine : IpGizmo
     {
-
         #region VARIABLES
         private int index;
         private Pen gizmoPen;
@@ -51,7 +50,7 @@ namespace TestEditor
             return false;
         }
 
-        private void MoveSelectedLines(float xPos, float yPos)
+        private void MoveSelected(float xPos, float yPos)
         {
             float k1 = xPos;
             float k2 = yPos;
@@ -68,6 +67,31 @@ namespace TestEditor
             pic.Lines[index].x2 += k1 - m1;
             pic.Lines[index].y1 += k2 - m2;
             pic.Lines[index].y2 += k2 - m2;
+            DefaultControllerPosition();
+        }
+        private void MovePoint(float xPos,float yPos,IpCursor cursor,bool fstPoint)
+        {
+            float k1 = xPos;
+            float k2 = yPos;
+            float m1 = cursor.X;
+            float m2 = cursor.Y;
+            IpCursor pos = new IpCursor();
+
+            grid.MoveCursor(pos, xPos, yPos, true, null);
+            k1 = pos.X;
+            k2 = pos.Y;
+            grid.MoveCursor(cursor, xPos, yPos, true, null);
+
+            if (fstPoint)
+            {
+                pic.Lines[index].x1 += k1 - m1;
+                pic.Lines[index].y1 += k2 - m2;
+            }
+            else
+            {
+                pic.Lines[index].x2 += k1 - m1;
+                pic.Lines[index].y2 += k2 - m2;
+            }
             DefaultControllerPosition();
         }
 
@@ -120,7 +144,11 @@ namespace TestEditor
         public override void Control(int xPos, int yPos)
         {
             if (dragSelected)
-                MoveSelectedLines(xPos, yPos);
+                MoveSelected(xPos, yPos);
+            if (p1CursorSelected)
+                MovePoint(xPos, yPos, p1Cursor, true);
+            if (p2CursorSelected)
+                MovePoint(xPos, yPos, p2Cursor, false);
         }
 
         public override void CheckSelectedController(int xPos, int yPos)

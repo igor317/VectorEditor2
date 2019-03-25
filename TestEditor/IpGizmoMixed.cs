@@ -76,7 +76,6 @@ namespace TestEditor
                 radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
                 CalculateNormals();
             }
-            ShowCursors();
         }
 
         private void ResetGizmo()
@@ -383,34 +382,6 @@ namespace TestEditor
                     pic.Ellipses[i].RotateCircle(cursorAngle - (float)Math.PI);
         }
 
-        private void ShowCursors()
-        {
-            ShowElements();
-            if (width <= 25)
-            {
-                xScaleL.ShowCursor = false;
-                xScaleR.ShowCursor = false;
-                xyScaleUR.ShowCursor = false;
-            }
-            if (height <= 25)
-            {
-                yScaleU.ShowCursor = false;
-                yScaleD.ShowCursor = false;
-                xyScaleUR.ShowCursor = false;
-            }
-        }
-
-        private void ShowElements()
-        {
-            moveCursor.ShowCursor = true;
-            xScaleL.ShowCursor = true;
-            xScaleR.ShowCursor = true;
-            yScaleU.ShowCursor = true;
-            yScaleD.ShowCursor = true;
-            xyScaleUR.ShowCursor = true;
-            rotationCursor.ShowCursor = true;
-        }
-
         private void ShowElements(bool movecursor, bool xScalel, bool xScaler, bool yScaleu, bool yScaled, bool xyScaleur, bool rotator)
         {
             moveCursor.ShowCursor = movecursor;
@@ -462,7 +433,6 @@ namespace TestEditor
             frsAngle = (float)Math.PI;
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
             CalculateNormals();
-            ShowCursors();
         }
 
         public override void DrawGizmo(Graphics graph)
@@ -521,7 +491,6 @@ namespace TestEditor
             if (f)
             {
                 CreateGizmo();
-                CalculateNormals();
             }
         }
 
@@ -546,7 +515,6 @@ namespace TestEditor
             if (f)
             {
                 CreateGizmo();
-                CalculateNormals();
             }
         }
 
@@ -632,6 +600,7 @@ namespace TestEditor
                 showRotationTrack = false;
                 frsAngle = cursorAngle;
                 rotatePic = ResetControl(rotationCursor);
+                ShowElements(true, true, true, true, true, true, true);
             }
         }
 

@@ -12,7 +12,7 @@ namespace TestEditor
         #region VARIABLES
         protected IpPicture pic;
         protected IpGrid grid;
-        protected bool mCenterPoint;
+        protected static bool mCenterPoint;
         #endregion
 
         #region SET&GET METHODS
