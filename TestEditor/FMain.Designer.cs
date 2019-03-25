@@ -60,6 +60,7 @@
             this.lblCoeff = new System.Windows.Forms.Label();
             this.pMirrorY = new System.Windows.Forms.PictureBox();
             this.pMirrorX = new System.Windows.Forms.PictureBox();
+            this.pSpline2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -71,6 +72,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pMirrorY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pMirrorX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pSpline2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -107,7 +109,7 @@
             // 
             // btnIncGrid
             // 
-            this.btnIncGrid.Location = new System.Drawing.Point(12, 258);
+            this.btnIncGrid.Location = new System.Drawing.Point(12, 279);
             this.btnIncGrid.Name = "btnIncGrid";
             this.btnIncGrid.Size = new System.Drawing.Size(75, 23);
             this.btnIncGrid.TabIndex = 3;
@@ -117,7 +119,7 @@
             // 
             // btnRedGrid
             // 
-            this.btnRedGrid.Location = new System.Drawing.Point(12, 229);
+            this.btnRedGrid.Location = new System.Drawing.Point(12, 250);
             this.btnRedGrid.Name = "btnRedGrid";
             this.btnRedGrid.Size = new System.Drawing.Size(75, 23);
             this.btnRedGrid.TabIndex = 4;
@@ -174,6 +176,8 @@
             this.ImageList.Images.SetKeyName(14, "Back.bmp");
             this.ImageList.Images.SetKeyName(15, "MirrorX.bmp");
             this.ImageList.Images.SetKeyName(16, "MirrorY.bmp");
+            this.ImageList.Images.SetKeyName(17, "Spline2.bmp");
+            this.ImageList.Images.SetKeyName(18, "Spline2Selected.bmp");
             // 
             // pCircle
             // 
@@ -346,12 +350,22 @@
             this.pMirrorX.TabStop = false;
             this.pMirrorX.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMirrorX_MouseClick);
             // 
+            // pSpline2
+            // 
+            this.pSpline2.Location = new System.Drawing.Point(12, 213);
+            this.pSpline2.Name = "pSpline2";
+            this.pSpline2.Size = new System.Drawing.Size(25, 25);
+            this.pSpline2.TabIndex = 35;
+            this.pSpline2.TabStop = false;
+            this.pSpline2.Click += new System.EventHandler(this.pSpline2_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(1131, 655);
+            this.Controls.Add(this.pSpline2);
             this.Controls.Add(this.pMirrorX);
             this.Controls.Add(this.pMirrorY);
             this.Controls.Add(this.lblCoeff);
@@ -394,6 +408,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pStepBack)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pMirrorY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pMirrorX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pSpline2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -431,6 +446,7 @@
         private System.Windows.Forms.PictureBox pMirrorY;
         private System.Windows.Forms.PictureBox pMirrorX;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pSpline2;
     }
 }
 

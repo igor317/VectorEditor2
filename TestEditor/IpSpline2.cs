@@ -10,7 +10,7 @@ namespace TestEditor
     public struct IpSpline2
     {
         private float[] x, y;
-        public static int res = 30;
+        public static int res = 10;
         public float x1;
         public float y1;
         public float x2;
@@ -65,17 +65,17 @@ namespace TestEditor
         {
             x1 = lastCursor.X;
             y1 = lastCursor.Y;
-            x2 = selectCursor.X;
-            y2 = selectCursor.Y;
-            x3 = x1;
-            y3 = y1;
+            x3 = selectCursor.X;
+            y3 = selectCursor.Y;
+            x2 = (x1+x3)/2;
+            y2 = (y1+y3)/2;
             this.pen = pen;
             CalculatePoints();
         }
         public void AddCurve(IpCursor selectCursor)
         {
-            x3 = selectCursor.X;
-            y3 = selectCursor.Y;
+            x2 = selectCursor.X;
+            y2 = selectCursor.Y;
             CalculatePoints();
         }
 
@@ -85,12 +85,16 @@ namespace TestEditor
             y = new float[res];
             float delta = 1 / (float)res;
             float t = 0;
-            for (int i = 0; i < res; ++i)
+            x[0] = x1;
+            y[0] = y1;
+            for (int i = 1; i < res-1; ++i)
             {
                 t += delta;
-                x[i] = (2 * t - 2 * t * t) * x1 + t * t * x2;
-                y[i] = (2 * t - 2 * t * t) * y1 + t * t * y2;
+                x[i] = (1 - 2 * t + t * t) * x1 + (2 * t - 2 * t * t) * x2 + t * t * x3;
+                y[i] = (1 - 2 * t + t * t) * y1 + (2 * t - 2 * t * t) * y2 + t * t * y3;
             }
+            x[res - 1] = x3;
+            y[res - 1] = y3;
         }
 
 
@@ -105,7 +109,32 @@ namespace TestEditor
             {
                 buff.DrawLine(sPen, x[i] * coeff - xf, y[i] * coeff - yf, x[i - 1] * coeff - xf, y[i - 1] * coeff - yf);
             }
-           // buff.DrawLine(sPen, (xR + x[0]) * coeff - xf, (yR + y[0]) * coeff - yf, (xR + x[res - 1]) * coeff - xf, (yR + y[res - 1]) * coeff - yf);
+        }
+
+        public static bool operator !=(IpSpline2 s1, IpSpline2 s2)
+        {
+            if ((s1.x1 != s2.x1) || (s1.y1 != s2.y1) || (s1.x2 != s2.x2) || (s1.y2 != s2.y2) || (s1.x3 != s2.x3) || (s1.y3 != s2.y3))
+                return true;
+            return false;
+        }
+        public static bool operator ==(IpSpline2 s1, IpSpline2 s2)
+        {
+            if ((s1.x1 == s2.x1) && (s1.y1 == s2.y1) && (s1.x2 == s2.x2) && (s1.y2 == s2.y2) && (s1.x3 == s2.x3) && (s1.y3 == s2.y3))
+                return true;
+            return false;
+        }
+
+        public static bool operator !=(IpSpline2 s1, int i2)
+        {
+            if ((s1.x1 != i2) || (s1.y1 != i2) || (s1.x2 != i2) || (s1.y2 != i2) || (s1.x3 != i2) || (s1.y3 != i2))
+                return true;
+            return false;
+        }
+        public static bool operator ==(IpSpline2 s1, int i2)
+        {
+            if ((s1.x1 == i2) && (s1.y1 == i2) && (s1.x2 == i2) && (s1.y2 == i2) && (s1.x3 == i2) && (s1.y3 == i2))
+                return true;
+            return false;
         }
 
     }

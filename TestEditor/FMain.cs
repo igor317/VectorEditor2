@@ -64,6 +64,17 @@ namespace TestEditor
                                 pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
                                 pictureEditor.Picture.AddCircle(new Pen(Color.Black),false);
                                 break;
+                            case EditMode.Spline2M:     // Двигаем p1 SPLINE2
+                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false, null);
+                                break;
+                            case EditMode.Spline2D:     // Двигаем p3 SPLINE2
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
+                                pictureEditor.Picture.AddSpline2(new Pen(Color.Black), false);
+                                break;
+                            case EditMode.Spline2C:     // Двигаем p2 SPLINE2
+                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
+                                pictureEditor.Picture.AddCurveSpline2();
+                                break;
                             case EditMode.SelectionMode: // Двигаем selectPoint SelectionMode
                                 pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false,null);
                                 pictureEditor.GizmoEditor.SelectRect.SelectLines();
@@ -128,6 +139,15 @@ namespace TestEditor
                             pictureEditor.GizmoEditor.CreateGizmo();
                             pictureEditor.SetEditMode(EditMode.ReadyToSelect);
                             break;
+                        case EditMode.Spline2D:
+                            pictureEditor.Picture.AddSpline2(new Pen(Color.Black), true);
+                            pictureEditor.SetEditMode(EditMode.Spline2C);
+                            break;
+                        case EditMode.Spline2C:
+                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
+                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
+                            pictureEditor.SetEditMode(EditMode.Spline2D);
+                            break;
                     }
                     break;
                 case MouseButtons.Right:
@@ -151,6 +171,19 @@ namespace TestEditor
                             break;
                         case EditMode.ReadyToSelect:
                             pictureEditor.GizmoEditor.ResetControllers();
+                            break;
+                        case EditMode.Spline2M:
+                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
+                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
+                            pictureEditor.SetEditMode(EditMode.Spline2D);
+                            break;
+                        case EditMode.Spline2D:
+                            pictureEditor.SetEditMode(EditMode.Spline2M);
+                            break;
+                        case EditMode.Spline2C:
+                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
+                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
+                            pictureEditor.SetEditMode(EditMode.Spline2M);
                             break;
                     }
                     break;
@@ -195,6 +228,7 @@ namespace TestEditor
             CleanImages(pStepBack);
             CleanImages(pMirrorX);
             CleanImages(pMirrorY);
+            CleanImages(pSpline2);
             if (!pictureEditor.Grid.EnableGrid)
                 toolTip1.SetToolTip(pGrid, "Show Grid");
             else
@@ -214,6 +248,7 @@ namespace TestEditor
             pMirrorY.Image = ImageList.Images[16];
             pStepBack.Image = ImageList.Images[14];
             pLine.Image =       (pictureEditor.EditMode == EditMode.LineModeM || pictureEditor.EditMode == EditMode.LineModeD) ? ImageList.Images[3] : ImageList.Images[2];
+            pSpline2.Image = (pictureEditor.EditMode == EditMode.Spline2M || pictureEditor.EditMode == EditMode.Spline2D || pictureEditor.EditMode == EditMode.Spline2C) ? ImageList.Images[18] : ImageList.Images[17];
             pCircle.Image = (pictureEditor.EditMode == EditMode.CircleModeM || pictureEditor.EditMode == EditMode.CircleModeD) ? ImageList.Images[5] : ImageList.Images[4];
             pRotationMagnet.Image = (pictureEditor.Grid.EnableRotationGrid) ? ImageList.Images[9] : ImageList.Images[8];
             pMagnet.Image = (pictureEditor.Grid.EnableMagnet) ? ImageList.Images[7] : ImageList.Images[6];
@@ -468,6 +503,12 @@ namespace TestEditor
         {
             pictureEditor.GizmoEditor.MirrorSelectedY();
             pictureEditor.Draw();
+        }
+
+        private void pSpline2_Click(object sender, EventArgs e)
+        {
+            pictureEditor.SetEditMode(EditMode.Spline2M);
+            DrawMode();
         }
     }
 }

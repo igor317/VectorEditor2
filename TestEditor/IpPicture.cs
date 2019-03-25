@@ -14,13 +14,16 @@ namespace TestEditor
         private const short countAddingLines = 2;
 
         private LinePic[] lines;
+        private IpSpline2[] splines2;
         private Ellipse[] circles;
         private LinePic[] bufferLines;
         private Ellipse[] bufferCircles;
         private int counterLines = countAddingLines;
         private int counterCircles = countAddingLines;
+        private int counterSplines2 = countAddingLines;
         private int counterC = 0;
         private int counter = 0;
+        private int counterS2 = 0;
         private IpCursor selectCursor;
         private IpCursor lastCursor;
         private VectorPicture vectorPicture;
@@ -40,6 +43,10 @@ namespace TestEditor
         {
             get { return circles; }
         }
+        public IpSpline2[] Splines2
+        {
+            get { return splines2; }
+        }
 
         public int CounterLines
         {
@@ -48,6 +55,10 @@ namespace TestEditor
         public int CounterEllipses
         {
             get { return counterC; }
+        }
+        public int CounterSplines2
+        {
+            get { return counterS2; }
         }
         public float ScaleCoefficient
         {
@@ -72,6 +83,7 @@ namespace TestEditor
         {
             lines = new LinePic[counterLines];
             circles = new Ellipse[counterCircles];
+            splines2 = new IpSpline2[counterSplines2];
             this.selectCursor = selectCursor;
             this.lastCursor = lastCursor;
             vectorPicture = new VectorPicture();
@@ -115,7 +127,32 @@ namespace TestEditor
                 lastCursor.Y = selectCursor.Y;
                 counterC++;
             }
+        }
 
+        public void AddSpline2(Pen pen,bool DrawSelectSpline2)
+        {
+            if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
+                return;
+            if (counterS2 >= counterSplines2 - 1)
+            {
+                counterSplines2 += countAddingLines;
+                Array.Resize(ref splines2, counterSplines2);
+            }
+            splines2[counterS2].AddLine(lastCursor, selectCursor, pen);
+
+            if (DrawSelectSpline2)
+            {
+                lastCursor.X = selectCursor.X;
+                lastCursor.Y = selectCursor.Y;
+                selectCursor.X = splines2[counterS2].x2;
+                selectCursor.Y = splines2[counterS2].y2;
+                counterS2++;
+            }
+        }
+
+        public void AddCurveSpline2()
+        {
+            splines2[counterS2 - 1].AddCurve(selectCursor);
         }
 
         public void StepBack()

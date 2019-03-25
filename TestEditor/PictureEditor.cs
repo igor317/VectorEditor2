@@ -17,7 +17,9 @@ namespace TestEditor
         SelectionMode,
         CircleModeM,
         CircleModeD,
-
+        Spline2M,
+        Spline2D,
+        Spline2C,
     };
 
     class PictureEditor
@@ -93,9 +95,9 @@ namespace TestEditor
 
         private void DrawCursor()
         {
-            if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD || editMode == EditMode.Spline2D || editMode == EditMode.Spline2C)
                 SelectCursor.DrawXCursor(gBuff,xOffset,yOffset,scaleCoeff);
-            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD)
+            if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD || editMode == EditMode.Spline2M)
                 LastCursor.DrawXCursor(gBuff, xOffset, yOffset, scaleCoeff);
         }
 
@@ -140,6 +142,19 @@ namespace TestEditor
                 pic.Ellipses[i].DrawEllipse(gBuff,xOffset,yOffset,scaleCoeff,gizmoEditor.SelectionPen);
             }
         }
+
+        private void DrawSplines2()
+        {
+            int count = pic.CounterSplines2;
+            if (editMode == EditMode.Spline2D)
+                count++;
+            for (int i = 0;i<count;++i)
+            {
+                if (pic.Splines2[i] == 0)
+                    return;
+                pic.Splines2[i].DrawSpline2(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+            }
+        }
         #endregion
 
         #region PUBLIC METHODS
@@ -170,6 +185,7 @@ namespace TestEditor
             DrawGizmo();
             DrawLines();
             DrawCircles();
+            DrawSplines2();
             if (drawScaleCoeff && scaleCoeff > minScale)
                 gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
             graph.DrawImageUnscaled(bmp, 0, 0);
