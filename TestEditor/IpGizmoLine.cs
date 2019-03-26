@@ -176,11 +176,13 @@ namespace TestEditor
 
         public override void MirrorSelectedX()
         {
-
+            pic.Lines[index].MirrorX(moveCursor);
+            CreateGizmo();
         }
         public override void MirrorSelectedY()
         {
-
+            pic.Lines[index].MirrorY(moveCursor);
+            CreateGizmo();
         }
 
         #endregion
