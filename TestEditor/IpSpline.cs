@@ -23,9 +23,9 @@ namespace TestEditor
         public bool selected;
         public float xSmin,ySmin,xSmax,ySmax;
 
-        private float angle1, angle2, angle3;
-        private float radius1, radius2, radius3;
-        private float hc1, wc1, hc2, wc2, hc3, wc3;
+        private float angle1, angle2, angle3, angle4;
+        private float radius1, radius2, radius3, radius4;
+        private float hc1, wc1, hc2, wc2, hc3, wc3, hc4, wc4;
         private float xCent, yCent;
 
         public void SetCenterPoint(float xCenter, float yCenter)
@@ -43,12 +43,16 @@ namespace TestEditor
             wc2 = x2 - xCenter;
             hc3 = yCenter - y3;
             wc3 = x3 - xCenter;
+            hc4 = yCenter - y4;
+            wc4 = x4 - xCenter;
             radius1 = Convert.ToSingle(Math.Sqrt(hc1 * hc1 + wc1 * wc1));
             radius2 = Convert.ToSingle(Math.Sqrt(hc2 * hc2 + wc2 * wc2));
             radius3 = Convert.ToSingle(Math.Sqrt(hc3 * hc3 + wc3 * wc3));
+            radius4 = Convert.ToSingle(Math.Sqrt(hc4 * hc4 + wc4 * wc4));
             angle1 = (float)Math.Atan2(hc1, wc1);
             angle2 = (float)Math.Atan2(hc2, wc2);
             angle3 = (float)Math.Atan2(hc3, wc3);
+            angle4 = (float)Math.Atan2(hc4, wc4);
         }
 
         public void RotateSpline(float angle)
@@ -56,15 +60,19 @@ namespace TestEditor
             double radAngle1 = Math.PI / 2 + angle + angle1;
             double radAngle2 = Math.PI / 2 + angle + angle2;
             double radAngle3 = Math.PI / 2 + angle + angle3;
+            double radAngle4 = Math.PI / 2 + angle + angle4;
+            x4 = xCent + radius4 * (float)Math.Sin(radAngle4);
+            y4 = yCent + radius4 * (float)Math.Cos(radAngle4);
             x3 = xCent + radius3 * (float)Math.Sin(radAngle3);
             y3 = yCent + radius3 * (float)Math.Cos(radAngle3);
             x2 = xCent + radius2 * (float)Math.Sin(radAngle2);
             y2 = yCent + radius2 * (float)Math.Cos(radAngle2);
             x1 = xCent + radius1 * (float)Math.Sin(radAngle1);
             y1 = yCent + radius1 * (float)Math.Cos(radAngle1);
+            CalculatePoints();
         }
 
-        public void AddLine(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        public void AddSpline(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
         {
             x1 = lastCursor.X;
             y1 = lastCursor.Y;
@@ -89,6 +97,54 @@ namespace TestEditor
         {
             x3 = selectCursor.X;
             y3 = selectCursor.Y;
+            CalculatePoints();
+        }
+
+        public void MirrorX(IpCursor cursor)
+        {
+            if (x1 < cursor.X)
+                x1 = x1 + Math.Abs(cursor.X - x1) * 2;
+            else
+                x1 = x1 - Math.Abs(cursor.X - x1) * 2;
+
+            if (x2 < cursor.X)
+                x2 = x2 + Math.Abs(cursor.X - x2) * 2;
+            else
+                x2 = x2 - Math.Abs(cursor.X - x2) * 2;
+
+            if (x3 < cursor.X)
+                x3 = x3 + Math.Abs(cursor.X - x3) * 2;
+            else
+                x3 = x3 - Math.Abs(cursor.X - x3) * 2;
+
+            if (x4 < cursor.X)
+                x4 = x4 + Math.Abs(cursor.X - x4) * 2;
+            else
+                x4 = x4 - Math.Abs(cursor.X - x4) * 2;
+            CalculatePoints();
+        }
+
+        public void MirrorY(IpCursor cursor)
+        {
+            if (y1 < cursor.Y)
+                y1 = y1 + Math.Abs(cursor.Y - y1) * 2;
+            else
+                y1 = y1 - Math.Abs(cursor.Y - y1) * 2;
+
+            if (y2 < cursor.Y)
+                y2 = y2 + Math.Abs(cursor.Y - y2) * 2;
+            else
+                y2 = y2 - Math.Abs(cursor.Y - y2) * 2;
+
+            if (y3 < cursor.Y)
+                y3 = y3 + Math.Abs(cursor.Y - y3) * 2;
+            else
+                y3 = y3 - Math.Abs(cursor.Y - y3) * 2;
+
+            if (y4 < cursor.Y)
+                y4 = y4 + Math.Abs(cursor.Y - y4) * 2;
+            else
+                y4 = y4 - Math.Abs(cursor.Y - y4) * 2;
             CalculatePoints();
         }
 

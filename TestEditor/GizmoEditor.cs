@@ -58,11 +58,6 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterSplines; ++i)
                 if (pic.Splines[i].selected)
                     countSelectedSplines++;
-            if ((countSelectedLines == 1 && countSelectedEllipses == 1 && countSelectedSplines == 1) || countSelectedLines > 1 || countSelectedEllipses > 1 || countSelectedSplines > 1) // GIZMO MIXED
-            {
-                gizmo = new GizmoMixed(pic, grid);
-                return;
-            }
             if (countSelectedLines == 1 && countSelectedEllipses == 0 && countSelectedSplines == 0) // GIZMO LINE
             {
                 gizmo = new GizmoLine(pic, grid);
@@ -77,6 +72,8 @@ namespace TestEditor
                 gizmo = new GizmoSpline(pic, grid);
                 return;
             }
+            gizmo = new GizmoMixed(pic, grid);
+            return;
 
         }
         #endregion

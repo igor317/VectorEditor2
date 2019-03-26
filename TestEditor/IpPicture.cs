@@ -140,7 +140,7 @@ namespace TestEditor
                 counterSplines += countAddingLines;
                 Array.Resize(ref splines, counterSplines);
             }
-            splines[counterS].AddLine(lastCursor, selectCursor, pen);
+            splines[counterS].AddSpline(lastCursor, selectCursor, pen);
 
             if (DrawSelectSpline2)
             {

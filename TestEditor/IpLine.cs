@@ -59,6 +59,32 @@ namespace TestEditor
             this.pen = pen;
         }
 
+        public void MirrorX(IpCursor cursor)
+        {
+            if (x1 < cursor.X)
+                x1 = x1 + Math.Abs(cursor.X - x1) * 2;
+            else
+                x1 = x1 - Math.Abs(cursor.X - x1) * 2;
+
+            if (x2 < cursor.X)
+                x2 = x2 + Math.Abs(cursor.X - x2) * 2;
+            else
+                x2 = x2 - Math.Abs(cursor.X - x2) * 2;
+        }
+
+        public void MirrorY(IpCursor cursor)
+        {
+            if (y1 < cursor.Y)
+                y1 = y1 + Math.Abs(cursor.Y - y1) * 2;
+            else
+                y1 = y1 - Math.Abs(cursor.Y - y1) * 2;
+
+            if (y2 < cursor.Y)
+                y2 = y2 + Math.Abs(cursor.Y - y2) * 2;
+            else
+                y2 = y2 - Math.Abs(cursor.Y - y2) * 2;
+        }
+
         public void DrawLine(Graphics buff,float xf,float yf,float coeff, Pen selectedPen)
         {
             Pen sPen;

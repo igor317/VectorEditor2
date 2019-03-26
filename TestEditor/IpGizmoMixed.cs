@@ -68,11 +68,12 @@ namespace TestEditor
             xyScaleUR.X = x2;
             xyScaleUR.Y = y1;
 
+            rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
+            rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
             if (resetRotator)
             {
-                rotationCursor.X = x2 - width / 2;
-                rotationCursor.Y = y2 - height / 2 - radius;
                 frsAngle = (float)Math.PI;
+                cursorAngle = frsAngle;
                 radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
                 CalculateNormals();
             }
@@ -91,6 +92,8 @@ namespace TestEditor
         {
             CalculatePoints();
             showGizmo = true;
+            frsAngle = (float)Math.PI;
+            cursorAngle = frsAngle;
             width = x2 - x1;
             height = y2 - y1;
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
@@ -123,12 +126,13 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterEllipses; ++i)
                 if (pic.Ellipses[i].selected)
                     pic.Ellipses[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
+            for (int i = 0; i < pic.CounterSplines; ++i)
+                if (pic.Splines[i].selected)
+                    pic.Splines[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
         }
 
         private void CalculatePoints()
         {
-            bool fL = false;
-            bool fE = false;
             float minX = 10000;
             float maxX = 0;
             float minY = 10000;
@@ -154,7 +158,6 @@ namespace TestEditor
                         maxY = pic.Ellipses[i].y1;
                     if (pic.Ellipses[i].y2 > maxY)
                         maxY = pic.Ellipses[i].y2;
-                    fE = true;
                 }
             }
             for (int i = 0; i < pic.CounterLines; ++i)
@@ -178,19 +181,28 @@ namespace TestEditor
                         maxY = pic.Lines[i].y1;
                     if (pic.Lines[i].y2 > maxY)
                         maxY = pic.Lines[i].y2;
-                    fL = true;
                 }
             }
-            if (fL || fE)
+            for (int i = 0; i < pic.CounterSplines; ++i)
             {
-                x1 = minX;
-                x2 = maxX;
-                y1 = minY;
-                y2 = maxY;
-                //zeroGizmo = false;
+                if (pic.Splines[i].selected)
+                {
+                    if (pic.Splines[i].xSmin < minX)
+                        minX = pic.Splines[i].xSmin;
+                    if (pic.Splines[i].ySmin < minY)
+                        minY = pic.Splines[i].ySmin;
+
+                    if (pic.Splines[i].xSmax > maxX)
+                        maxX = pic.Splines[i].xSmax;
+                    if (pic.Splines[i].ySmax > maxY)
+                        maxY = pic.Splines[i].ySmax;
+                }
             }
-            //else
-                //zeroGizmo = true;
+
+            x1 = minX;
+            x2 = maxX;
+            y1 = minY;
+            y2 = maxY;
         }
 
         private void MoveCenterPoint(int xPos, int yPos)
@@ -201,23 +213,16 @@ namespace TestEditor
 
         private void MoveSelectedLines(float xPos, float yPos)
         {
-            float k1 = xPos;
-            float k2 = yPos;
             float m1 = moveCursor.X;
             float m2 = moveCursor.Y;
-            IpCursor pos = new IpCursor();
-
-            grid.MoveCursor(pos, xPos, yPos, true, null);
-            k1 = pos.X;
-            k2 = pos.Y;
             grid.MoveCursor(moveCursor, xPos, yPos, true, null);
+            float k1 = moveCursor.X;
+            float k2 = moveCursor.Y;
 
             x1 += k1 - m1;
             x2 += k1 - m1;
             y1 += k2 - m2;
             y2 += k2 - m2;
-            rotationCursor.X += k1 - m1;
-            rotationCursor.Y += k2 - m2;
             DefaultControllerPosition(false, false);
             for (int i = 0; i < pic.CounterLines; ++i)
             {
@@ -243,16 +248,31 @@ namespace TestEditor
                     pic.Ellipses[i].SetCenterPoint(moveCursor.X, moveCursor.Y);
                 }
             }
+
+            for (int i = 0;i<pic.CounterSplines;++i)
+            {
+                if (pic.Splines[i].selected)
+                {
+                    pic.Splines[i].x1 += k1 - m1;
+                    pic.Splines[i].y1 += k2 - m2;
+                    pic.Splines[i].x2 += k1 - m1;
+                    pic.Splines[i].y2 += k2 - m2;
+                    pic.Splines[i].x3 += k1 - m1;
+                    pic.Splines[i].y3 += k2 - m2;
+                    pic.Splines[i].x4 += k1 - m1;
+                    pic.Splines[i].y4 += k2 - m2;
+                    pic.Splines[i].CalculatePoints();
+                    pic.Splines[i].SetCenterPoint(moveCursor.X, moveCursor.Y);
+                }
+            }
         }
 
         private void ScaleSelectedLinesX(bool right, float xPos)
         {
-            float kX = xPos;
-            float mR = xScaleR.X;
-            float mL = xScaleL.X;
+            float mR = 0;
             IpCursor pos = new IpCursor();
             grid.MoveCursor(pos, xPos, -1, true, null);
-            kX = pos.X;
+            float kX = pos.X;
 
             for (int i = 0; i < pic.CounterLines; ++i)
             {
@@ -262,21 +282,22 @@ namespace TestEditor
                     float coeff2 = 0;
                     if (right)
                     {
+                        mR = xScaleR.X;
                         coeff1 = 1 - ((xScaleR.X - pic.Lines[i].x1) / width);
                         coeff2 = 1 - ((xScaleR.X - pic.Lines[i].x2) / width);
-                        pic.Lines[i].x1 += (kX - mR) * coeff1;
-                        pic.Lines[i].x2 += (kX - mR) * coeff2;
                     }
                     else
                     {
+                        mR = xScaleL.X;
                         coeff1 = 1 - ((pic.Lines[i].x1 - xScaleL.X) / width);
                         coeff2 = 1 - ((pic.Lines[i].x2 - xScaleL.X) / width);
-                        pic.Lines[i].x1 += (kX - mL) * coeff1;
-                        pic.Lines[i].x2 += (kX - mL) * coeff2;
                     }
+                    pic.Lines[i].x1 += (kX - mR) * coeff1;
+                    pic.Lines[i].x2 += (kX - mR) * coeff2;
                     pic.Lines[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
                 }
             }
+
             for (int i = 0; i < pic.CounterEllipses; ++i)
             {
                 if (pic.Ellipses[i].selected)
@@ -298,29 +319,58 @@ namespace TestEditor
                 }
             }
 
+            for (int i = 0;i<pic.CounterSplines;++i)
+            {
+                if (pic.Splines[i].selected)
+                {
+                    float coeff1 = 0;
+                    float coeff2 = 0;
+                    float coeff3 = 0;
+                    float coeff4 = 0;
+                    if (right)
+                    {
+                        mR = xScaleR.X;
+                        coeff1 = 1 - ((xScaleR.X - pic.Splines[i].x1) / width);
+                        coeff2 = 1 - ((xScaleR.X - pic.Splines[i].x2) / width);
+                        coeff3 = 1 - ((xScaleR.X - pic.Splines[i].x3) / width);
+                        coeff4 = 1 - ((xScaleR.X - pic.Splines[i].x4) / width);
+                    }
+                    else
+                    {
+                        mR = xScaleL.X;
+                        coeff1 = 1 - ((pic.Splines[i].x1 - xScaleL.X) / width);
+                        coeff2 = 1 - ((pic.Splines[i].x2 - xScaleL.X) / width);
+                        coeff3 = 1 - ((pic.Splines[i].x3 - xScaleL.X) / width);
+                        coeff4 = 1 - ((pic.Splines[i].x4 - xScaleL.X) / width);
+                    }
+                    pic.Splines[i].x1 += (kX - mR) * coeff1;
+                    pic.Splines[i].x2 += (kX - mR) * coeff2;
+                    pic.Splines[i].x3 += (kX - mR) * coeff3;
+                    pic.Splines[i].x4 += (kX - mR) * coeff4;
+                    pic.Splines[i].CalculatePoints();
+                    pic.Splines[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
+                }
+            }
+
             if (right)
             {
                 width += kX - mR;
                 x2 = x1 + width;
-                grid.MoveCursor(xScaleR, xPos, -1, true, null);
             }
             else
             {
-                x1 += kX - mL;
+                x1 += kX - mR;
                 width = x2 - x1;
-                grid.MoveCursor(xScaleL, xPos, -1, true, null);
             }
             DefaultControllerPosition(true, true);
         }
 
         private void ScaleSelectedLinesY(bool up, float yPos)
         {
-            float kY = yPos;
-            float mU = yScaleU.Y;
-            float mD = yScaleD.Y;
+            float mR = 0;
             IpCursor pos = new IpCursor();
             grid.MoveCursor(pos, -1, yPos, true, null);
-            kY = pos.Y;
+            float kY = pos.Y;
 
             for (int i = 0; i < pic.CounterLines; ++i)
             {
@@ -330,33 +380,64 @@ namespace TestEditor
                     float coeff2 = 0;
                     if (up)
                     {
+                        mR = yScaleU.Y;
                         coeff1 = 1 - ((pic.Lines[i].y1 - yScaleU.Y) / height);
                         coeff2 = 1 - ((pic.Lines[i].y2 - yScaleU.Y) / height);
-                        pic.Lines[i].y1 += (kY - mU) * coeff1;
-                        pic.Lines[i].y2 += (kY - mU) * coeff2;
                     }
                     else
                     {
+                        mR = yScaleD.Y;
                         coeff1 = 1 - ((yScaleD.Y - pic.Lines[i].y1) / height);
                         coeff2 = 1 - ((yScaleD.Y - pic.Lines[i].y2) / height);
-                        pic.Lines[i].y1 += (kY - mD) * coeff1;
-                        pic.Lines[i].y2 += (kY - mD) * coeff2;
                     }
+                    pic.Lines[i].y1 += (kY - mR) * coeff1;
+                    pic.Lines[i].y2 += (kY - mR) * coeff2;
                     pic.Lines[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
                 }
 
             }
+
+            for (int i = 0; i < pic.CounterSplines; ++i)
+            {
+                if (pic.Splines[i].selected)
+                {
+                    float coeff1 = 0;
+                    float coeff2 = 0;
+                    float coeff3 = 0;
+                    float coeff4 = 0;
+                    if (up)
+                    {
+                        mR = yScaleU.Y;
+                        coeff1 = 1 - ((pic.Splines[i].y1 - yScaleU.Y) / height);
+                        coeff2 = 1 - ((pic.Splines[i].y2 - yScaleU.Y) / height);
+                        coeff2 = 1 - ((pic.Splines[i].y3 - yScaleU.Y) / height);
+                        coeff2 = 1 - ((pic.Splines[i].y4 - yScaleU.Y) / height);
+                    }
+                    else
+                    {
+                        mR = yScaleD.Y;
+                        coeff1 = 1 - ((yScaleD.Y - pic.Splines[i].y1) / height);
+                        coeff2 = 1 - ((yScaleD.Y - pic.Splines[i].y2) / height);
+                        coeff3 = 1 - ((yScaleD.Y - pic.Splines[i].y3) / height);
+                        coeff4 = 1 - ((yScaleD.Y - pic.Splines[i].y4) / height);
+                    }
+                    pic.Splines[i].y1 += (kY - mR) * coeff1;
+                    pic.Splines[i].y2 += (kY - mR) * coeff2;
+                    pic.Splines[i].y3 += (kY - mR) * coeff3;
+                    pic.Splines[i].y4 += (kY - mR) * coeff4;
+                    pic.Splines[i].CalculatePoints();
+                    pic.Splines[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
+                }
+            }
             if (up)
             {
-                y1 += kY - mU;
-                height += mU - kY;
-                grid.MoveCursor(yScaleU, -1, yPos, true, null);
+                y1 += kY - mR;
+                height += mR - kY;
             }
             else
             {
-                height += kY - mD;
+                height += kY - mR;
                 y2 = y1 + height;
-                grid.MoveCursor(yScaleD, -1, yPos, true, null);
             }
             DefaultControllerPosition(true, true);
         }
@@ -380,6 +461,9 @@ namespace TestEditor
             for (int i = 0; i < pic.CounterEllipses; ++i)
                 if (pic.Ellipses[i].selected)
                     pic.Ellipses[i].RotateCircle(cursorAngle - (float)Math.PI);
+            for (int i = 0; i < pic.CounterSplines; ++i)
+                if (pic.Splines[i].selected)
+                    pic.Splines[i].RotateSpline(cursorAngle - (float)Math.PI);
         }
 
         private void ShowElements(bool movecursor, bool xScalel, bool xScaler, bool yScaleu, bool yScaled, bool xyScaleur, bool rotator)
@@ -428,10 +512,11 @@ namespace TestEditor
 
             xyScaleUR.X = x2;
             xyScaleUR.Y = y1;
-            rotationCursor.X = x2 - width / 2;
-            rotationCursor.Y = y2 - height / 2 - radius;
             frsAngle = (float)Math.PI;
+            cursorAngle = frsAngle;
             radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
+            rotationCursor.X = moveCursor.X;
+            rotationCursor.Y = moveCursor.Y - radius;
             CalculateNormals();
         }
 
@@ -472,50 +557,24 @@ namespace TestEditor
 
         public override void MirrorSelectedX()
         {
-            bool f = false;
             for (int i = 0; i < pic.CounterLines; ++i)
-            {
                 if (pic.Lines[i].selected)
-                {
-                    if (pic.Lines[i].x1 < moveCursor.X)
-                        pic.Lines[i].x1 = pic.Lines[i].x1 + Math.Abs(moveCursor.X - pic.Lines[i].x1) * 2;
-                    else
-                        pic.Lines[i].x1 = pic.Lines[i].x1 - Math.Abs(moveCursor.X - pic.Lines[i].x1) * 2;
-                    if (pic.Lines[i].x2 > moveCursor.X)
-                        pic.Lines[i].x2 = pic.Lines[i].x2 - Math.Abs(pic.Lines[i].x2 - moveCursor.X) * 2;
-                    else
-                        pic.Lines[i].x2 = pic.Lines[i].x2 + Math.Abs(moveCursor.X - pic.Lines[i].x2) * 2;
-                    f = true;
-                }
-            }
-            if (f)
-            {
-                CreateGizmo();
-            }
+                    pic.Lines[i].MirrorX(moveCursor);
+            for (int i = 0;i<pic.CounterSplines;++i)
+                if (pic.Splines[i].selected)
+                    pic.Splines[i].MirrorX(moveCursor);
+            CreateGizmo();
         }
 
         public override void MirrorSelectedY()
         {
-            bool f = false;
             for (int i = 0; i < pic.CounterLines; ++i)
-            {
                 if (pic.Lines[i].selected)
-                {
-                    if (pic.Lines[i].y1 < moveCursor.Y)
-                        pic.Lines[i].y1 = pic.Lines[i].y1 + Math.Abs(moveCursor.Y - pic.Lines[i].y1) * 2;
-                    else
-                        pic.Lines[i].y1 = pic.Lines[i].y1 - Math.Abs(moveCursor.Y - pic.Lines[i].y1) * 2;
-                    if (pic.Lines[i].y2 > moveCursor.Y)
-                        pic.Lines[i].y2 = pic.Lines[i].y2 - Math.Abs(pic.Lines[i].y2 - moveCursor.Y) * 2;
-                    else
-                        pic.Lines[i].y2 = pic.Lines[i].y2 + Math.Abs(moveCursor.Y - pic.Lines[i].y2) * 2;
-                    f = true;
-                }
-            }
-            if (f)
-            {
-                CreateGizmo();
-            }
+                    pic.Lines[i].MirrorY(moveCursor);
+            for (int i = 0; i < pic.CounterSplines; ++i)
+                if (pic.Splines[i].selected)
+                    pic.Splines[i].MirrorY(moveCursor);
+            CreateGizmo();
         }
 
         public override void Control(int xPos, int yPos)
