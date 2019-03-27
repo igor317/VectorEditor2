@@ -15,6 +15,8 @@ namespace TestEditor
         private SelectRect selectRect;
         private IpGrid grid;
         private IpPicture pic;
+
+        private bool f = false;
         #endregion
 
         #region GET&GET METHODS
@@ -144,6 +146,19 @@ namespace TestEditor
             pic.DeleteSelectedCircles();
             pic.DeleteSelectedSpline();
             gizmo = null;
+        }
+
+        public void CopySelected()
+        {
+            f = pic.CopyPicture();
+        }
+        public void PasteSelected()
+        {
+            if (f)
+            {
+                pic.PastePicture();
+                CreateGizmo();
+            }
         }
 
         #endregion

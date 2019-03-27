@@ -41,8 +41,10 @@ namespace TestEditor
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
-            label2.Text = Convert.ToString(e.X + " " + (e.X+pictureEditor.XOffset)/(pictureEditor.ScaleCoeff));
-            label3.Text = Convert.ToString(e.X + " " + (e.X / (pictureEditor.ScaleCoeff)));
+            //label2.Text = Convert.ToString(e.X + " " + (e.X+pictureEditor.XOffset)/(pictureEditor.ScaleCoeff));
+            //label3.Text = Convert.ToString(e.X + " " + (e.X / (pictureEditor.ScaleCoeff)));
+
+            //label3.Text = Convert.ToString(pictureEditor.Picture.Lines.Length);
             if (inSelect)
             {
                 switch (e.Button)
@@ -201,6 +203,7 @@ namespace TestEditor
                     break;
             }
             CheckState();
+            label2.Text = Convert.ToString("Selected " + pictureEditor.Picture.GetCountSelected());
             pictureEditor.Draw();
         }
 
@@ -522,6 +525,17 @@ namespace TestEditor
         {
             pictureEditor.SetEditMode(EditMode.SplineM);
             DrawMode();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureEditor.GizmoEditor.CopySelected();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureEditor.GizmoEditor.PasteSelected();
+            pictureEditor.Draw();
         }
     }
 }

@@ -410,8 +410,8 @@ namespace TestEditor
                         mR = yScaleU.Y;
                         coeff1 = 1 - ((pic.Splines[i].y1 - yScaleU.Y) / height);
                         coeff2 = 1 - ((pic.Splines[i].y2 - yScaleU.Y) / height);
-                        coeff2 = 1 - ((pic.Splines[i].y3 - yScaleU.Y) / height);
-                        coeff2 = 1 - ((pic.Splines[i].y4 - yScaleU.Y) / height);
+                        coeff3 = 1 - ((pic.Splines[i].y3 - yScaleU.Y) / height);
+                        coeff4 = 1 - ((pic.Splines[i].y4 - yScaleU.Y) / height);
                     }
                     else
                     {

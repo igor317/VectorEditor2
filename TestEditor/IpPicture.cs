@@ -11,7 +11,7 @@ namespace TestEditor
     class IpPicture
     {
         #region VARIABLES
-        private const short countAddingLines = 2;
+        private const short countAddingLines = 1;
 
         private LinePic[] lines;
         private IpSpline[] splines;
@@ -20,6 +20,10 @@ namespace TestEditor
         private LinePic[] bufferLines;
         private Ellipse[] bufferCircles;
         private IpSpline[] bufferSplines;
+        int counterSBuff = 0;
+        int counterLBuff = 0;
+        int counterCBuff = 0;
+
         private int counterLines = countAddingLines;
         private int counterCircles = countAddingLines;
         private int counterSplines = countAddingLines;
@@ -362,6 +366,148 @@ namespace TestEditor
             Array.Copy(bufferSplines, splines, bufferSplines.Length);
             Array.Clear(splines, counterS, countAddingLines);
             bufferSplines = null;
+        }
+
+        public bool CopyPicture()
+        {
+            bool f = false;
+            for (int i = 0; i < CounterSplines; ++i)
+                if (splines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            for (int i = 0; i < CounterLines; ++i)
+            {
+                if (lines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            }
+            for (int i = 0; i < CounterEllipses; ++i)
+            {
+                if (circles[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            }
+            if (!f)
+                return false;
+            counterSBuff = 0;
+            counterLBuff = 0;
+            counterCBuff = 0;
+            int counterLines1 = countAddingLines;
+            int counterCircles1 = countAddingLines;
+            int counterSplines1 = countAddingLines;
+            bufferLines = new LinePic[counterLines1];
+            bufferCircles = new Ellipse[counterCircles1];
+            bufferSplines = new IpSpline[counterSplines1];
+
+            for (int i = 0; i < splines.Length; ++i)
+            {
+                if (counterSBuff >= counterSplines1 - 1)
+                {
+                    counterSplines1 += countAddingLines;
+                    Array.Resize(ref bufferSplines, counterSplines1);
+                }
+                if (splines[i].selected)
+                {
+                    bufferSplines[counterSBuff] = splines[i];
+                    counterSBuff++;
+                }
+            }
+
+            for (int i = 0; i < circles.Length; ++i)
+            {
+                if (counterCBuff >= counterCircles1 - 1)
+                {
+                    counterCircles1 += countAddingLines;
+                    Array.Resize(ref bufferCircles, counterCircles1);
+                }
+                if (circles[i].selected)
+                {
+                    bufferCircles[counterCBuff] = circles[i];
+                    counterCBuff++;
+                }
+                
+            }
+
+            for (int i = 0; i < lines.Length; ++i)
+            {
+                if (counterLBuff >= counterLines1 - 1)
+                {
+                    counterLines1 += countAddingLines;
+                    Array.Resize(ref bufferLines, counterLines1);
+                }
+                if (lines[i].selected)
+                {
+                    bufferLines[counterLBuff] = lines[i];
+                    counterLBuff++;
+                }
+            }
+            return true;
+        }
+
+        public void PastePicture()
+        {
+            for (int i = 0; i < counter; ++i)
+                lines[i].selected = false;
+            for (int i = 0; i < counterC; ++i)
+                circles[i].selected = false;
+            for (int i = 0; i < counterS; ++i)
+                splines[i].selected = false;
+
+            if (bufferLines != null && bufferSplines != null && bufferCircles != null)
+            {
+                counter += counterLBuff-1;
+                counterC += counterCBuff-1;
+                counterS += counterSBuff-1;
+                Array.Resize(ref splines, counterS+1);
+                Array.Resize(ref lines, counter+1);
+                Array.Resize(ref circles, counterC+1);
+
+                Array.Copy(bufferLines, 0, lines, counter - counterLBuff+1, counterLBuff);
+                Array.Copy(bufferCircles, 0, circles, counterC - counterCBuff+1, counterCBuff);
+                Array.Copy(bufferSplines, 0, splines, counterS - counterSBuff+1, counterSBuff);
+
+               // bufferLines = null;
+               // bufferSplines = null;
+                //bufferCircles = null;
+            }
+        }
+
+        public int GetCountSelectedLines()
+        {
+            int cL = 0;
+            for (int i = 0; i < counter; ++i)
+                if (lines[i].selected)
+                    cL++;
+            return cL;
+        }
+
+        public int GetCountSelectedEllipse()
+        {
+            int cS = 0;
+            for (int i = 0; i < counterC; ++i)
+                if (circles[i].selected)
+                    cS++;
+            return cS;
+        }
+
+        public int GetCountSelectedSplines()
+        {
+            int cSp = 0;
+            for (int i = 0; i < counterS; ++i)
+                if (splines[i].selected)
+                    cSp++;
+            return cSp;
+        }
+
+        public int GetCountSelected()
+        {
+            return GetCountSelectedLines() + GetCountSelectedEllipse() + GetCountSelectedSplines();
         }
         #endregion
     }
