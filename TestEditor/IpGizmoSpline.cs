@@ -173,7 +173,7 @@ namespace TestEditor
             float m1 = p1Cursor.X;
             float m2 = p1Cursor.Y;
 
-            grid.MoveCursor(p1Cursor, xPos, yPos, true, moveCursor);
+            grid.MoveCursor(p1Cursor, xPos, yPos, true, p2Cursor);
             k1 = p1Cursor.X;
             k2 = p1Cursor.Y;
 
@@ -224,7 +224,7 @@ namespace TestEditor
             float m1 = p4Cursor.X;
             float m2 = p4Cursor.Y;
 
-            grid.MoveCursor(p4Cursor, xPos, yPos, true, moveCursor);
+            grid.MoveCursor(p4Cursor, xPos, yPos, true, p3Cursor);
             k1 = p4Cursor.X;
             k2 = p4Cursor.Y;
 
