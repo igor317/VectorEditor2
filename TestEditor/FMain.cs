@@ -45,6 +45,7 @@ namespace TestEditor
             //label3.Text = Convert.ToString(e.X + " " + (e.X / (pictureEditor.ScaleCoeff)));
 
             //label3.Text = Convert.ToString(pictureEditor.Picture.Lines.Length);
+
             if (inSelect)
             {
                 switch (e.Button)
@@ -87,6 +88,7 @@ namespace TestEditor
                                 break;
                         }
                         pictureEditor.Draw();
+
                         break;
                     case MouseButtons.Right:
                         switch (pictureEditor.EditMode)
@@ -203,7 +205,8 @@ namespace TestEditor
                     break;
             }
             CheckState();
-            label2.Text = Convert.ToString("Selected " + pictureEditor.Picture.GetCountSelected());
+            //label2.Text = Convert.ToString("Selected " + pictureEditor.Picture.GetCountSelected());
+            //label2.Text = Convert.ToString(pictureEditor.ccc);
             pictureEditor.Draw();
         }
 
@@ -217,6 +220,7 @@ namespace TestEditor
         {
             pictureEditor.ClearPicture();
             pictureEditor.Draw();
+            this.Text = "Vector Editor";
         }
 
         private void CheckState()
@@ -392,6 +396,7 @@ namespace TestEditor
 
                 pictureEditor.Picture.LoadFile(path);
                 pictureEditor.Draw();
+                this.Text = "Vector Editor | " + openFileDialog.SafeFileName;
             }
             openFileDialog.Dispose();
         }
@@ -431,7 +436,6 @@ namespace TestEditor
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
-            label2.Text = Convert.ToString(xOffsetB.Value);
             pictureEditor.Draw();
         }
 
@@ -501,6 +505,7 @@ namespace TestEditor
             lblCoeff.Text = Convert.ToString(pictureEditor.ScaleCoeff);
             //label1.Text = Convert.ToString(pictureEditor.ScaleCoeff);
             pictureEditor.Draw();
+            label2.Text = Convert.ToString(pictureEditor.ccc);
         }
 
         private void btnMirror_Click(object sender, EventArgs e)

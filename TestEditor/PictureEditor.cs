@@ -48,6 +48,8 @@ namespace TestEditor
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
+
+        public int ccc = 0;
         #endregion
 
         #region SET&GET METHODS
@@ -120,14 +122,25 @@ namespace TestEditor
 
         private void DrawLines()
         {
+            ccc = 0;
             int count = pic.CounterLines;
             if (editMode == EditMode.LineModeD)
-                count++;
+            count++;
             for (int i = 0; i < count; ++i)
             {
                 if (pic.Lines[i] == 0)
                     return;
-                pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                float xMin = Math.Min(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
+                float xMax = Math.Max(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
+                float yMin = Math.Min(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
+                float yMax = Math.Max(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
+                float lX = xMax - xMin;
+                float lY = yMax - yMin;
+                if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
+                {
+                    pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    ccc++;
+                }
             }
         }
 

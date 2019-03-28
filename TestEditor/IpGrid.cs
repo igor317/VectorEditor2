@@ -99,7 +99,7 @@ namespace TestEditor
             cursor.Y = (yR >= 0.5f) ? yT : yT + 1;
         }
 
-        private void MagnetLines(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, float res)
+        private void MagnetLines(IpCursor cursor, bool ignoreSelected, float res)
         {
             for (int i = 0; i < pic.CounterLines; ++i)
             {
@@ -110,13 +110,13 @@ namespace TestEditor
                 }
                 if (magnetPoints)
                 {
-                    if (Math.Abs(pic.Lines[i].x1 - xPos) <= res && Math.Abs(pic.Lines[i].y1 - yPos) <= res)
+                    if (Math.Abs(pic.Lines[i].x1 - cursor.X) <= res && Math.Abs(pic.Lines[i].y1 - cursor.Y) <= res)
                     {
                         cursor.X = pic.Lines[i].x1;
                         cursor.Y = pic.Lines[i].y1;
                         break;
                     }
-                    if (Math.Abs(pic.Lines[i].x2 - xPos) <= res && Math.Abs(pic.Lines[i].y2 - yPos) <= res)
+                    if (Math.Abs(pic.Lines[i].x2 - cursor.X) <= res && Math.Abs(pic.Lines[i].y2 - cursor.Y) <= res)
                     {
                         cursor.X = pic.Lines[i].x2;
                         cursor.Y = pic.Lines[i].y2;
@@ -124,7 +124,7 @@ namespace TestEditor
                     }
                 }
                 if (magnetCenter)
-                    if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2) / 2 - xPos) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2) / 2 - yPos) <= res)
+                    if (Math.Abs((pic.Lines[i].x1 + pic.Lines[i].x2) / 2 - cursor.X) <= res && Math.Abs((pic.Lines[i].y1 + pic.Lines[i].y2) / 2 - cursor.Y) <= res)
                     {
                         cursor.X = (pic.Lines[i].x1 + pic.Lines[i].x2) / 2;
                         cursor.Y = (pic.Lines[i].y1 + pic.Lines[i].y2) / 2;
@@ -154,7 +154,7 @@ namespace TestEditor
                             float t3 = (y2 - y1 != 0) ? Math.Abs((yP - y1) / (y2 - y1)) : 0;
                             float t4 = (y4 - y3 != 0) ? Math.Abs((yP - y3) / (y4 - y3)) : 0;
                             if (t1 <= 1 && t2 <= 1 && t3 <= 1 && t4 <= 1)
-                                if (Math.Abs(xP - xPos) <= res && Math.Abs(yP - yPos) <= res)
+                                if (Math.Abs(xP - cursor.X) <= res && Math.Abs(yP - cursor.Y) <= res)
                                 {
                                     cursor.X = xP;
                                     cursor.Y = yP;
@@ -166,7 +166,7 @@ namespace TestEditor
             }
         }
 
-        private void MagnetSplines(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, float res)
+        private void MagnetSplines(IpCursor cursor, bool ignoreSelected, float res)
         {
             for (int i = 0; i < pic.CounterSplines; ++i)
             {
@@ -177,13 +177,13 @@ namespace TestEditor
                 }
                 if (magnetPoints)
                 {
-                    if (Math.Abs(pic.Splines[i].x1 - xPos) <= res && Math.Abs(pic.Splines[i].y1 - yPos) <= res)
+                    if (Math.Abs(pic.Splines[i].x1 - cursor.X) <= res && Math.Abs(pic.Splines[i].y1 - cursor.Y) <= res)
                     {
                         cursor.X = pic.Splines[i].x1;
                         cursor.Y = pic.Splines[i].y1;
                         break;
                     }
-                    if (Math.Abs(pic.Splines[i].x4 - xPos) <= res && Math.Abs(pic.Splines[i].y4 - yPos) <= res)
+                    if (Math.Abs(pic.Splines[i].x4 - cursor.X) <= res && Math.Abs(pic.Splines[i].y4 - cursor.Y) <= res)
                     {
                         cursor.X = pic.Splines[i].x4;
                         cursor.Y = pic.Splines[i].y4;
@@ -193,12 +193,31 @@ namespace TestEditor
             }
         }
 
+        private void MagnetEllipses(IpCursor cursor, bool ignoreSelected, float res)
+        {
+            for (int i = 0;i<pic.CounterEllipses;++i)
+            {
+                if (ignoreSelected)
+                {
+                    if (pic.Ellipses[i].selected)
+                        continue;
+                }
+                if (magnetCenter)
+                {
+                    if (Math.Abs(pic.Ellipses[i].xR - cursor.X) <= res && Math.Abs(pic.Ellipses[i].yR - cursor.Y) <= res)
+                    {
+                        cursor.X = pic.Ellipses[i].xR;
+                        cursor.Y = pic.Ellipses[i].yR;
+                    }
+                }
+            }
+        }
+
         private void MagnetCursorPosition(IpCursor cursor, float xPos, float yPos,bool ignoreSelected, float res)
         {
-            cursor.X = xPos;
-            cursor.Y = yPos;
-            MagnetLines(cursor, xPos, yPos, ignoreSelected, res);
-            MagnetSplines(cursor, xPos, yPos, ignoreSelected, res);
+            MagnetLines(cursor, ignoreSelected, res);
+            MagnetSplines(cursor, ignoreSelected, res);
+            MagnetEllipses(cursor, ignoreSelected, res);
         }
         #endregion
 
@@ -265,34 +284,6 @@ namespace TestEditor
 
         public void MoveCursor(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, IpCursor pivot)
         {
-            if (EnableMagnet)
-            {
-                if (ignoreSelected)
-                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, true, 5);
-                else
-                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, false, 5);
-                return;
-            }
-            if (EnableGrid)
-            {
-                if (xPos != -1)
-                    GridXPosition(cursor, (xPos + xOffset) / ScaleCoeff);
-                if (yPos != -1)
-                    GridYPosition(cursor, (yPos + yOffset) / ScaleCoeff);
-                return;
-            }
-
-            if (rotationGrid && pivot != null)
-            {
-                float xp = pivot.X * ScaleCoeff - xOff - xPos;
-                float yp = pivot.Y * ScaleCoeff - yoff - yPos;
-                float raduis = (float)Math.Sqrt(Math.Pow(xp, 2) + Math.Pow(yp, 2));
-                float angle = (float)Math.Atan2(-xp, -yp);
-                angle = GridRotation(angle);
-                cursor.X = pivot.X + raduis / ScaleCoeff * (float)Math.Sin(angle);
-                cursor.Y = pivot.Y + raduis / ScaleCoeff * (float)Math.Cos(angle);
-                return;
-            }
             if (xPos != -1)
             {
                 if (xPos < sizeX)
@@ -310,6 +301,33 @@ namespace TestEditor
                     cursor.Y = (sizeY + yOffset) / ScaleCoeff;
                 if (yPos < 0)
                     cursor.Y = 0;
+            }
+            if (EnableMagnet)
+            {
+                if (ignoreSelected)
+                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, true, 5);
+                else
+                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, false, 5);
+                //return;
+            }
+            if (EnableGrid)
+            {
+                if (xPos != -1)
+                    GridXPosition(cursor, (xPos + xOffset) / ScaleCoeff);
+                if (yPos != -1)
+                    GridYPosition(cursor, (yPos + yOffset) / ScaleCoeff);
+                //return;
+            }
+
+            if (rotationGrid && pivot != null)
+            {
+                float xp = pivot.X * ScaleCoeff - xOff - xPos;
+                float yp = pivot.Y * ScaleCoeff - yoff - yPos;
+                float raduis = (float)Math.Sqrt(Math.Pow(xp, 2) + Math.Pow(yp, 2));
+                float angle = (float)Math.Atan2(-xp, -yp);
+                angle = GridRotation(angle);
+                cursor.X = pivot.X + raduis / ScaleCoeff * (float)Math.Sin(angle);
+                cursor.Y = pivot.Y + raduis / ScaleCoeff * (float)Math.Cos(angle);
             }
         }
 
