@@ -38,14 +38,16 @@ namespace TestEditor
             SetCenterPoint(xCenter, yCenter);
             hc1 = yCenter - yR;
             wc1 = xR - xCenter;
+
             radius1 = Convert.ToSingle(Math.Sqrt(hc1 * hc1 + wc1 * wc1));
+
             angle1 = (float)Math.Atan2(hc1, wc1);
             pAlpha = alpha;
         }
 
         public void RotateCircle(float angle)
         {
-            double radAngle1 =Math.PI/2 + angle + angle1;
+            double radAngle1 = Math.PI/2 + angle + angle1;
             xR = xCent + radius1 * (float)Math.Sin(radAngle1);
             yR = yCent + radius1 * (float)Math.Cos(radAngle1);
             alpha = pAlpha + angle;

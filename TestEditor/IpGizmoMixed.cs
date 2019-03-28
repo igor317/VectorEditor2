@@ -302,20 +302,25 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i].selected)
                 {
+                    float coeffC = 0;
                     float coeff1 = 0;
+
                     float coeff2 = 0;
                     if (right)
                     {
-                        coeff1 = 1 - ((xScaleR.X - pic.Ellipses[i].xR) / width);
-                        //coeff2 = 1 - ((gizmo.xScaleR.X - pic.Ellipses[i].radY) / gizmo.width);
-                        float k = pic.Ellipses[i].radX + pic.Ellipses[i].radY;
-                        float rX = pic.Ellipses[i].radX;
-                        pic.Ellipses[i].radX += (kX - mR) / 2 * (float)Math.Abs(Math.Cos(pic.Ellipses[i].alpha));
-                        pic.Ellipses[i].radY += (kX - mR) / 2 * (float)Math.Abs(Math.Sin(pic.Ellipses[i].alpha));
-                        pic.Ellipses[i].xR += (kX - mR) * coeff1;
-                        pic.Ellipses[i].CalculatePoints();
+                        mR = xScaleR.X;
                     }
-                    pic.Ellipses[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
+                    else
+                    {
+                        //mR = xScaleL.X;
+                        //coeff1 = 1 - ((pic.Ellipses[i].xR - xScaleL.X) / width);
+                    }
+                    //pic.Ellipses[i].radX += (kX - mR)/2 * coeff1;
+                    //pic.Ellipses[i].xR += (kX - mR) * coeffC;
+                    //pic.Ellipses[i].xRaX += (kX - mR) * coeff1;
+                    //pic.Ellipses[i].xRaY += (kX - mR) * coeffC;
+                    //pic.Ellipses[i].CalculatePoints();
+                    //pic.Ellipses[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
                 }
             }
 
