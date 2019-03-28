@@ -190,12 +190,16 @@ namespace TestEditor
         {
             counterLines = countAddingLines;
             counterCircles = countAddingLines;
+            counterSplines = countAddingLines;
             Array.Clear(lines, 0, lines.Length);
             Array.Clear(circles, 0, circles.Length);
+            Array.Clear(splines, 0, splines.Length);
             Array.Resize(ref lines, counterLines);
+            Array.Resize(ref splines, counterLines);
             Array.Resize(ref circles, counterCircles);
             counter = 0;
             counterC = 0;
+            counterS = 0;
         }
 
         public void LoadFile(string path)
@@ -493,6 +497,11 @@ namespace TestEditor
                 counter += counterLBuff-1;
                 counterC += counterCBuff-1;
                 counterS += counterSBuff-1;
+
+                counterLines = counter;
+                counterCircles = counterC;
+                counterSplines = counterS;
+
                 Array.Resize(ref splines, counterS+1);
                 Array.Resize(ref lines, counter+1);
                 Array.Resize(ref circles, counterC+1);
@@ -500,10 +509,6 @@ namespace TestEditor
                 Array.Copy(bufferLines, 0, lines, counter - counterLBuff+1, counterLBuff);
                 Array.Copy(bufferCircles, 0, circles, counterC - counterCBuff+1, counterCBuff);
                 Array.Copy(bufferSplines, 0, splines, counterS - counterSBuff+1, counterSBuff);
-
-               // bufferLines = null;
-               // bufferSplines = null;
-                //bufferCircles = null;
             }
         }
 

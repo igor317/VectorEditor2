@@ -88,10 +88,10 @@ namespace TestEditor
                 if (y[i] > yMax)
                     yMax = y[i];
             }
-            x1 = xR - xMin;
-            y1 = yR - yMin;
-            x2 = xR - xMax;
-            y2 = yR - yMax;
+            x1 = Math.Abs(xR - xMin);
+            y1 = Math.Abs(yR - yMin);
+            x2 = Math.Abs(xR - xMax);
+            y2 = Math.Abs(yR - yMax);
         }
 
         public void DrawEllipse(Graphics buff, float xf, float yf, float coeff, Pen selectedPen)

@@ -153,11 +153,21 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     return;
-                pic.Ellipses[i].DrawEllipse(gBuff,xOffset,yOffset,scaleCoeff,gizmoEditor.SelectionPen);
+                float xMax = pic.Ellipses[i].x1 * scaleCoeff - XOffset;
+                float xMin = pic.Ellipses[i].x2 * scaleCoeff - XOffset;
+                float yMax = pic.Ellipses[i].y1 * scaleCoeff - YOffset;
+                float yMin = pic.Ellipses[i].y2 * scaleCoeff - YOffset;
+                float lX = xMax - xMin;
+                float lY = yMax - yMin;
+                if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
+                {
+                    pic.Ellipses[i].DrawEllipse(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    ccc++;
+                }
             }
         }
 
-        private void DrawSplines2()
+        private void DrawSplines()
         {
             int count = pic.CounterSplines;
             if (editMode == EditMode.SplineD)
@@ -166,7 +176,17 @@ namespace TestEditor
             {
                 if (pic.Splines[i] == 0)
                     return;
-                pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                float xMax = pic.Splines[i].xSmax * scaleCoeff - XOffset;
+                float xMin = pic.Splines[i].xSmin * scaleCoeff - XOffset;
+                float yMax = pic.Splines[i].ySmax * scaleCoeff - YOffset;
+                float yMin = pic.Splines[i].ySmin * scaleCoeff - YOffset;
+                float lX = xMax - xMin;
+                float lY = yMax - yMin;
+                if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
+                {
+                    pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    ccc++;
+                }
             }
         }
         #endregion
@@ -199,7 +219,7 @@ namespace TestEditor
             DrawGizmo();
             DrawLines();
             DrawCircles();
-            DrawSplines2();
+            DrawSplines();
             if (drawScaleCoeff && scaleCoeff > minScale)
                 gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
             graph.DrawImageUnscaled(bmp, 0, 0);

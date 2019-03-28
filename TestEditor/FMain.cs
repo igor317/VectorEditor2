@@ -307,6 +307,25 @@ namespace TestEditor
                 case Keys.ControlKey:
                     ctrl = true;
                     break;
+                case Keys.Z:
+                    if (ctrl)
+                    {
+                        pictureEditor.SetEditMode(EditMode.LineModeD);
+                        pictureEditor.Picture.StepBack();
+                        DrawMode();
+                    }
+                    break;
+                case Keys.C:
+                    if (ctrl)
+                        pictureEditor.GizmoEditor.CopySelected();
+                    break;
+                case Keys.V:
+                    if (ctrl)
+                    {
+                        pictureEditor.GizmoEditor.PasteSelected();
+                        pictureEditor.Draw();
+                    }
+                    break;
             }     
         }
 
@@ -330,16 +349,7 @@ namespace TestEditor
                 case Keys.ControlKey:
                     ctrl = false;
                     break;
-                case Keys.Z:
-                    if (ctrl)
-                    {
-                        pictureEditor.SetEditMode(EditMode.LineModeD);
-                        pictureEditor.Picture.StepBack();
-                        DrawMode();
-                    }
-                    break;
             }
-
         }
 
         private void pSelectMode_MouseClick(object sender, MouseEventArgs e)

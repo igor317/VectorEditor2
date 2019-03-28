@@ -91,7 +91,7 @@ namespace TestEditor
         public void SelectLines()
         {
             ClearSelectionArray();
-            for (int i = 0; i < pic.CounterLines + 1; ++i)
+            for (int i = 0; i < pic.CounterLines+1; ++i)
             {
                 if (pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
@@ -101,7 +101,7 @@ namespace TestEditor
                     pic.Lines[i].selected = true;
                 }
             }
-            for (int i = 0; i < pic.CounterEllipses + 1; ++i)
+            for (int i = 0; i < pic.CounterEllipses+1; ++i)
             {
                 if (pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
@@ -111,7 +111,7 @@ namespace TestEditor
                     pic.Ellipses[i].selected = true;
                 }
             }
-            for (int i = 0; i < pic.CounterSplines + 1; ++i)
+            for (int i = 0; i < pic.CounterSplines+1; ++i)
             {
                 if (pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset <= y2

@@ -394,7 +394,7 @@ namespace TestEditor
         }
         public override void MirrorSelectedY()
         {
-            pic.Splines[index].MirrorX(moveCursor);
+            pic.Splines[index].MirrorY(moveCursor);
             CreateGizmo();
         }
 
