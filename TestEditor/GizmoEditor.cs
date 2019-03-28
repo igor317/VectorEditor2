@@ -67,9 +67,9 @@ namespace TestEditor
             }
             if (countSelectedLines == 0 && countSelectedEllipses == 1 && countSelectedSplines == 0)  // GIZMO ELLIPSE
             {
-                return;
+                //return;
             }
-            if (countSelectedLines == 0 && countSelectedEllipses == 0 && countSelectedSplines == 1)
+            if (countSelectedLines == 0 && countSelectedEllipses == 0 && countSelectedSplines == 1) // GIZMO SPLINE
             {
                 gizmo = new GizmoSpline(pic, grid);
                 return;

@@ -150,6 +150,8 @@ namespace TestEditor
 
         public void CalculatePoints()
         {
+            x = null;
+            y = null;
             xSmin = 9999;
             ySmin = 9999;
             xSmax = 0;

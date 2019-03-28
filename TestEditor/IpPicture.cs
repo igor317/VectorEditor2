@@ -205,12 +205,15 @@ namespace TestEditor
             vectorPicture.LoadPicture(path);
             counter = 0;
             counterC = 0;
+            counterS = 0;
             float xC = sizeX / vectorPicture.OriginX;
             float yC = sizeY / vectorPicture.OriginY;
             counterLines = vectorPicture.CounterLines + 1;
             counterCircles = vectorPicture.CounterCircles + 1;
+            counterSplines = vectorPicture.CounterSplines + 1;
             lines = new LinePic[counterLines];
             circles = new Ellipse[counterCircles];
+            splines = new IpSpline[counterSplines];
             for (int i = 0; i < vectorPicture.CounterLines; ++i)
             {
                 lines[i].x1 = Convert.ToInt16(vectorPicture.GetLineX1(i) * xC);
@@ -224,9 +227,26 @@ namespace TestEditor
             {
                 circles[i].xR = Convert.ToInt16(vectorPicture.GetCircleXC(i) * xC);
                 circles[i].yR = Convert.ToInt16(vectorPicture.GetCircleYC(i) * yC);
-                circles[i].radX = Convert.ToInt16(vectorPicture.GetCircleRadius(i) * (xC+yC)/2);
+                circles[i].radX = Convert.ToInt16(vectorPicture.GetCircleRadX(i) * xC);
+                circles[i].radY = Convert.ToInt16(vectorPicture.GetCircleRadY(i) * yC);
+                circles[i].alpha = vectorPicture.GetCircleAlpha(i);    
                 circles[i].pen = new Pen(Color.Black);
+                circles[i].CalculatePoints();
                 counterC++;
+            }
+            for (int i = 0;i<vectorPicture.CounterSplines;++i)
+            {
+                splines[i].x1 = Convert.ToInt16(vectorPicture.GetSplineX1(i) * xC);
+                splines[i].y1 = Convert.ToInt16(vectorPicture.GetSplineY1(i) * xC);
+                splines[i].x2 = Convert.ToInt16(vectorPicture.GetSplineX2(i) * xC);
+                splines[i].y2 = Convert.ToInt16(vectorPicture.GetSplineY2(i) * xC);
+                splines[i].x3 = Convert.ToInt16(vectorPicture.GetSplineX3(i) * xC);
+                splines[i].y3 = Convert.ToInt16(vectorPicture.GetSplineY3(i) * xC);
+                splines[i].x4 = Convert.ToInt16(vectorPicture.GetSplineX4(i) * xC);
+                splines[i].y4 = Convert.ToInt16(vectorPicture.GetSplineY4(i) * xC);
+                splines[i].pen = new Pen(Color.Black);
+                splines[i].CalculatePoints();
+                counterS++;
             }
             vectorPicture.ClearBuffer();
         }
@@ -247,7 +267,16 @@ namespace TestEditor
                     for (int i = 0;i<counterC;++i)
                     {
                         file.WriteLine("<circle " + "cx=" + "\"" + circles[i].xR + "\"" + " " + "cy=" + "\"" + circles[i].yR +
-                            "\"" + " " + "r=" + "\"" + circles[i].radX + "\"" + "\\>");
+                            "\"" + " " + "rx=" + "\"" + circles[i].radX + "\"" + " " + "ry=" + "\"" + circles[i].radY + "\"" +
+                            " " + "a=" + "\"" + circles[i].alpha + "\"" +  "\\>");
+                    }
+                    
+                    for (int i = 0;i<counterS;++i)
+                    {
+                        file.WriteLine("<spline " + "x1=" + "\"" + splines[i].x1 + "\"" + " " + "y1=" + "\"" + splines[i].y1 +
+                            "\"" + " " + "x2=" + "\"" + splines[i].x2 + "\"" + " " + "y2=" + "\"" + splines[i].y2 + "\"" + " "
+                            + "x3=" + "\"" + splines[i].x3 + "\"" + " " + "y3=" + "\"" + splines[i].y3 + "\"" + " " + "x4=" + "\"" + splines[i].x4 + "\"" + " "
+                            + "y4=" + "\"" + splines[i].y4 + "\"" + "\\>");
                     }
                     file.Close();
                 }

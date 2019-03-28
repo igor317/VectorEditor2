@@ -16,12 +16,15 @@ namespace TestEditor
 
         private string[] text;                      // Контейнер для текста
         private float[] xL1, yL1, xL2, yL2;         // Массив координат
+        private float[] xS1, yS1, xS2, yS2, xS3, yS3, xS4, yS4;
 
-        private float[] xC, yC, radC;
+        private float[] xC, yC, radXC, radYC, alphaC;
         private int counterLines = 0;
         private int counterCircles = 0;
+        private int counterSplines = 0;
         private int cL = addCounterPoint;     // Максимальное количество точек
         private int cC = addCounterPoint;
+        private int cS = addCounterPoint;
         #endregion
 
         #region SET&GET METHODS
@@ -33,14 +36,18 @@ namespace TestEditor
         {
             get { return originY; }
         }
+
         public int CounterLines
         {
             get { return counterLines; }
         }
-
         public int CounterCircles
         {
             get { return counterCircles; }
+        }
+        public int CounterSplines
+        {
+            get { return counterSplines; }
         }
 
         public float GetLineX1(int pos)
@@ -68,9 +75,50 @@ namespace TestEditor
         {
             return yC[pos];
         }
-        public float GetCircleRadius(int pos)
+        public float GetCircleRadX(int pos)
         {
-            return radC[pos];
+            return radXC[pos];
+        }
+        public float GetCircleRadY(int pos)
+        {
+            return radYC[pos];
+        }
+        public float GetCircleAlpha(int pos)
+        {
+            return alphaC[pos];
+        }
+
+        public float GetSplineX1(int pos)
+        {
+            return xS1[pos];
+        }
+        public float GetSplineY1(int pos)
+        {
+            return yS1[pos];
+        }
+        public float GetSplineX2(int pos)
+        {
+            return xS2[pos];
+        }
+        public float GetSplineY2(int pos)
+        {
+            return yS2[pos];
+        }
+        public float GetSplineX3(int pos)
+        {
+            return xS3[pos];
+        }
+        public float GetSplineY3(int pos)
+        {
+            return yS3[pos];
+        }
+        public float GetSplineX4(int pos)
+        {
+            return xS4[pos];
+        }
+        public float GetSplineY4(int pos)
+        {
+            return yS4[pos];
         }
         #endregion
 
@@ -81,12 +129,25 @@ namespace TestEditor
             yL1 = new float[cL];
             xL2 = new float[cL];
             yL2 = new float[cL];
+
             xC = new float[cC];
             yC = new float[cC];
-            radC = new float[cC];
+            radXC = new float[cC];
+            radYC = new float[cC];
+            alphaC = new float[cC];
+
+            xS1 = new float[cS];
+            yS1 = new float[cS];
+            xS2 = new float[cS];
+            yS2 = new float[cS];
+            xS3 = new float[cS];
+            yS3 = new float[cS];
+            xS4 = new float[cS];
+            yS4 = new float[cS];
             string str;
             counterLines = 0;
             counterCircles = 0;
+            counterSplines = 0;
             using (StreamReader file = new StreamReader(path))
             {
                 if (path.Substring(path.Length - 3, 3) == "svg")
@@ -120,7 +181,8 @@ namespace TestEditor
                                     cC += addCounterPoint;
                                     Array.Resize(ref xC, cC);
                                     Array.Resize(ref yC, cC);
-                                    Array.Resize(ref radC, cC);
+                                    Array.Resize(ref radXC, cC);
+                                    Array.Resize(ref radYC, cC);
                                 }
                                 counterCircles++;
                             }
@@ -157,9 +219,28 @@ namespace TestEditor
                                 cC += addCounterPoint;
                                 Array.Resize(ref xC, cC);
                                 Array.Resize(ref yC, cC);
-                                Array.Resize(ref radC, cC);
+                                Array.Resize(ref radXC, cC);
+                                Array.Resize(ref radYC, cC);
+                                Array.Resize(ref alphaC, cC);
                             }
                             counterCircles++;
+                        }
+                        if (str.Substring(1, 6) == "spline")
+                        {
+                            GetSplineFromString(str);
+                            if (CounterSplines >= cS - 1)
+                            {
+                                cS += addCounterPoint;
+                                Array.Resize(ref xS1, cS);
+                                Array.Resize(ref yS1, cS);
+                                Array.Resize(ref xS2, cS);
+                                Array.Resize(ref yS2, cS);
+                                Array.Resize(ref xS3, cS);
+                                Array.Resize(ref yS3, cS);
+                                Array.Resize(ref xS4, cS);
+                                Array.Resize(ref yS4, cS);
+                            }
+                            counterSplines++;
                         }
                     }
                 }
@@ -175,8 +256,20 @@ namespace TestEditor
             yL2 = null;
             xC = null;
             yC = null;
-            radC = null;
+            radXC = null;
+            radYC = null;
+            alphaC = null;
+
             text = null;
+
+            xS1 = null;
+            yS1 = null;
+            xS2 = null;
+            yS2 = null;
+            xS3 = null;
+            yS3 = null;
+            xS4 = null;
+            yS4 = null;
         }
         #endregion
 
@@ -255,9 +348,76 @@ namespace TestEditor
                     {
                         yC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
-                    if (text[i].Substring(0, 1) == "r")
+                    if (text[i].Substring(0, 2) == "rx")
                     {
-                        radC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        radXC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "ry")
+                    {
+                        radYC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 1) == "a")
+                    {
+                        alphaC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                }
+            }
+        }
+
+        private void GetSplineFromString(string originalStr)
+        {
+            text = new string[countWords];
+            int k = 0;
+            string temp = "";
+            for (int i = 0; i < originalStr.Length; ++i)
+            {
+                if (originalStr.Substring(i, 1) != " " && originalStr.Substring(i, 1) != ">")
+                {
+                    temp += originalStr.Substring(i, 1);
+                }
+                else
+                {
+                    text[k] = temp;
+                    k++;
+                    temp = "";
+                }
+            }
+
+            for (int i = 0; i < text.Length; ++i)
+            {
+                if (text[i] != null)
+                {
+                    if (text[i].Substring(0, 2) == "x1")
+                    {
+                        xS1[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "y1")
+                    {
+                        yS1[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "x2")
+                    {
+                        xS2[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "y2")
+                    {
+                        yS2[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "x3")
+                    {
+                        xS3[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "y3")
+                    {
+                        yS3[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "x4")
+                    {
+                        xS4[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 2) == "y4")
+                    {
+                        yS4[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                 }
             }
