@@ -80,18 +80,19 @@ namespace TestEditor
             p3Cursor.Y = pic.Splines[index].y3;
             p4Cursor.X = pic.Splines[index].x4;
             p4Cursor.Y = pic.Splines[index].y4;
-            rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
-            rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
+
             if (resetRotator)
             {
                 frsAngle = (float)Math.PI;
                 cursorAngle = (float)Math.PI;
-                rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
-                rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
-                radius = (float)Math.Sqrt((pic.Splines[index].xSmax- pic.Splines[index].xSmin) / 2 * (pic.Splines[index].xSmax - pic.Splines[index].xSmin) / 2
+                radius = (float)Math.Sqrt((pic.Splines[index].xSmax - pic.Splines[index].xSmin) / 2 * (pic.Splines[index].xSmax - pic.Splines[index].xSmin) / 2
                     + (pic.Splines[index].ySmax - pic.Splines[index].ySmin) / 2 * (pic.Splines[index].ySmax - pic.Splines[index].ySmin) / 2);
                 CalculateNormals();
             }
+
+            rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
+            rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
+
         }
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
@@ -151,7 +152,6 @@ namespace TestEditor
             k1 = pos.X;
             k2 = pos.Y;
             grid.MoveCursor(moveCursor, xPos, yPos, true, null);
-
 
             pic.Splines[index].x1 += k1 - m1;
             pic.Splines[index].y1 += k2 - m2;

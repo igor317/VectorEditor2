@@ -68,8 +68,6 @@ namespace TestEditor
             xyScaleUR.X = x2;
             xyScaleUR.Y = y1;
 
-            rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
-            rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
             if (resetRotator)
             {
                 frsAngle = (float)Math.PI;
@@ -77,6 +75,10 @@ namespace TestEditor
                 radius = (float)Math.Sqrt(width / 2 * width / 2 + height / 2 * height / 2);
                 CalculateNormals();
             }
+
+            rotationCursor.X = moveCursor.X + radius * (float)Math.Sin(cursorAngle);
+            rotationCursor.Y = moveCursor.Y + radius * (float)Math.Cos(cursorAngle);
+
         }
 
         private void ResetGizmo()
@@ -208,6 +210,7 @@ namespace TestEditor
         private void MoveCenterPoint(int xPos, int yPos)
         {
             grid.MoveCursor(moveCursor, xPos, yPos, false, null);
+            DefaultControllerPosition(false, true);
             CalculateNormals();
         }
 
