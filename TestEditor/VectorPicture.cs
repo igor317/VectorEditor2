@@ -9,43 +9,42 @@ namespace TestEditor
 {
     class VectorPicture
     {
-        private struct Lines
+        public struct LoadLines
         {
-            float x1, y1, x2, y2;
-            int layer;
+            public float x1, y1, x2, y2;
+            public int layer;
         }
 
-        private struct Spline
+        public struct LoadSpline
         {
-            float x1, y1, x2, y2, x3, y3, x4, y4;
-            int layer;
+            public float x1, y1, x2, y2, x3, y3, x4, y4;
+            public int layer;
         }
 
-        private struct Ellipse
+        public struct LoadEllipse
         {
-            float x, y, radX, radY, aplha;
-            int layer;
+            public float x, y, radX, radY, alpha;
+            public int layer;
         }
+
 
         #region VARIABLES
         private const short addCounterPoint = 2;    // Увеличение размера массива
         private const short countWords = 10;        // Число слов в строке
         private float originX, originY;
-        private int[] layers;
 
         private string[] text;                      // Контейнер для текста
-        private float[] xL1, yL1, xL2, yL2;         // Массив координат
-        private float[] xS1, yS1, xS2, yS2, xS3, yS3, xS4, yS4;
+        private LoadLines[] lines;
+        private LoadSpline[] splines;
+        private LoadEllipse[] ellipses;
+        private bool haveLayer = false;
 
-        private float[] xC, yC, radXC, radYC, alphaC;
         private int counterLines = 0;
         private int counterCircles = 0;
         private int counterSplines = 0;
-        private int counterLayers = 0;
         private int cL = addCounterPoint;     // Максимальное количество точек
         private int cC = addCounterPoint;
         private int cS = addCounterPoint;
-        private int cLayer = addCounterPoint;
         #endregion
 
         #region SET&GET METHODS
@@ -56,10 +55,6 @@ namespace TestEditor
         public float OriginY
         {
             get { return originY; }
-        }
-        public int GetLayer(int pos)
-        {
-            return layers[pos];
         }
 
         public int CounterLines
@@ -75,100 +70,28 @@ namespace TestEditor
             get { return counterSplines; }
         }
 
-        public float GetLineX1(int pos)
+        public LoadLines[] Lines
         {
-            return xL1[pos];
-        }
-        public float GetLineY1(int pos)
-        {
-            return yL1[pos];
-        }
-        public float GetLineX2(int pos)
-        {
-            return xL2[pos];
-        }
-        public float GetLineY2(int pos)
-        {
-            return yL2[pos];
+            get { return lines; }
         }
 
-        public float GetCircleXC(int pos)
+        public LoadEllipse[] Ellipses
         {
-            return xC[pos];
+            get { return ellipses; }
         }
-        public float GetCircleYC(int pos)
+    
+        public LoadSpline[] Splines
         {
-            return yC[pos];
-        }
-        public float GetCircleRadX(int pos)
-        {
-            return radXC[pos];
-        }
-        public float GetCircleRadY(int pos)
-        {
-            return radYC[pos];
-        }
-        public float GetCircleAlpha(int pos)
-        {
-            return alphaC[pos];
-        }
-
-        public float GetSplineX1(int pos)
-        {
-            return xS1[pos];
-        }
-        public float GetSplineY1(int pos)
-        {
-            return yS1[pos];
-        }
-        public float GetSplineX2(int pos)
-        {
-            return xS2[pos];
-        }
-        public float GetSplineY2(int pos)
-        {
-            return yS2[pos];
-        }
-        public float GetSplineX3(int pos)
-        {
-            return xS3[pos];
-        }
-        public float GetSplineY3(int pos)
-        {
-            return yS3[pos];
-        }
-        public float GetSplineX4(int pos)
-        {
-            return xS4[pos];
-        }
-        public float GetSplineY4(int pos)
-        {
-            return yS4[pos];
+            get { return splines; }
         }
         #endregion
 
         #region PUBLIC METHODS
         public void LoadPicture(string path)
         {
-            xL1 = new float[cL];
-            yL1 = new float[cL];
-            xL2 = new float[cL];
-            yL2 = new float[cL];
-
-            xC = new float[cC];
-            yC = new float[cC];
-            radXC = new float[cC];
-            radYC = new float[cC];
-            alphaC = new float[cC];
-
-            xS1 = new float[cS];
-            yS1 = new float[cS];
-            xS2 = new float[cS];
-            yS2 = new float[cS];
-            xS3 = new float[cS];
-            yS3 = new float[cS];
-            xS4 = new float[cS];
-            yS4 = new float[cS];
+            lines = new LoadLines[cL];
+            ellipses = new LoadEllipse[cC];
+            splines = new LoadSpline[cS];
             string str;
             counterLines = 0;
             counterCircles = 0;
@@ -191,10 +114,7 @@ namespace TestEditor
                                 if (CounterLines >= cL - 1)
                                 {
                                     cL += addCounterPoint;
-                                    Array.Resize(ref xL1, cL);
-                                    Array.Resize(ref yL1, cL);
-                                    Array.Resize(ref xL2, cL);
-                                    Array.Resize(ref yL2, cL);
+                                    Array.Resize(ref lines, cL);
                                 }
                                 counterLines++;
                             }
@@ -204,10 +124,7 @@ namespace TestEditor
                                 if (CounterCircles >= cC - 1)
                                 {
                                     cC += addCounterPoint;
-                                    Array.Resize(ref xC, cC);
-                                    Array.Resize(ref yC, cC);
-                                    Array.Resize(ref radXC, cC);
-                                    Array.Resize(ref radYC, cC);
+                                    Array.Resize(ref ellipses, cC);
                                 }
                                 counterCircles++;
                             }
@@ -229,10 +146,7 @@ namespace TestEditor
                             if (CounterLines >= cL - 1)
                             {
                                 cL += addCounterPoint;
-                                Array.Resize(ref xL1, cL);
-                                Array.Resize(ref yL1, cL);
-                                Array.Resize(ref xL2, cL);
-                                Array.Resize(ref yL2, cL);
+                                Array.Resize(ref lines, cL);
                             }
                             counterLines++;
                         }
@@ -242,11 +156,7 @@ namespace TestEditor
                             if (CounterCircles >= cC - 1)
                             {
                                 cC += addCounterPoint;
-                                Array.Resize(ref xC, cC);
-                                Array.Resize(ref yC, cC);
-                                Array.Resize(ref radXC, cC);
-                                Array.Resize(ref radYC, cC);
-                                Array.Resize(ref alphaC, cC);
+                                Array.Resize(ref ellipses, cC);
                             }
                             counterCircles++;
                         }
@@ -256,14 +166,7 @@ namespace TestEditor
                             if (CounterSplines >= cS - 1)
                             {
                                 cS += addCounterPoint;
-                                Array.Resize(ref xS1, cS);
-                                Array.Resize(ref yS1, cS);
-                                Array.Resize(ref xS2, cS);
-                                Array.Resize(ref yS2, cS);
-                                Array.Resize(ref xS3, cS);
-                                Array.Resize(ref yS3, cS);
-                                Array.Resize(ref xS4, cS);
-                                Array.Resize(ref yS4, cS);
+                                Array.Resize(ref splines, cS);
                             }
                             counterSplines++;
                         }
@@ -275,26 +178,10 @@ namespace TestEditor
 
         public void ClearBuffer()
         {
-            xL1 = null;
-            yL1 = null;
-            xL2 = null;
-            yL2 = null;
-            xC = null;
-            yC = null;
-            radXC = null;
-            radYC = null;
-            alphaC = null;
-
+            lines = null;
+            ellipses = null;
             text = null;
-
-            xS1 = null;
-            yS1 = null;
-            xS2 = null;
-            yS2 = null;
-            xS3 = null;
-            yS3 = null;
-            xS4 = null;
-            yS4 = null;
+            splines = null;
         }
         #endregion
 
@@ -324,19 +211,23 @@ namespace TestEditor
                 {
                     if (text[i].Substring(0, 2) == "x1")
                     {
-                        xL1[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        lines[CounterLines].x1 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y1")
                     {
-                        yL1[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        lines[CounterLines].y1 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "x2")
                     {
-                        xL2[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        lines[CounterLines].x2 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y2")
                     {
-                        yL2[CounterLines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        lines[CounterLines].y2 = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0,1) == "l")
+                    {
+                        lines[counterLines].layer = Convert.ToInt16(GetNumbFromString(text[i]));
                     }
                 }
             }
@@ -367,23 +258,27 @@ namespace TestEditor
                 {
                     if (text[i].Substring(0, 2) == "cx")
                     {
-                        xC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        ellipses[CounterCircles].x = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "cy")
                     {
-                        yC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        ellipses[CounterCircles].y = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "rx")
                     {
-                        radXC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        ellipses[CounterCircles].radX = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "ry")
                     {
-                        radYC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        ellipses[CounterCircles].radY = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 1) == "a")
                     {
-                        alphaC[counterCircles] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        ellipses[CounterCircles].alpha = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 1) == "l")
+                    {
+                        ellipses[CounterCircles].layer = Convert.ToInt16(GetNumbFromString(text[i]));
                     }
                 }
             }
@@ -414,35 +309,39 @@ namespace TestEditor
                 {
                     if (text[i].Substring(0, 2) == "x1")
                     {
-                        xS1[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].x1 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y1")
                     {
-                        yS1[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].y1 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "x2")
                     {
-                        xS2[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].x2 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y2")
                     {
-                        yS2[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].y2 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "x3")
                     {
-                        xS3[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].x3 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y3")
                     {
-                        yS3[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].y3 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "x4")
                     {
-                        xS4[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].x4 = Convert.ToSingle(GetNumbFromString(text[i]));
                     }
                     if (text[i].Substring(0, 2) == "y4")
                     {
-                        yS4[CounterSplines] = Convert.ToSingle(GetNumbFromString(text[i]));
+                        splines[CounterSplines].y4 = Convert.ToSingle(GetNumbFromString(text[i]));
+                    }
+                    if (text[i].Substring(0, 1) == "l")
+                    {
+                        splines[CounterSplines].layer = Convert.ToInt16(GetNumbFromString(text[i]));
                     }
                 }
             }

@@ -394,34 +394,37 @@ namespace TestEditor
             splines = new IpSpline[counterSplines];
             for (int i = 0; i < vectorPicture.CounterLines; ++i)
             {
-                lines[i].x1 = Convert.ToInt16(vectorPicture.GetLineX1(i) * xC);
-                lines[i].y1 = Convert.ToInt16(vectorPicture.GetLineY1(i) * yC);
-                lines[i].x2 = Convert.ToInt16(vectorPicture.GetLineX2(i) * xC);
-                lines[i].y2 = Convert.ToInt16(vectorPicture.GetLineY2(i) * yC);
+                lines[i].x1 = Convert.ToInt16(vectorPicture.Lines[i].x1 * xC);
+                lines[i].y1 = Convert.ToInt16(vectorPicture.Lines[i].y1 * yC);
+                lines[i].x2 = Convert.ToInt16(vectorPicture.Lines[i].x2 * xC);
+                lines[i].y2 = Convert.ToInt16(vectorPicture.Lines[i].y2 * yC);
+                lines[i].layer = vectorPicture.Lines[i].layer;
                 lines[i].pen = new Pen(Color.Black);
                 counter++;
             }
             for (int i = 0;i<vectorPicture.CounterCircles;++i)
             {
-                circles[i].xR = Convert.ToInt16(vectorPicture.GetCircleXC(i) * xC);
-                circles[i].yR = Convert.ToInt16(vectorPicture.GetCircleYC(i) * yC);
-                circles[i].radX = Convert.ToInt16(vectorPicture.GetCircleRadX(i) * xC);
-                circles[i].radY = Convert.ToInt16(vectorPicture.GetCircleRadY(i) * yC);
-                circles[i].alpha = vectorPicture.GetCircleAlpha(i);    
+                circles[i].xR = Convert.ToInt16(vectorPicture.Ellipses[i].x * xC);
+                circles[i].yR = Convert.ToInt16(vectorPicture.Ellipses[i].y * yC);
+                circles[i].radX = Convert.ToInt16(vectorPicture.Ellipses[i].radX * xC);
+                circles[i].radY = Convert.ToInt16(vectorPicture.Ellipses[i].radY * yC);
+                circles[i].alpha = vectorPicture.Ellipses[i].alpha;
+                circles[i].layer = vectorPicture.Ellipses[i].layer;
                 circles[i].pen = new Pen(Color.Black);
                 circles[i].CalculatePoints();
                 counterC++;
             }
             for (int i = 0;i<vectorPicture.CounterSplines;++i)
             {
-                splines[i].x1 = Convert.ToInt16(vectorPicture.GetSplineX1(i) * xC);
-                splines[i].y1 = Convert.ToInt16(vectorPicture.GetSplineY1(i) * xC);
-                splines[i].x2 = Convert.ToInt16(vectorPicture.GetSplineX2(i) * xC);
-                splines[i].y2 = Convert.ToInt16(vectorPicture.GetSplineY2(i) * xC);
-                splines[i].x3 = Convert.ToInt16(vectorPicture.GetSplineX3(i) * xC);
-                splines[i].y3 = Convert.ToInt16(vectorPicture.GetSplineY3(i) * xC);
-                splines[i].x4 = Convert.ToInt16(vectorPicture.GetSplineX4(i) * xC);
-                splines[i].y4 = Convert.ToInt16(vectorPicture.GetSplineY4(i) * xC);
+                splines[i].x1 = Convert.ToInt16(vectorPicture.Splines[i].x1 * xC);
+                splines[i].y1 = Convert.ToInt16(vectorPicture.Splines[i].y1 * xC);
+                splines[i].x2 = Convert.ToInt16(vectorPicture.Splines[i].x2 * xC);
+                splines[i].y2 = Convert.ToInt16(vectorPicture.Splines[i].y2 * xC);
+                splines[i].x3 = Convert.ToInt16(vectorPicture.Splines[i].x3 * xC);
+                splines[i].y3 = Convert.ToInt16(vectorPicture.Splines[i].y3 * xC);
+                splines[i].x4 = Convert.ToInt16(vectorPicture.Splines[i].x4 * xC);
+                splines[i].y4 = Convert.ToInt16(vectorPicture.Splines[i].y4 * xC);
+                splines[i].layer = vectorPicture.Splines[i].layer;
                 splines[i].pen = new Pen(Color.Black);
                 splines[i].CalculatePoints();
                 counterS++;
