@@ -16,10 +16,13 @@ namespace TestEditor
         private LinePic[] lines;
         private IpSpline[] splines;
         private Ellipse[] circles;
+        private IpLayer[] layers;
 
         private LinePic[] bufferLines;
         private Ellipse[] bufferCircles;
         private IpSpline[] bufferSplines;
+        private IpLayer[] bufferLayers;
+        
         int counterSBuff = 0;
         int counterLBuff = 0;
         int counterCBuff = 0;
@@ -27,9 +30,11 @@ namespace TestEditor
         private int counterLines = countAddingLines;
         private int counterCircles = countAddingLines;
         private int counterSplines = countAddingLines;
+        private int counterLayers = 1;
         private int counterC = 0;
         private int counter = 0;
         private int counterS = 0;
+        //private int CounterLayer
         private IpCursor selectCursor;
         private IpCursor lastCursor;
         private VectorPicture vectorPicture;
@@ -53,6 +58,10 @@ namespace TestEditor
         {
             get { return splines; }
         }
+        public IpLayer[] Layers
+        {
+            get { return layers; }
+        }
 
         public int CounterLines
         {
@@ -66,6 +75,11 @@ namespace TestEditor
         {
             get { return counterS; }
         }
+        public int CounterLayers
+        {
+            get { return counterLayers; }
+        }
+
         public float ScaleCoefficient
         {
             set { scaleCoeff = value; }
@@ -84,12 +98,116 @@ namespace TestEditor
 
         #endregion
 
+        #region PRIVATE METHODS
+        private bool CopyLines()
+        {
+            bufferLines = null;
+            bool f = false;
+            for (int i = 0; i < CounterLines; ++i)
+            {
+                if (lines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            }
+            if (!f)
+                return false;
+            counterLBuff = 0;
+            int counterLines1 = countAddingLines;
+            bufferLines = new LinePic[counterLines1];
+
+            for (int i = 0; i < lines.Length; ++i)
+            {
+                if (counterLBuff >= counterLines1 - 1)
+                {
+                    counterLines1 += countAddingLines;
+                    Array.Resize(ref bufferLines, counterLines1);
+                }
+                if (lines[i].selected)
+                {
+                    bufferLines[counterLBuff] = lines[i];
+                    counterLBuff++;
+                }
+            }
+            return true;
+        }
+
+        private bool CopyEllises()
+        {
+            bufferCircles = null;
+            bool f = false;
+            for (int i = 0; i < CounterEllipses; ++i)
+            {
+                if (circles[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            }
+            if (!f)
+                return false;
+            counterCBuff = 0;
+            int counterCircles1 = countAddingLines;
+            bufferCircles = new Ellipse[counterCircles1];
+
+            for (int i = 0; i < circles.Length; ++i)
+            {
+                if (counterCBuff >= counterCircles1 - 1)
+                {
+                    counterCircles1 += countAddingLines;
+                    Array.Resize(ref bufferCircles, counterCircles1);
+                }
+                if (circles[i].selected)
+                {
+                    bufferCircles[counterCBuff] = circles[i];
+                    counterCBuff++;
+                }
+
+            }
+            return true;
+        }
+
+        private bool CopySplines()
+        {
+            bool f = false;
+            for (int i = 0; i < CounterSplines; ++i)
+                if (splines[i].selected)
+                {
+                    f = true;
+                    break;
+                }
+            if (!f)
+                return false;
+            counterSBuff = 0;
+            int counterSplines1 = countAddingLines;
+            bufferSplines = new IpSpline[counterSplines1];
+            for (int i = 0; i < splines.Length; ++i)
+            {
+                if (counterSBuff >= counterSplines1 - 1)
+                {
+                    counterSplines1 += countAddingLines;
+                    Array.Resize(ref bufferSplines, counterSplines1);
+                }
+                if (splines[i].selected)
+                {
+                    bufferSplines[counterSBuff] = splines[i];
+                    counterSBuff++;
+                }
+            }
+            return true;
+        }
+
+        #endregion
+
         #region PUBLIC METHODS
         public IpPicture(IpCursor selectCursor, IpCursor lastCursor, int sizeX, int sizeY)
         {
             lines = new LinePic[counterLines];
             circles = new Ellipse[counterCircles];
             splines = new IpSpline[counterSplines];
+            layers = new IpLayer[counterLayers];
+            layers[0] = new IpLayer();
             this.selectCursor = selectCursor;
             this.lastCursor = lastCursor;
             vectorPicture = new VectorPicture();
@@ -97,7 +215,63 @@ namespace TestEditor
             this.sizeY = sizeY;
         }
 
-        public void AddLine(Pen pen, bool DrawSelectLine)
+        public void ShowAllLayers()
+        {
+            for (int i = 0; i < Layers.Length; ++i)
+            {
+                Layers[i].active = true;
+            }
+        }
+
+        public void SwitchLayer(int index)
+        {
+            layers[index].active = (layers[index].active) ? false : true;
+        }
+
+        public void AddSelectedToLayer(int index)
+        {
+            for (int i = 0;i<counter;++i)
+            {
+                if (lines[i].selected)
+                    lines[i].layer = index;
+            }
+        }
+
+        public void DeleteLayer(int index)
+        {
+            counterLayers--;
+            int k = 0;
+            bufferLayers = new IpLayer[counterLayers];
+
+            for (int i = 0;i<layers.Length;++i)
+            {
+                if (i != index)
+                {
+                    bufferLayers[k] = layers[i];
+                    k++;
+                }
+
+            }
+            Array.Resize(ref layers, counterLayers);
+            Array.Copy(bufferLayers, layers, counterLayers);
+            bufferLayers = null;
+        }
+
+        public void AddLayer()
+        {
+            counterLayers++;
+            Array.Resize(ref layers, counterLayers);
+            layers[counterLayers - 1] = new IpLayer();
+        }
+
+        public void AddLayer(string Name)
+        {
+            counterLayers++;
+            Array.Resize(ref layers, counterLayers);
+            layers[counterLayers - 1] = new IpLayer(Name);
+        }
+
+        public void AddLine(Pen pen, bool DrawSelectLine,int layer)
         {
             if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
                 return;
@@ -106,7 +280,7 @@ namespace TestEditor
                 counterLines += countAddingLines;
                 Array.Resize(ref lines, counterLines);
             }
-            lines[counter].AddLine(lastCursor, selectCursor, pen);
+            lines[counter].AddLine(lastCursor, selectCursor, pen, layer);
 
             if (DrawSelectLine)
             {
@@ -116,7 +290,7 @@ namespace TestEditor
             }
         }
 
-        public void AddCircle(Pen pen, bool DrawSelectCircle)
+        public void AddCircle(Pen pen, bool DrawSelectCircle,int layer)
         {
             if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
                 return;
@@ -125,7 +299,7 @@ namespace TestEditor
                 counterCircles += countAddingLines;
                 Array.Resize(ref circles, counterCircles);
             }
-            circles[counterC].AddCircle(lastCursor, selectCursor,pen);
+            circles[counterC].AddCircle(lastCursor, selectCursor, pen, layer);
 
             if (DrawSelectCircle)
             {
@@ -135,7 +309,7 @@ namespace TestEditor
             }
         }
 
-        public void AddSpline(Pen pen,bool DrawSelectSpline2)
+        public void AddSpline(Pen pen, bool DrawSelectSpline2, int layer)
         {
             if (selectCursor.X == lastCursor.X && selectCursor.Y == lastCursor.Y)
                 return;
@@ -144,7 +318,7 @@ namespace TestEditor
                 counterSplines += countAddingLines;
                 Array.Resize(ref splines, counterSplines);
             }
-            splines[counterS].AddSpline(lastCursor, selectCursor, pen);
+            splines[counterS].AddSpline(lastCursor, selectCursor, pen, layer);
 
             if (DrawSelectSpline2)
             {
@@ -403,83 +577,8 @@ namespace TestEditor
 
         public bool CopyPicture()
         {
-            bool f = false;
-            for (int i = 0; i < CounterSplines; ++i)
-                if (splines[i].selected)
-                {
-                    f = true;
-                    break;
-                }
-            for (int i = 0; i < CounterLines; ++i)
-            {
-                if (lines[i].selected)
-                {
-                    f = true;
-                    break;
-                }
-            }
-            for (int i = 0; i < CounterEllipses; ++i)
-            {
-                if (circles[i].selected)
-                {
-                    f = true;
-                    break;
-                }
-            }
-            if (!f)
+            if (!CopyLines() && !CopyEllises() && !CopySplines())
                 return false;
-            counterSBuff = 0;
-            counterLBuff = 0;
-            counterCBuff = 0;
-            int counterLines1 = countAddingLines;
-            int counterCircles1 = countAddingLines;
-            int counterSplines1 = countAddingLines;
-            bufferLines = new LinePic[counterLines1];
-            bufferCircles = new Ellipse[counterCircles1];
-            bufferSplines = new IpSpline[counterSplines1];
-
-            for (int i = 0; i < splines.Length; ++i)
-            {
-                if (counterSBuff >= counterSplines1 - 1)
-                {
-                    counterSplines1 += countAddingLines;
-                    Array.Resize(ref bufferSplines, counterSplines1);
-                }
-                if (splines[i].selected)
-                {
-                    bufferSplines[counterSBuff] = splines[i];
-                    counterSBuff++;
-                }
-            }
-
-            for (int i = 0; i < circles.Length; ++i)
-            {
-                if (counterCBuff >= counterCircles1 - 1)
-                {
-                    counterCircles1 += countAddingLines;
-                    Array.Resize(ref bufferCircles, counterCircles1);
-                }
-                if (circles[i].selected)
-                {
-                    bufferCircles[counterCBuff] = circles[i];
-                    counterCBuff++;
-                }
-                
-            }
-
-            for (int i = 0; i < lines.Length; ++i)
-            {
-                if (counterLBuff >= counterLines1 - 1)
-                {
-                    counterLines1 += countAddingLines;
-                    Array.Resize(ref bufferLines, counterLines1);
-                }
-                if (lines[i].selected)
-                {
-                    bufferLines[counterLBuff] = lines[i];
-                    counterLBuff++;
-                }
-            }
             return true;
         }
 
@@ -492,23 +591,26 @@ namespace TestEditor
             for (int i = 0; i < counterS; ++i)
                 splines[i].selected = false;
 
-            if (bufferLines != null && bufferSplines != null && bufferCircles != null)
+            if (bufferCircles != null)
             {
-                counter += counterLBuff-1;
                 counterC += counterCBuff-1;
-                counterS += counterSBuff-1;
-
-                counterLines = counter;
                 counterCircles = counterC;
-                counterSplines = counterS;
-
-                Array.Resize(ref splines, counterS+1);
-                Array.Resize(ref lines, counter+1);
                 Array.Resize(ref circles, counterC+1);
-
-                Array.Copy(bufferLines, 0, lines, counter - counterLBuff+1, counterLBuff);
                 Array.Copy(bufferCircles, 0, circles, counterC - counterCBuff+1, counterCBuff);
-                Array.Copy(bufferSplines, 0, splines, counterS - counterSBuff+1, counterSBuff);
+            }
+            if (bufferLines != null)
+            {
+                counter += counterLBuff;
+                counterLines = counter + 1;
+                Array.Resize(ref lines, counter + 1);
+                Array.Copy(bufferLines, 0, lines, counter - counterLBuff + 1, counterLBuff);
+            }
+            if (bufferSplines != null)
+            {
+                counterS += counterSBuff-1;
+                counterSplines = counterS;
+                Array.Resize(ref splines, counterS + 1);
+                Array.Copy(bufferSplines, 0, splines, counterS - counterSBuff + 1, counterSBuff);
             }
         }
 

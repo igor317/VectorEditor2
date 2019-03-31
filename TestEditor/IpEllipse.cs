@@ -19,6 +19,7 @@ namespace TestEditor
         public bool selected;
         public float alpha;
         public float pAlpha;
+        public int layer;
 
         public float x1, y1, x2, y2;
 
@@ -54,7 +55,7 @@ namespace TestEditor
             CalculatePoints();
         }
 
-        public void AddCircle(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        public void AddCircle(IpCursor lastCursor, IpCursor selectCursor, Pen pen,int layer)
         {
             xR = lastCursor.X;
             yR = lastCursor.Y;
@@ -62,6 +63,8 @@ namespace TestEditor
             radY = Math.Abs(lastCursor.Y - selectCursor.Y);
             CalculatePoints();
             this.pen = pen;
+            this.layer = layer;
+            selected = false;
         }
         public void CalculatePoints()
         {

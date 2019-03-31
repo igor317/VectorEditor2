@@ -115,7 +115,7 @@ namespace TestEditor
         
         public void ResetGizmo()
         {
-            selectRect.ResetRect();
+            //selectRect.ResetRect();
             gizmo = null;
         }
 

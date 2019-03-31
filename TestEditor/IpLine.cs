@@ -15,6 +15,7 @@ namespace TestEditor
         public float y2;
         public Pen pen;
         public bool selected;
+        public int layer;
 
         private float angle1, angle2;
         private float radius1, radius2;
@@ -50,13 +51,15 @@ namespace TestEditor
             y1 = yCent + radius1 * (float)Math.Cos(radAngle1);
         }
 
-        public void AddLine(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        public void AddLine(IpCursor lastCursor, IpCursor selectCursor, Pen pen,int layer)
         {
             x1 = lastCursor.X;
             y1 = lastCursor.Y;
             x2 = selectCursor.X;
             y2 = selectCursor.Y;
+            selected = false;
             this.pen = pen;
+            this.layer = layer;
         }
 
         public void MirrorX(IpCursor cursor)

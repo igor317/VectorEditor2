@@ -28,7 +28,7 @@ namespace TestEditor
                 pic.Splines[i].selected = false;
         }
 
-        public void ResetRect()
+        public void ResetRect(bool resetSelection)
         {
             x1 = 0;
             y1 = 0;
@@ -36,7 +36,8 @@ namespace TestEditor
             y2 = 0;
             width = 0;
             height = 0;
-            ClearSelectionArray();
+            if (resetSelection)
+                ClearSelectionArray();
         }
 
         public SelectRect(IpPicture pic,SolidBrush brush)
@@ -91,38 +92,41 @@ namespace TestEditor
         public void SelectLines()
         {
             ClearSelectionArray();
-            for (int i = 0; i < pic.CounterLines+1; ++i)
+            AddLinesToSelection(true);
+
+        }
+        public void AddLinesToSelection(bool add)
+        {
+            for (int i = 0; i < pic.CounterLines + 1; ++i)
             {
                 if (pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
                     && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    pic.Lines[i].selected = true;
+                    pic.Lines[i].selected = add;
                 }
             }
-            for (int i = 0; i < pic.CounterEllipses+1; ++i)
+            for (int i = 0; i < pic.CounterEllipses + 1; ++i)
             {
                 if (pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
                     && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    pic.Ellipses[i].selected = true;
+                    pic.Ellipses[i].selected = add;
                 }
             }
-            for (int i = 0; i < pic.CounterSplines+1; ++i)
+            for (int i = 0; i < pic.CounterSplines + 1; ++i)
             {
                 if (pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset <= y2
                     && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    pic.Splines[i].selected = true;
+                    pic.Splines[i].selected = add;
                 }
             }
-
         }
-
     }
 }

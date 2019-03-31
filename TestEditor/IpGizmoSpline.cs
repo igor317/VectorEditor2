@@ -10,7 +10,7 @@ namespace TestEditor
     class GizmoSpline : IpGizmo
     {
         #region VARIABLES
-        private int index;
+        private int index = 999999;
         private Pen gizmoPen;
         private bool showGizmo;
         private IpCursor moveCursor;

@@ -22,6 +22,7 @@ namespace TestEditor
         public Pen pen;
         public bool selected;
         public float xSmin,ySmin,xSmax,ySmax;
+        public int layer;
 
         private float angle1, angle2, angle3, angle4;
         private float radius1, radius2, radius3, radius4;
@@ -72,7 +73,7 @@ namespace TestEditor
             CalculatePoints();
         }
 
-        public void AddSpline(IpCursor lastCursor, IpCursor selectCursor, Pen pen)
+        public void AddSpline(IpCursor lastCursor, IpCursor selectCursor, Pen pen,int layer)
         {
             x1 = lastCursor.X;
             y1 = lastCursor.Y;
@@ -83,7 +84,9 @@ namespace TestEditor
             x3 = (x1 + x4) / 2;
             y3 = (y1 + y4) / 2;
             this.pen = pen;
+            this.layer = layer;
             CalculatePoints();
+            selected = false;
         }
         public void Curve1(IpCursor selectCursor)
         {

@@ -48,8 +48,6 @@ namespace TestEditor
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
-
-        public int ccc = 0;
         #endregion
 
         #region SET&GET METHODS
@@ -122,7 +120,6 @@ namespace TestEditor
 
         private void DrawLines()
         {
-            ccc = 0;
             int count = pic.CounterLines;
             if (editMode == EditMode.LineModeD)
             count++;
@@ -130,6 +127,12 @@ namespace TestEditor
             {
                 if (pic.Lines[i] == 0)
                     return;
+
+                if (!pic.Layers[pic.Lines[i].layer].active)
+                {
+                    continue;
+                }
+
                 float xMin = Math.Min(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
                 float xMax = Math.Max(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
                 float yMin = Math.Min(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
@@ -139,7 +142,6 @@ namespace TestEditor
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
                     pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
-                    ccc++;
                 }
             }
         }
@@ -162,7 +164,6 @@ namespace TestEditor
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
                     pic.Ellipses[i].DrawEllipse(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
-                    ccc++;
                 }
             }
         }
@@ -185,7 +186,6 @@ namespace TestEditor
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
                     pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
-                    ccc++;
                 }
             }
         }
@@ -243,7 +243,11 @@ namespace TestEditor
             if (mode != EditMode.ReadyToSelect)
             {
                 gizmoEditor.ResetGizmo();
+                if (mode != EditMode.SelectionMode)
+                    gizmoEditor.SelectRect.ResetRect(true);
             }
+
+
 
             if (mode == EditMode.CircleModeM || mode == EditMode.LineModeM)
                 SetCursorSettings(lastCursor, 5, new Pen(Color.Green));

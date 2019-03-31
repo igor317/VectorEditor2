@@ -9,10 +9,29 @@ namespace TestEditor
 {
     class VectorPicture
     {
+        private struct Lines
+        {
+            float x1, y1, x2, y2;
+            int layer;
+        }
+
+        private struct Spline
+        {
+            float x1, y1, x2, y2, x3, y3, x4, y4;
+            int layer;
+        }
+
+        private struct Ellipse
+        {
+            float x, y, radX, radY, aplha;
+            int layer;
+        }
+
         #region VARIABLES
         private const short addCounterPoint = 2;    // Увеличение размера массива
         private const short countWords = 10;        // Число слов в строке
         private float originX, originY;
+        private int[] layers;
 
         private string[] text;                      // Контейнер для текста
         private float[] xL1, yL1, xL2, yL2;         // Массив координат
@@ -22,9 +41,11 @@ namespace TestEditor
         private int counterLines = 0;
         private int counterCircles = 0;
         private int counterSplines = 0;
+        private int counterLayers = 0;
         private int cL = addCounterPoint;     // Максимальное количество точек
         private int cC = addCounterPoint;
         private int cS = addCounterPoint;
+        private int cLayer = addCounterPoint;
         #endregion
 
         #region SET&GET METHODS
@@ -35,6 +56,10 @@ namespace TestEditor
         public float OriginY
         {
             get { return originY; }
+        }
+        public int GetLayer(int pos)
+        {
+            return layers[pos];
         }
 
         public int CounterLines
