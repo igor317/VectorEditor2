@@ -235,6 +235,16 @@ namespace TestEditor
                 if (lines[i].selected)
                     lines[i].layer = index;
             }
+            for (int i = 0;i<counterC;++i)
+            {
+                if (circles[i].selected)
+                    circles[i].layer = index;
+            }
+            for (int i = 0;i<counterS;++i)
+            {
+                if (splines[i].selected)
+                    splines[i].layer = index;
+            }
         }
 
         public void DeleteLayer(int index)
@@ -242,7 +252,6 @@ namespace TestEditor
             counterLayers--;
             int k = 0;
             bufferLayers = new IpLayer[counterLayers];
-
             for (int i = 0;i<layers.Length;++i)
             {
                 if (i != index)

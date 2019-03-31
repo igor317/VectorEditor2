@@ -155,6 +155,12 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     return;
+
+                if (!pic.Layers[pic.Ellipses[i].layer].active)
+                {
+                    continue;
+                }
+
                 float xMax = pic.Ellipses[i].x1 * scaleCoeff - XOffset;
                 float xMin = pic.Ellipses[i].x2 * scaleCoeff - XOffset;
                 float yMax = pic.Ellipses[i].y1 * scaleCoeff - YOffset;
@@ -177,6 +183,12 @@ namespace TestEditor
             {
                 if (pic.Splines[i] == 0)
                     return;
+
+                if (!pic.Layers[pic.Splines[i].layer].active)
+                {
+                    continue;
+                }
+
                 float xMax = pic.Splines[i].xSmax * scaleCoeff - XOffset;
                 float xMin = pic.Splines[i].xSmin * scaleCoeff - XOffset;
                 float yMax = pic.Splines[i].ySmax * scaleCoeff - YOffset;
