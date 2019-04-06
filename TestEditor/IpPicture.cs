@@ -16,7 +16,6 @@ namespace TestEditor
         private LinePic[] lines;
         private IpSpline[] splines;
         private Ellipse[] circles;
-        private IpLayer[] layers;
 
         private LinePic[] bufferLines;
         private Ellipse[] bufferCircles;
@@ -57,10 +56,6 @@ namespace TestEditor
         public IpSpline[] Splines
         {
             get { return splines; }
-        }
-        public IpLayer[] Layers
-        {
-            get { return layers; }
         }
 
         public int CounterLines
@@ -206,26 +201,11 @@ namespace TestEditor
             lines = new LinePic[counterLines];
             circles = new Ellipse[counterCircles];
             splines = new IpSpline[counterSplines];
-            layers = new IpLayer[counterLayers];
-            layers[0] = new IpLayer();
             this.selectCursor = selectCursor;
             this.lastCursor = lastCursor;
             vectorPicture = new VectorPicture();
             this.sizeX = sizeX;
             this.sizeY = sizeY;
-        }
-
-        public void ShowAllLayers()
-        {
-            for (int i = 0; i < Layers.Length; ++i)
-            {
-                Layers[i].active = true;
-            }
-        }
-
-        public void SwitchLayer(int index)
-        {
-            layers[index].active = (layers[index].active) ? false : true;
         }
 
         public void AddSelectedToLayer(int index)
@@ -245,39 +225,6 @@ namespace TestEditor
                 if (splines[i].selected)
                     splines[i].layer = index;
             }
-        }
-
-        public void DeleteLayer(int index)
-        {
-            counterLayers--;
-            int k = 0;
-            bufferLayers = new IpLayer[counterLayers];
-            for (int i = 0;i<layers.Length;++i)
-            {
-                if (i != index)
-                {
-                    bufferLayers[k] = layers[i];
-                    k++;
-                }
-
-            }
-            Array.Resize(ref layers, counterLayers);
-            Array.Copy(bufferLayers, layers, counterLayers);
-            bufferLayers = null;
-        }
-
-        public void AddLayer()
-        {
-            counterLayers++;
-            Array.Resize(ref layers, counterLayers);
-            layers[counterLayers - 1] = new IpLayer();
-        }
-
-        public void AddLayer(string Name)
-        {
-            counterLayers++;
-            Array.Resize(ref layers, counterLayers);
-            layers[counterLayers - 1] = new IpLayer(Name);
         }
 
         public void AddLine(Pen pen, bool DrawSelectLine,int layer)

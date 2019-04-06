@@ -13,20 +13,18 @@ namespace TestEditor
     public partial class MainWindow : Form
     {
         PictureEditor pictureEditor; // Класс редактора
+        PanelLayer panelLayer;
         OpenFileDialog openFileDialog; // Тест
         SaveFileDialog saveFileDialog; // Тест2
-        bool inSelect = false;
-        bool ctrl = false;
-        //bool alt = true;
-        bool shift = false;
+
+
         public MainWindow()
         {
             InitializeComponent();
             pictureEditor = new PictureEditor(panel1);
             pictureEditor.SetEditMode(EditMode.ReadyToSelect);
+            panelLayer = new PanelLayer(pLayer,5,5,20);
             panel1.MouseWheel += new MouseEventHandler(panel1_MouseWheel);
-            lbxLayer.Items.Add(pictureEditor.Picture.Layers[0].name);
-            lbxLayer.SelectedIndex = 0;
             DrawMode();
         }
 
@@ -42,188 +40,10 @@ namespace TestEditor
             pictureEditor.Draw();
         }
 
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (inSelect)
-            {
-                switch (e.Button)
-                {
-                    case MouseButtons.Left:
-                        switch (pictureEditor.EditMode)
-                        {
-                            case EditMode.LineModeM:    // Двигаем lastPoint LINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
-                                break;
-                            case EditMode.LineModeD:    // Двигаем selectPoint и рисуем LINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
-                                pictureEditor.Picture.AddLine(new Pen(Color.Black), false,lbxLayer.SelectedIndex);
-                                break;
-                            case EditMode.CircleModeM:  // Двигаем lastPoint ELLIPSE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
-                                break;
-                            case EditMode.CircleModeD:  // Двигаем selectPoint и рисуем ELLIPSE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
-                                pictureEditor.Picture.AddCircle(new Pen(Color.Black),false, lbxLayer.SelectedIndex);
-                                break;
-                            case EditMode.SplineM:     // Двигаем p1 SPLINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false, null);
-                                break;
-                            case EditMode.SplineD:     // Двигаем p4 SPLINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, pictureEditor.LastCursor);
-                                pictureEditor.Picture.AddSpline(new Pen(Color.Black), false, lbxLayer.SelectedIndex);
-                                break;
-                            case EditMode.Spline1:     // Двигаем p2 SPLINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
-                                pictureEditor.Picture.AddCurveSpline1();
-                                break;
-                            case EditMode.Spline2:     // Двигаем p3 SPLINE
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false, null);
-                                pictureEditor.Picture.AddCurveSpline2();
-                                break;
-                            case EditMode.SelectionMode: // Двигаем selectPoint SelectionMode
-                                pictureEditor.Grid.MoveCursor(pictureEditor.SelectCursor, e.X, e.Y, false,null);
-                                if (ctrl)
-                                {
-                                    pictureEditor.GizmoEditor.SelectRect.AddLinesToSelection(false);
-                                    break;
-                                }
-                                if (shift)
-                                {
-                                    pictureEditor.GizmoEditor.SelectRect.AddLinesToSelection(true);
-                                    break;
-                                }
-                                pictureEditor.GizmoEditor.SelectRect.SelectLines();
-                                break;
-                        }
-                        pictureEditor.Draw();
-
-                        break;
-                    case MouseButtons.Right:
-                        switch (pictureEditor.EditMode)
-                        {
-                            case EditMode.ReadyToSelect:
-                                pictureEditor.GizmoEditor.ControlGizmo(e.X, e.Y);
-                                pictureEditor.Draw();
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            inSelect = true;
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-                    switch(pictureEditor.EditMode)
-                    {
-                        case EditMode.ReadyToSelect:
-                            pictureEditor.SetEditMode(EditMode.SelectionMode);
-                            //if (!ctrl)
-                                //pictureEditor.GizmoEditor.SelectRect.ResetRect();
-                            pictureEditor.Grid.MoveCursor(pictureEditor.LastCursor, e.X, e.Y, false,null);
-                            break;
-                    }
-                    break;
-                case MouseButtons.Right:
-                    switch (pictureEditor.EditMode)
-                    {
-                        case EditMode.ReadyToSelect:
-                            pictureEditor.GizmoEditor.CheckSelectedController(e.X, e.Y);
-                            break;
-                    }
-                    break;
-            }
-            CheckState();
-        }
-
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
-        {
-            inSelect = false;
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-                    switch (pictureEditor.EditMode)
-                    {
-                        case EditMode.LineModeD:
-                            pictureEditor.Picture.AddLine(new Pen(Color.Black), true, lbxLayer.SelectedIndex);
-                            break;
-                        case EditMode.CircleModeD:
-                            pictureEditor.Picture.AddCircle(new Pen(Color.Black), true, lbxLayer.SelectedIndex);
-                            break;
-                        case EditMode.SelectionMode:
-                            pictureEditor.GizmoEditor.CreateGizmo();
-                            pictureEditor.GizmoEditor.SelectRect.ResetRect(false);
-                            pictureEditor.SetEditMode(EditMode.ReadyToSelect);
-                            break;
-                        case EditMode.SplineD:
-                            pictureEditor.Picture.AddSpline(new Pen(Color.Black), true, lbxLayer.SelectedIndex);
-                            pictureEditor.SetEditMode(EditMode.Spline1);
-                            break;
-                        case EditMode.Spline1:
-                            pictureEditor.SetEditMode(EditMode.Spline2);
-                            break;
-                        case EditMode.Spline2:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.SplineD);
-                            break;
-                    }
-                    break;
-                case MouseButtons.Right:
-                    switch (pictureEditor.EditMode)
-                    {
-                        case EditMode.LineModeM:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.LineModeD);
-                            break;
-                        case EditMode.LineModeD:
-                            pictureEditor.SetEditMode(EditMode.LineModeM);
-                            break;
-                        case EditMode.CircleModeM:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.CircleModeD);
-                            break;
-                        case EditMode.CircleModeD:
-                            pictureEditor.SetEditMode(EditMode.CircleModeM);
-                            break;
-                        case EditMode.ReadyToSelect:
-                            pictureEditor.GizmoEditor.ResetControllers();
-                            break;
-                        case EditMode.SplineM:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.SplineD);
-                            break;
-                        case EditMode.SplineD:
-                            pictureEditor.SetEditMode(EditMode.SplineM);
-                            break;
-                        case EditMode.Spline1:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.SplineM);
-                            break;
-                        case EditMode.Spline2:
-                            pictureEditor.SelectCursor.X = pictureEditor.LastCursor.X;
-                            pictureEditor.SelectCursor.Y = pictureEditor.LastCursor.Y;
-                            pictureEditor.SetEditMode(EditMode.SplineM);
-                            break;
-                    }
-                    break;
-            }
-            CheckState();
-            //label2.Text = Convert.ToString("Selected " + pictureEditor.Picture.GetCountSelected());
-            //label2.Text = Convert.ToString(pictureEditor.ccc);
-            pictureEditor.Draw();
-        }
-
         private void Form1_Shown(object sender, EventArgs e)
         {
             pictureEditor.Draw();
+            panelLayer.Draw();
 
         }
 
@@ -303,24 +123,21 @@ namespace TestEditor
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.Modifiers == Keys.Alt)
-               // alt = false;
-
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
                     if (!pictureEditor.Grid.EnableRotationGrid)
                     {
                         pictureEditor.Grid.EnableRotationGrid = true;
-                        shift = true;
+                        pictureEditor.shift = true;
                         DrawMode();
                     }
                     break;
                 case Keys.ControlKey:
-                    ctrl = true;
+                    pictureEditor.ctrl = true;
                     break;
                 case Keys.Z:
-                    if (ctrl)
+                    if (pictureEditor.ctrl)
                     {
                         pictureEditor.SetEditMode(EditMode.LineModeD);
                         pictureEditor.Picture.StepBack();
@@ -328,11 +145,11 @@ namespace TestEditor
                     }
                     break;
                 case Keys.C:
-                    if (ctrl)
+                    if (pictureEditor.ctrl)
                         pictureEditor.GizmoEditor.CopySelected();
                     break;
                 case Keys.V:
-                    if (ctrl)
+                    if (pictureEditor.ctrl)
                     {
                         pictureEditor.GizmoEditor.PasteSelected();
                         pictureEditor.Draw();
@@ -343,15 +160,13 @@ namespace TestEditor
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            //if (e.Modifiers != Keys.Alt)
-               // alt = true;
             switch (e.KeyCode)
             {
                 case Keys.ShiftKey:
                     if (pictureEditor.Grid.EnableRotationGrid)
                     {
                         pictureEditor.Grid.EnableRotationGrid = false;
-                        shift = false;
+                        pictureEditor.shift = false;
                         DrawMode();
                     }
                     break;
@@ -360,7 +175,7 @@ namespace TestEditor
                     pictureEditor.Draw();
                     break;
                 case Keys.ControlKey:
-                    ctrl = false;
+                    pictureEditor.ctrl = false;
                     break;
             }
         }
@@ -465,7 +280,7 @@ namespace TestEditor
         private void panel1_MouseWheel(object sender, MouseEventArgs e)
         {
             int res = 40;
-            if (e.Delta > 0 && !shift && !ctrl)       // Скролл вверх
+            if (e.Delta > 0 && !pictureEditor.shift && !pictureEditor.ctrl)       // Скролл вверх
             {
                 if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0)
                 {
@@ -473,7 +288,7 @@ namespace TestEditor
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
                 }
             }
-            if (e.Delta < 0 && !shift && !ctrl)       // Скролл вниз
+            if (e.Delta < 0 && !pictureEditor.shift && !pictureEditor.ctrl)       // Скролл вниз
             {
                 if (yOffsetB.Value < yOffsetB.Maximum && yOffsetB.Value >= 0 && pictureEditor.ScaleCoeff != 1)
                 {
@@ -481,7 +296,7 @@ namespace TestEditor
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
                 }
             }
-            if (e.Delta > 0 && !shift && ctrl)       // Скролл вправо
+            if (e.Delta > 0 && !pictureEditor.shift && pictureEditor.ctrl)       // Скролл вправо
             {
                 if (xOffsetB.Value <= xOffsetB.Maximum && xOffsetB.Value > 0)
                 {
@@ -489,7 +304,7 @@ namespace TestEditor
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
                 }
             }
-            if (e.Delta < 0 && !shift && ctrl)       // Скролл влево
+            if (e.Delta < 0 && !pictureEditor.shift && pictureEditor.ctrl)       // Скролл влево
             {
                 if (xOffsetB.Value < xOffsetB.Maximum && xOffsetB.Value >= 0 && pictureEditor.ScaleCoeff != 1)
                 {
@@ -497,11 +312,11 @@ namespace TestEditor
                     pictureEditor.SetOffsets(xOffsetB.Value, yOffsetB.Value);
                 }
             }
-            if (e.Delta > 0 && shift)        // Увеличить масштаб
+            if (e.Delta > 0 && pictureEditor.shift)        // Увеличить масштаб
             {
                 label1.Text = Convert.ToString(pictureEditor.IncreaseScaleCoeff(e.X,e.Y));
             }
-            if (e.Delta < 0 && shift)
+            if (e.Delta < 0 && pictureEditor.shift)
             {
                 pictureEditor.ReduceScaleCoeff(e.X,e.Y);
             }
@@ -562,52 +377,6 @@ namespace TestEditor
         {
             pictureEditor.GizmoEditor.PasteSelected();
             pictureEditor.Draw();
-        }
-
-        private void btnAddLayer_Click(object sender, EventArgs e)
-        {
-            pictureEditor.Picture.AddLayer();
-            lbxLayer.Items.Add(pictureEditor.Picture.Layers[pictureEditor.Picture.CounterLayers - 1].name);
-            lbxLayer.SelectedIndex = pictureEditor.Picture.CounterLayers - 1;
-        }
-
-        private void lbxLayer_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            pictureEditor.Draw();
-        }
-
-        private void btnShowLayer_Click(object sender, EventArgs e)
-        {
-            pictureEditor.Picture.SwitchLayer(lbxLayer.SelectedIndex);
-            pictureEditor.Draw();
-        }
-
-        private void btnShowAllLayers_Click(object sender, EventArgs e)
-        {
-            pictureEditor.Picture.ShowAllLayers();
-            pictureEditor.Draw();
-        }
-
-        private void btmASTSL_Click(object sender, EventArgs e)
-        {
-            pictureEditor.Picture.AddSelectedToLayer(lbxLayer.SelectedIndex);
-        }
-
-        private void btnDeleteLayer_Click(object sender, EventArgs e)
-        {
-            if (lbxLayer.Items.Count > 1)
-            {
-                int ind = lbxLayer.SelectedIndex;
-                pictureEditor.Picture.DeleteLayer(lbxLayer.SelectedIndex);
-
-                lbxLayer.Items.Clear();
-                for (int i = 0; i < pictureEditor.Picture.Layers.Length; ++i)
-                {
-                    lbxLayer.Items.Add(pictureEditor.Picture.Layers[i].name);
-                }
-                lbxLayer.SelectedIndex = pictureEditor.Picture.Layers.Length-1;
-            }
-            
         }
     }
 }

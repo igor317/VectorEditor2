@@ -63,12 +63,7 @@
             this.pMirrorY = new System.Windows.Forms.PictureBox();
             this.pMirrorX = new System.Windows.Forms.PictureBox();
             this.pSpline2 = new System.Windows.Forms.PictureBox();
-            this.lbxLayer = new System.Windows.Forms.ListBox();
-            this.btnAddLayer = new System.Windows.Forms.Button();
-            this.btnShowLayer = new System.Windows.Forms.Button();
-            this.btnDeleteLayer = new System.Windows.Forms.Button();
-            this.btnShowAllLayers = new System.Windows.Forms.Button();
-            this.btmASTSL = new System.Windows.Forms.Button();
+            this.pLayer = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCircle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pSelectMode)).BeginInit();
@@ -89,9 +84,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(900, 600);
             this.panel1.TabIndex = 0;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
-            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
-            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
             // yOffsetB
             // 
@@ -248,7 +240,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1287, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1326, 24);
             this.menuStrip1.TabIndex = 25;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -384,77 +376,20 @@
             this.pSpline2.TabStop = false;
             this.pSpline2.Click += new System.EventHandler(this.pSpline2_Click);
             // 
-            // lbxLayer
+            // pLayer
             // 
-            this.lbxLayer.FormattingEnabled = true;
-            this.lbxLayer.Location = new System.Drawing.Point(1086, 296);
-            this.lbxLayer.Name = "lbxLayer";
-            this.lbxLayer.Size = new System.Drawing.Size(189, 134);
-            this.lbxLayer.TabIndex = 36;
-            this.lbxLayer.SelectedIndexChanged += new System.EventHandler(this.lbxLayer_SelectedIndexChanged);
-            // 
-            // btnAddLayer
-            // 
-            this.btnAddLayer.Location = new System.Drawing.Point(1086, 436);
-            this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(92, 23);
-            this.btnAddLayer.TabIndex = 37;
-            this.btnAddLayer.Text = "Add";
-            this.btnAddLayer.UseVisualStyleBackColor = true;
-            this.btnAddLayer.Click += new System.EventHandler(this.btnAddLayer_Click);
-            // 
-            // btnShowLayer
-            // 
-            this.btnShowLayer.Location = new System.Drawing.Point(1183, 436);
-            this.btnShowLayer.Name = "btnShowLayer";
-            this.btnShowLayer.Size = new System.Drawing.Size(92, 23);
-            this.btnShowLayer.TabIndex = 38;
-            this.btnShowLayer.Text = "Show";
-            this.btnShowLayer.UseVisualStyleBackColor = true;
-            this.btnShowLayer.Click += new System.EventHandler(this.btnShowLayer_Click);
-            // 
-            // btnDeleteLayer
-            // 
-            this.btnDeleteLayer.Location = new System.Drawing.Point(1086, 465);
-            this.btnDeleteLayer.Name = "btnDeleteLayer";
-            this.btnDeleteLayer.Size = new System.Drawing.Size(92, 23);
-            this.btnDeleteLayer.TabIndex = 39;
-            this.btnDeleteLayer.Text = "Delete";
-            this.btnDeleteLayer.UseVisualStyleBackColor = true;
-            this.btnDeleteLayer.Click += new System.EventHandler(this.btnDeleteLayer_Click);
-            // 
-            // btnShowAllLayers
-            // 
-            this.btnShowAllLayers.Location = new System.Drawing.Point(1184, 465);
-            this.btnShowAllLayers.Name = "btnShowAllLayers";
-            this.btnShowAllLayers.Size = new System.Drawing.Size(92, 23);
-            this.btnShowAllLayers.TabIndex = 40;
-            this.btnShowAllLayers.Text = "Show all";
-            this.btnShowAllLayers.UseVisualStyleBackColor = true;
-            this.btnShowAllLayers.Click += new System.EventHandler(this.btnShowAllLayers_Click);
-            // 
-            // btmASTSL
-            // 
-            this.btmASTSL.Location = new System.Drawing.Point(1117, 494);
-            this.btmASTSL.Name = "btmASTSL";
-            this.btmASTSL.Size = new System.Drawing.Size(137, 23);
-            this.btmASTSL.TabIndex = 41;
-            this.btmASTSL.Text = "Add to selected layer";
-            this.btmASTSL.UseVisualStyleBackColor = true;
-            this.btmASTSL.Click += new System.EventHandler(this.btmASTSL_Click);
+            this.pLayer.Location = new System.Drawing.Point(1085, 308);
+            this.pLayer.Name = "pLayer";
+            this.pLayer.Size = new System.Drawing.Size(229, 319);
+            this.pLayer.TabIndex = 42;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ClientSize = new System.Drawing.Size(1287, 655);
-            this.Controls.Add(this.btmASTSL);
-            this.Controls.Add(this.btnShowAllLayers);
-            this.Controls.Add(this.btnDeleteLayer);
-            this.Controls.Add(this.btnShowLayer);
-            this.Controls.Add(this.btnAddLayer);
-            this.Controls.Add(this.lbxLayer);
+            this.ClientSize = new System.Drawing.Size(1326, 655);
+            this.Controls.Add(this.pLayer);
             this.Controls.Add(this.pSpline2);
             this.Controls.Add(this.pMirrorX);
             this.Controls.Add(this.pMirrorY);
@@ -539,12 +474,7 @@
         private System.Windows.Forms.PictureBox pSpline2;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ListBox lbxLayer;
-        private System.Windows.Forms.Button btnAddLayer;
-        private System.Windows.Forms.Button btnShowLayer;
-        private System.Windows.Forms.Button btnDeleteLayer;
-        private System.Windows.Forms.Button btnShowAllLayers;
-        private System.Windows.Forms.Button btmASTSL;
+        private System.Windows.Forms.Panel pLayer;
     }
 }
 

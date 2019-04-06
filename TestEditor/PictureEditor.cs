@@ -48,6 +48,10 @@ namespace TestEditor
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
+
+        private bool inSelect = false;
+        public bool shift;
+        public bool ctrl;
         #endregion
 
         #region SET&GET METHODS
@@ -128,11 +132,6 @@ namespace TestEditor
                 if (pic.Lines[i] == 0)
                     return;
 
-                if (!pic.Layers[pic.Lines[i].layer].active)
-                {
-                    continue;
-                }
-
                 float xMin = Math.Min(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
                 float xMax = Math.Max(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
                 float yMin = Math.Min(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
@@ -155,11 +154,6 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i] == 0)
                     return;
-
-                if (!pic.Layers[pic.Ellipses[i].layer].active)
-                {
-                    continue;
-                }
 
                 float xMax = pic.Ellipses[i].x1 * scaleCoeff - XOffset;
                 float xMin = pic.Ellipses[i].x2 * scaleCoeff - XOffset;
@@ -184,11 +178,6 @@ namespace TestEditor
                 if (pic.Splines[i] == 0)
                     return;
 
-                if (!pic.Layers[pic.Splines[i].layer].active)
-                {
-                    continue;
-                }
-
                 float xMax = pic.Splines[i].xSmax * scaleCoeff - XOffset;
                 float xMin = pic.Splines[i].xSmin * scaleCoeff - XOffset;
                 float yMax = pic.Splines[i].ySmax * scaleCoeff - YOffset;
@@ -201,6 +190,182 @@ namespace TestEditor
                 }
             }
         }
+
+        private void Holst_MouseDown(object sender, MouseEventArgs e)
+        {
+            inSelect = true;
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    switch (EditMode)
+                    {
+                        case EditMode.ReadyToSelect:
+                            SetEditMode(EditMode.SelectionMode);
+                            Grid.MoveCursor(LastCursor, e.X, e.Y, false, null);
+                            if (!ctrl && !shift)
+                                gizmoEditor.SelectRect.ResetRect(true);
+                            break;
+                    }
+                    break;
+                case MouseButtons.Right:
+                    switch (EditMode)
+                    {
+                        case EditMode.ReadyToSelect:
+                            GizmoEditor.CheckSelectedController(e.X, e.Y);
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private void Holst_MouseUp(object sender, MouseEventArgs e)
+        {
+            inSelect = false;
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    switch (EditMode)
+                    {
+                        case EditMode.LineModeD:
+                            Picture.AddLine(new Pen(Color.Black), true, 0);
+                            break;
+                        case EditMode.CircleModeD:
+                            Picture.AddCircle(new Pen(Color.Black), true, 0);
+                            break;
+                        case EditMode.SelectionMode:
+                            GizmoEditor.CreateGizmo();
+                            GizmoEditor.SelectRect.ResetRect(false);
+                            SetEditMode(EditMode.ReadyToSelect);
+                            break;
+                        case EditMode.SplineD:
+                            Picture.AddSpline(new Pen(Color.Black), true, 0);
+                            SetEditMode(EditMode.Spline1);
+                            break;
+                        case EditMode.Spline1:
+                            SetEditMode(EditMode.Spline2);
+                            break;
+                        case EditMode.Spline2:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.SplineD);
+                            break;
+                    }
+                    break;
+                case MouseButtons.Right:
+                    switch (EditMode)
+                    {
+                        case EditMode.LineModeM:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.LineModeD);
+                            break;
+                        case EditMode.LineModeD:
+                            SetEditMode(EditMode.LineModeM);
+                            break;
+                        case EditMode.CircleModeM:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.CircleModeD);
+                            break;
+                        case EditMode.CircleModeD:
+                            SetEditMode(EditMode.CircleModeM);
+                            break;
+                        case EditMode.ReadyToSelect:
+                            GizmoEditor.ResetControllers();
+                            break;
+                        case EditMode.SplineM:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.SplineD);
+                            break;
+                        case EditMode.SplineD:
+                            SetEditMode(EditMode.SplineM);
+                            break;
+                        case EditMode.Spline1:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.SplineM);
+                            break;
+                        case EditMode.Spline2:
+                            SelectCursor.X = LastCursor.X;
+                            SelectCursor.Y = LastCursor.Y;
+                            SetEditMode(EditMode.SplineM);
+                            break;
+                    }
+                    break;
+            }
+            Draw();
+        }
+
+        private void Holst_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (inSelect)
+            {
+                switch (e.Button)
+                {
+                    case MouseButtons.Left:
+                        switch (EditMode)
+                        {
+                            case EditMode.LineModeM:    // Двигаем lastPoint LINE
+                                Grid.MoveCursor(LastCursor, e.X, e.Y, false, null);
+                                break;
+                            case EditMode.LineModeD:    // Двигаем selectPoint и рисуем LINE
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, LastCursor);
+                                Picture.AddLine(new Pen(Color.Black), false, 0);
+                                break;
+                            case EditMode.CircleModeM:  // Двигаем lastPoint ELLIPSE
+                                Grid.MoveCursor(LastCursor, e.X, e.Y, false, null);
+                                break;
+                            case EditMode.CircleModeD:  // Двигаем selectPoint и рисуем ELLIPSE
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, LastCursor);
+                                Picture.AddCircle(new Pen(Color.Black), false, 0);
+                                break;
+                            case EditMode.SplineM:     // Двигаем p1 SPLINE
+                                Grid.MoveCursor(LastCursor, e.X, e.Y, false, null);
+                                break;
+                            case EditMode.SplineD:     // Двигаем p4 SPLINE
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, LastCursor);
+                                Picture.AddSpline(new Pen(Color.Black), false, 0);
+                                break;
+                            case EditMode.Spline1:     // Двигаем p2 SPLINE
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, null);
+                                Picture.AddCurveSpline1();
+                                break;
+                            case EditMode.Spline2:     // Двигаем p3 SPLINE
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, null);
+                                Picture.AddCurveSpline2();
+                                break;
+                            case EditMode.SelectionMode: // Двигаем selectPoint SelectionMode
+                                Grid.MoveCursor(SelectCursor, e.X, e.Y, false, null);
+                                if (ctrl)
+                                {
+                                    GizmoEditor.SelectRect.AddLinesToSelection(false);
+                                    break;
+                                }
+                                if (shift)
+                                {
+                                    GizmoEditor.SelectRect.AddLinesToSelection(true);
+                                    break;
+                                }
+                                GizmoEditor.SelectRect.SelectLines();
+                                break;
+                        }
+                        Draw();
+
+                        break;
+                    case MouseButtons.Right:
+                        switch (EditMode)
+                        {
+                            case EditMode.ReadyToSelect:
+                                GizmoEditor.ControlGizmo(e.X, e.Y);
+                                Draw();
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
         #endregion
 
         #region PUBLIC METHODS
@@ -220,6 +385,10 @@ namespace TestEditor
             gBuff = Graphics.FromImage(bmp);
             gBuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             editMode = EditMode.LineModeM;
+
+            Holst.MouseDown += Holst_MouseDown;
+            Holst.MouseUp += Holst_MouseUp;
+            Holst.MouseMove += Holst_MouseMove;
         }
 
         public void Draw()
@@ -266,6 +435,7 @@ namespace TestEditor
             if (mode == EditMode.CircleModeD || mode == EditMode.LineModeD)
                 SetCursorSettings(lastCursor, 5, new Pen(Color.Red));
         }
+
         public void SetOffsets(float xOffset,float yOffset)
         {
             this.xOffset = xOffset;
@@ -309,6 +479,7 @@ namespace TestEditor
                 f4 = yPos;
             }
         }
+
         public void RasterizeImage(string path)
         {
             if (path == "")

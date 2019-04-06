@@ -104,7 +104,7 @@ namespace TestEditor
                     && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    if (pic.Layers[pic.Lines[i].layer].active)
+                    //if (pic.Layers[pic.Lines[i].layer].active)
                         pic.Lines[i].selected = add;
                 }
             }
@@ -115,7 +115,7 @@ namespace TestEditor
                     && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    if (pic.Layers[pic.Ellipses[i].layer].active)
+                   // if (pic.Layers[pic.Ellipses[i].layer].active)
                         pic.Ellipses[i].selected = add;
                 }
             }
@@ -126,7 +126,7 @@ namespace TestEditor
                     && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset <= x2
                     && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset <= y2)
                 {
-                    if (pic.Layers[pic.Splines[i].layer].active)
+                   // if (pic.Layers[pic.Splines[i].layer].active)
                         pic.Splines[i].selected = add;
                 }
             }

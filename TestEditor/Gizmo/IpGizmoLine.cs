@@ -51,17 +51,11 @@ namespace TestEditor
 
         private void MoveSelected(float xPos, float yPos)
         {
-            float k1 = xPos;
-            float k2 = yPos;
             float m1 = moveCursor.X;
             float m2 = moveCursor.Y;
-            IpCursor pos = new IpCursor();
-
-            grid.MoveCursor(pos, xPos, yPos, true, null);
-            k1 = pos.X;
-            k2 = pos.Y;
             grid.MoveCursor(moveCursor, xPos, yPos, true, null);
-
+            float k1 = moveCursor.X;
+            float k2 = moveCursor.Y;
 
             pic.Lines[index].x1 += k1 - m1;
             pic.Lines[index].x2 += k1 - m1;

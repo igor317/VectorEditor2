@@ -52,8 +52,8 @@
     <Compile Include="FSettings.Designer.cs">
       <DependentUpon>FSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="GizmoEditor.cs" />
-    <Compile Include="IpEllipse.cs" />
+    <Compile Include="Gizmo\GizmoEditor.cs" />
+    <Compile Include="DrawingStruct\IpEllipse.cs" />
     <Compile Include="IpCursor.cs" />
     <Compile Include="FMain.cs">
       <SubType>Form</SubType>
@@ -61,15 +61,20 @@
     <Compile Include="FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="IpGizmo.cs" />
-    <Compile Include="IpGizmoMixed.cs" />
-    <Compile Include="IpGizmoLine.cs" />
-    <Compile Include="IpGizmoSpline.cs" />
+    <Compile Include="Gizmo\IpGizmo.cs" />
+    <Compile Include="Gizmo\IpGizmoMixed.cs" />
+    <Compile Include="Gizmo\IpGizmoLine.cs" />
+    <Compile Include="Gizmo\IpGizmoSpline.cs" />
     <Compile Include="IpGrid.cs" />
-    <Compile Include="IpLine.cs" />
+    <Compile Include="DrawingStruct\IpLine.cs" />
     <Compile Include="IpPicture.cs" />
-    <Compile Include="IpSpline.cs" />
-    <Compile Include="IpLayer.cs" />
+    <Compile Include="DrawingStruct\IpSpline.cs" />
+    <Compile Include="LayerPanel\IpCursor.cs" />
+    <Compile Include="LayerPanel\IpLayer.cs" />
+    <Compile Include="LayerPanel\IpLayerRec.cs" />
+    <Compile Include="LayerPanel\IpSettingsBar.cs" />
+    <Compile Include="LayerPanel\IpVerticalScroll.cs" />
+    <Compile Include="LayerPanel\PanelLayer.cs" />
     <Compile Include="PictureEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,8 +83,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SelectRect.cs" />
-    <Compile Include="VectorPicture.cs" />
+    <Compile Include="Gizmo\SelectRect.cs" />
+    <Compile Include="SaveLoad\VectorPicture.cs" />
     <EmbeddedResource Include="FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
     </EmbeddedResource>
