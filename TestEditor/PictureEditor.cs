@@ -34,6 +34,7 @@ namespace TestEditor
         private IpCursor selectCursor = new IpCursor(5, new Pen(Color.Black));
         private IpCursor lastCursor = new IpCursor(5, new Pen(Color.Red));
         private int sizeX, sizeY;                                             // Размеры холста
+        private int yScrollWidth = 20;
 
         private Graphics graph;                                               // Первичный буфер
         private Graphics gBuff;                                               // Вторичный буфер
@@ -48,10 +49,13 @@ namespace TestEditor
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
+        private IpVerticalScroll yScroll;
 
         private bool inSelect = false;
         public bool shift;
         public bool ctrl;
+
+        private bool scrollMode = false;
         #endregion
 
         #region SET&GET METHODS
@@ -197,6 +201,11 @@ namespace TestEditor
             switch (e.Button)
             {
                 case MouseButtons.Left:
+                    if (yScroll.ScrollCheck(e.X, e.Y) && yScroll.Enable)
+                    {
+                        scrollMode = true;
+                        return;
+                    }
                     switch (EditMode)
                     {
                         case EditMode.ReadyToSelect:
@@ -206,7 +215,7 @@ namespace TestEditor
                                 gizmoEditor.SelectRect.ResetRect(true);
                             break;
                     }
-                    break;
+                    return;
                 case MouseButtons.Right:
                     switch (EditMode)
                     {
@@ -214,13 +223,14 @@ namespace TestEditor
                             GizmoEditor.CheckSelectedController(e.X, e.Y);
                             break;
                     }
-                    break;
+                    return;
             }
         }
 
         private void Holst_MouseUp(object sender, MouseEventArgs e)
         {
             inSelect = false;
+            scrollMode = false;
             switch (e.Button)
             {
                 case MouseButtons.Left:
@@ -304,6 +314,14 @@ namespace TestEditor
                 switch (e.Button)
                 {
                     case MouseButtons.Left:
+                        if (scrollMode)
+                        {
+                            //yScroll.Scroll(e.Y);
+                            YScroll(e.Y);
+                            Draw();
+                            return;
+                            //ScrollLayers(e.Y);
+                        }
                         switch (EditMode)
                         {
                             case EditMode.LineModeM:    // Двигаем lastPoint LINE
@@ -351,8 +369,7 @@ namespace TestEditor
                                 break;
                         }
                         Draw();
-
-                        break;
+                        return;
                     case MouseButtons.Right:
                         switch (EditMode)
                         {
@@ -361,27 +378,40 @@ namespace TestEditor
                                 Draw();
                                 break;
                         }
-                        break;
+                        return;
                 }
             }
+        }
+
+        private void Holst_Paint(object sender, PaintEventArgs e)
+        {
+            Draw();
+        }
+
+        private void YScroll(int yPos)
+        {
+            yScroll.Scroll(yPos);
+            SetOffsets(0, yScroll.Value);
         }
 
         #endregion
 
         #region PUBLIC METHODS
 
-        public PictureEditor(Panel Holst)
+        public PictureEditor(Control Holst)
         {
-            this.sizeX = Holst.Width;
+            this.sizeX = Holst.Width-yScrollWidth;
             this.sizeY = Holst.Height;
             graph = Holst.CreateGraphics();
 
             pic = new IpPicture(SelectCursor, LastCursor, sizeX,sizeY);
             ipGrid = new IpGrid(sizeX, sizeY, Picture);
             gizmoEditor = new GizmoEditor(Picture,Grid);
-
+            yScroll = new IpVerticalScroll(sizeX+ yScrollWidth, sizeY, yScrollWidth, 0, 100, 50);
+            //yScroll.ScrollBrush = new SolidBrush(Color.Blue);
+            yScroll.Enable = false;
             ClearPicture();
-            bmp = new Bitmap(sizeX, sizeY, graph);
+            bmp = new Bitmap(sizeX+yScrollWidth, sizeY, graph);
             gBuff = Graphics.FromImage(bmp);
             gBuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             editMode = EditMode.LineModeM;
@@ -389,6 +419,7 @@ namespace TestEditor
             Holst.MouseDown += Holst_MouseDown;
             Holst.MouseUp += Holst_MouseUp;
             Holst.MouseMove += Holst_MouseMove;
+            Holst.Paint += Holst_Paint;
         }
 
         public void Draw()
@@ -403,6 +434,7 @@ namespace TestEditor
             DrawSplines();
             if (drawScaleCoeff && scaleCoeff > minScale)
                 gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
+            yScroll.DrawRectangle(gBuff);
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 
@@ -446,37 +478,33 @@ namespace TestEditor
             pic.YOffset = yOffset;
         }
 
-        public float IncreaseScaleCoeff(int xPos,int yPos)
+        public void IncreaseScaleCoeff(int xPos,int yPos)
         {
             if (scaleCoeff < maxScale)
             {
                 scaleCoeff += deltaScale;
                 pic.ScaleCoefficient = scaleCoeff;
                 Grid.ScaleCoeff = scaleCoeff;
-                f6 = xPos * deltaScale;
-                f1 = xPos * deltaScale + xOffset;
-                f2 = yPos * deltaScale + yOffset;
 
-                //SetOffsets(f6, f2);
-                f5 = xOffset - f4;
-                f4 = xOffset;
-                f3 = xPos;
-
+                yScroll.Enable = true;
+                yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
-            return f6;
         }
 
         public void ReduceScaleCoeff(int xPos, int yPos)
         {
-            scaleCoeff -= deltaScale;
-            if (scaleCoeff < minScale)
-                scaleCoeff = minScale;
-            pic.ScaleCoefficient = scaleCoeff;
-            Grid.ScaleCoeff = scaleCoeff;
-            if (scaleCoeff == minScale)
+            if (scaleCoeff > minScale)
             {
-                f3 = xPos;
-                f4 = yPos;
+                scaleCoeff -= deltaScale;
+                pic.ScaleCoefficient = scaleCoeff;
+                Grid.ScaleCoeff = scaleCoeff;
+
+                if (scaleCoeff == minScale)
+                {
+                    yScroll.Enable = false;
+                    return;
+                }
+                yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
         }
 

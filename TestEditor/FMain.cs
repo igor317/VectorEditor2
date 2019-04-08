@@ -279,7 +279,7 @@ namespace TestEditor
 
         private void panel1_MouseWheel(object sender, MouseEventArgs e)
         {
-            int res = 40;
+            int res = 80;
             if (e.Delta > 0 && !pictureEditor.shift && !pictureEditor.ctrl)       // Скролл вверх
             {
                 if (yOffsetB.Value <= yOffsetB.Maximum && yOffsetB.Value > 0)
@@ -314,7 +314,7 @@ namespace TestEditor
             }
             if (e.Delta > 0 && pictureEditor.shift)        // Увеличить масштаб
             {
-                label1.Text = Convert.ToString(pictureEditor.IncreaseScaleCoeff(e.X,e.Y));
+                pictureEditor.IncreaseScaleCoeff(e.X,e.Y);
             }
             if (e.Delta < 0 && pictureEditor.shift)
             {

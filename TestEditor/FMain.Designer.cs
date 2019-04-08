@@ -89,7 +89,7 @@
             // 
             this.yOffsetB.Enabled = false;
             this.yOffsetB.LargeChange = 1;
-            this.yOffsetB.Location = new System.Drawing.Point(1047, 39);
+            this.yOffsetB.Location = new System.Drawing.Point(1062, 39);
             this.yOffsetB.Maximum = 0;
             this.yOffsetB.Name = "yOffsetB";
             this.yOffsetB.Size = new System.Drawing.Size(20, 616);
@@ -100,7 +100,7 @@
             // 
             this.xOffsetB.Enabled = false;
             this.xOffsetB.LargeChange = 1;
-            this.xOffsetB.Location = new System.Drawing.Point(153, 635);
+            this.xOffsetB.Location = new System.Drawing.Point(153, 651);
             this.xOffsetB.Maximum = 0;
             this.xOffsetB.Name = "xOffsetB";
             this.xOffsetB.Size = new System.Drawing.Size(894, 20);
@@ -228,7 +228,7 @@
             // 
             this.splitter1.Location = new System.Drawing.Point(0, 24);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 631);
+            this.splitter1.Size = new System.Drawing.Size(3, 647);
             this.splitter1.TabIndex = 24;
             this.splitter1.TabStop = false;
             // 
@@ -388,7 +388,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ClientSize = new System.Drawing.Size(1326, 655);
+            this.ClientSize = new System.Drawing.Size(1326, 671);
             this.Controls.Add(this.pLayer);
             this.Controls.Add(this.pSpline2);
             this.Controls.Add(this.pMirrorX);

@@ -79,7 +79,7 @@ namespace TestEditor
             if (countLayers - 1 >= maxLayersInPage)
             {
                 Scroll.Height = sizeY - settingsBarSize - 1 - (layerSize * (countLayers - maxLayersInPage));
-                Scroll.MaxValue = layerSize *(countLayers - maxLayersInPage ) + Scroll.Height;
+                Scroll.MaxValue = layerSize * (countLayers - maxLayersInPage) + Scroll.Height;
             }
         }
 

@@ -16,18 +16,18 @@ namespace TestEditor
         private int xlenght;
 
         private float yoffmouse;
-        private bool enableScroll;
         private float yOffset;
-        private SolidBrush brush;
-        private SolidBrush scrollBrush;
-        private SolidBrush scrollBrushDisabled;
 
         private int minValue;
         private int maxValue;
         private int value;
         private int height;
 
-        private int minHeight = 20;
+        public SolidBrush BackBrush { get; set; }
+        public SolidBrush ScrollBrush { get; set; }
+        public SolidBrush ScrollBrushDisabled { set; get; }
+        public bool Enable { get; set; }
+        public int MinHeight { get; set; }
         #endregion
 
         #region SET&GET METHODS
@@ -37,7 +37,7 @@ namespace TestEditor
             {
                 maxValue = value;
                 yOffset = ((this.value - minValue) * (sizeY - height)) / (maxValue - minValue - height);
-                enableScroll = (maxValue - minValue <= 0) ? false : true;
+                Enable = (maxValue - minValue <= 0) ? false : true;
             }
             get { return maxValue; }
         }
@@ -47,7 +47,7 @@ namespace TestEditor
             {
                 minValue = value;
                 yOffset = ((this.value - minValue) * (sizeY - height)) / (maxValue - minValue - height);
-                enableScroll = (maxValue - minValue <= 0) ? false : true;
+                Enable = (maxValue - minValue <= 0) ? false : true;
             }
             get { return minValue; }
         }
@@ -81,22 +81,12 @@ namespace TestEditor
         {
             set
             {
-                if (value < minHeight)
-                    height = minHeight;
+                if (value < MinHeight)
+                    height = MinHeight;
                 else
                     height = value;
             }
             get { return height; }
-        }
-        public int MinHeight
-        {
-            set { minHeight = value; }
-            get { return minHeight; }
-        }
-        public bool Enable
-        {
-            set { enableScroll = value; }
-            get { return enableScroll; }
         }
         #endregion
 
@@ -107,7 +97,7 @@ namespace TestEditor
         #region PUBLIC METHODS
         public bool ScrollCheck(float x, float y)
         {
-            if (enableScroll)
+            if (Enable)
             {
                 if (x >= xPos && x <= sizeX
                     && y >= yOffset && y <= yOffset + height)
@@ -119,27 +109,28 @@ namespace TestEditor
             return false;
         }
 
-        public IpVerticalScroll(int sizeX,int sizeY,int xlenght,int minValue, int maxValue, int height)
+        public IpVerticalScroll(int sizeX,int sizeY,int width,int minValue, int maxValue, int height)
         {
             this.sizeX = sizeX;
             this.sizeY = sizeY;
-            this.xlenght = xlenght;
+            this.xlenght = width;
             this.minValue = minValue;
             this.maxValue = maxValue;
+            MinHeight = 20;
             if (maxValue - minValue <= 0)
             {
-                enableScroll = false;
+                Enable = false;
                 this.height = sizeY;
             }
             else
             {
-                enableScroll = true;
+                Enable = true;
                 this.height = height;
             }
 
-            brush = new SolidBrush(Color.Wheat);
-            scrollBrush = new SolidBrush(Color.Black);
-            scrollBrushDisabled = new SolidBrush(Color.LightGray);
+            BackBrush = new SolidBrush(Color.Wheat);
+            ScrollBrush = new SolidBrush(Color.Black);
+            ScrollBrushDisabled = new SolidBrush(Color.LightGray);
             xPos = sizeX - xlenght;
             yOffset = 0;
             value = minValue;
@@ -148,18 +139,18 @@ namespace TestEditor
 
         public void DrawRectangle(Graphics graph)
         {
-            graph.FillRectangle(brush, xPos, 0, xlenght, sizeY);
-            if (enableScroll)
-                graph.FillRectangle(scrollBrush, xPos, yOffset, xlenght, height);          // Каретка
+            graph.FillRectangle(BackBrush, xPos, 0, xlenght, sizeY);
+            if (Enable)
+                graph.FillRectangle(ScrollBrush, xPos, yOffset, xlenght, height);          // Каретка
             else
-                graph.FillRectangle(scrollBrushDisabled, xPos, yOffset, xlenght, height);  // Каретка
+                graph.FillRectangle(ScrollBrushDisabled, xPos, yOffset, xlenght, height);  // Каретка
         }
 
 
 
         public void Scroll(int y)
         {
-            if (enableScroll)
+            if (Enable)
             {
                 if (y - yoffmouse >= 0 && y - yoffmouse + height <= sizeY && height < sizeY)
                 {
