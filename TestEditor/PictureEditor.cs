@@ -44,18 +44,15 @@ namespace TestEditor
         private float maxScale = 5;
         private float minScale = 1;
         private float deltaScale = 0.5f;
-        private float f1 = 0, f2 = 0,f3 = 0,f4 = 0,f5 = 0,f6 = 0,f7 = 0,f8 = 0;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
-        private IpVerticalScroll yScroll;
+        //private IpVerticalScroll yScroll;
 
         private bool inSelect = false;
         public bool shift;
         public bool ctrl;
-
-        private bool scrollMode = false;
         #endregion
 
         #region SET&GET METHODS
@@ -201,11 +198,6 @@ namespace TestEditor
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (yScroll.ScrollCheck(e.X, e.Y) && yScroll.Enable)
-                    {
-                        scrollMode = true;
-                        return;
-                    }
                     switch (EditMode)
                     {
                         case EditMode.ReadyToSelect:
@@ -230,7 +222,6 @@ namespace TestEditor
         private void Holst_MouseUp(object sender, MouseEventArgs e)
         {
             inSelect = false;
-            scrollMode = false;
             switch (e.Button)
             {
                 case MouseButtons.Left:
@@ -314,14 +305,6 @@ namespace TestEditor
                 switch (e.Button)
                 {
                     case MouseButtons.Left:
-                        if (scrollMode)
-                        {
-                            //yScroll.Scroll(e.Y);
-                            YScroll(e.Y);
-                            Draw();
-                            return;
-                            //ScrollLayers(e.Y);
-                        }
                         switch (EditMode)
                         {
                             case EditMode.LineModeM:    // Двигаем lastPoint LINE
@@ -387,31 +370,24 @@ namespace TestEditor
         {
             Draw();
         }
-
-        private void YScroll(int yPos)
-        {
-            yScroll.Scroll(yPos);
-            SetOffsets(0, yScroll.Value);
-        }
-
         #endregion
 
         #region PUBLIC METHODS
 
         public PictureEditor(Control Holst)
         {
-            this.sizeX = Holst.Width-yScrollWidth;
+            this.sizeX = Holst.Width;
             this.sizeY = Holst.Height;
             graph = Holst.CreateGraphics();
 
             pic = new IpPicture(SelectCursor, LastCursor, sizeX,sizeY);
             ipGrid = new IpGrid(sizeX, sizeY, Picture);
             gizmoEditor = new GizmoEditor(Picture,Grid);
-            yScroll = new IpVerticalScroll(sizeX+ yScrollWidth, sizeY, yScrollWidth, 0, 100, 50);
+            //yScroll = new IpVerticalScroll(sizeX+ yScrollWidth, sizeY, yScrollWidth, 0, 100, 50);
             //yScroll.ScrollBrush = new SolidBrush(Color.Blue);
-            yScroll.Enable = false;
+            //yScroll.Enable = false;
             ClearPicture();
-            bmp = new Bitmap(sizeX+yScrollWidth, sizeY, graph);
+            bmp = new Bitmap(sizeX, sizeY, graph);
             gBuff = Graphics.FromImage(bmp);
             gBuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             editMode = EditMode.LineModeM;
@@ -434,7 +410,6 @@ namespace TestEditor
             DrawSplines();
             if (drawScaleCoeff && scaleCoeff > minScale)
                 gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
-            yScroll.DrawRectangle(gBuff);
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 
@@ -486,8 +461,8 @@ namespace TestEditor
                 pic.ScaleCoefficient = scaleCoeff;
                 Grid.ScaleCoeff = scaleCoeff;
 
-                yScroll.Enable = true;
-                yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
+                //yScroll.Enable = true;
+                //yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
         }
 
@@ -501,10 +476,10 @@ namespace TestEditor
 
                 if (scaleCoeff == minScale)
                 {
-                    yScroll.Enable = false;
+                    //yScroll.Enable = false;
                     return;
                 }
-                yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
+                //yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
         }
 

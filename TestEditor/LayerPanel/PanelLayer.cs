@@ -26,14 +26,12 @@ namespace TestEditor
 
         private IpLayerRec[] layerR;
         //public IpCursor2 AddLayerButton { get; private set; }
-        public IpVerticalScroll Scroll { get; private set; }
+        private IpVerticalScroll Scroll;
         public IpSettingsBar settingsBar { get; private set; }
 
         private int maxLayersInPage;
 
         private int settingsBarSize;
-
-        private bool scrollMode = false;
         #endregion
 
         #region SET&GET METHODS
@@ -78,8 +76,11 @@ namespace TestEditor
             yOffset += layerSize;
             if (countLayers - 1 >= maxLayersInPage)
             {
-                Scroll.Height = sizeY - settingsBarSize - 1 - (layerSize * (countLayers - maxLayersInPage));
-                Scroll.MaxValue = layerSize * (countLayers - maxLayersInPage) + Scroll.Height;
+                Scroll.Enable = true;
+                //Scroll.Length = sizeY;
+                //Scroll.Value = layerSize * (countLayers- maxLayersInPage);
+                Scroll.MaxValue = layerSize * (countLayers - maxLayersInPage) ;
+                //Scroll.Value = 
             }
         }
 
@@ -131,7 +132,7 @@ namespace TestEditor
         private void ScrollLayers(int y)
         {
             int k = 0;
-            Scroll.Scroll(y);
+            //Scroll.Scroll(y);
             for (int i = 0; i < countLayers; ++i)
             {
                 k = i;
@@ -148,25 +149,6 @@ namespace TestEditor
                 return;
             if (CheckAddingButton(xPos, yPos))
                 return;
-            if (Scroll.ScrollCheck(xPos, yPos))
-            {
-                scrollMode = true;
-                return;
-            }
-        }
-
-        private void ControlMouseMove(int xPos, int yPos)
-        {
-            if (scrollMode)
-            {
-                ScrollLayers(yPos);
-                return;
-            }
-        }
-
-        private void ControlMouseUp(int xPos, int yPos)
-        {
-            scrollMode = false;
         }
 
         private void LayerPanel_MouseDown(object sender, MouseEventArgs e)
@@ -175,54 +157,27 @@ namespace TestEditor
             Draw();
         }
 
-        private void LayerPanel_MouseMove(object sender, MouseEventArgs e)
+
+        private void LayerPanel_Paint(object sender, PaintEventArgs e)
         {
-            ControlMouseMove(e.X, e.Y);
             Draw();
         }
 
-        private void LayerPanel_MouseUp(object sender, MouseEventArgs e)
+
+        private void Scroll_IpScroll(object sender, IpScrollEventArgs e)
         {
-            ControlMouseUp(e.X, e.Y);
+            ScrollLayers(e.Y);
             Draw();
         }
         #endregion
 
         #region PUBLIC METHODS
-        public PanelLayer(Panel layerPanel)
-        {
-            graph = layerPanel.CreateGraphics();
-            sizeX = layerPanel.Width;
-            sizeY = layerPanel.Height;
-            bmp = new Bitmap(sizeX, sizeY,graph);
-            gbuff = Graphics.FromImage(bmp);
-            gbuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-
-            yOffset = 0;
-            countLayers = 0;
-            scrollWidth = 15;
-            maxLayersInPage = 4;
-            settingsBarSize = 30;
-
-            layerSize = Convert.ToInt16(sizeY / maxLayersInPage - settingsBarSize/maxLayersInPage);
-            Scroll = new IpVerticalScroll(sizeX, sizeY-settingsBarSize-1, scrollWidth,0,0,20);
-            settingsBar = new IpSettingsBar(sizeX, sizeY, settingsBarSize);
-        
-            AddLayer();
-            layerR[0].SelectedLayer = true;
-
-            layerPanel.MouseDown += LayerPanel_MouseDown;
-            layerPanel.MouseMove += LayerPanel_MouseMove;
-            layerPanel.MouseUp += LayerPanel_MouseUp;
-        }
-
-
         public PanelLayer(Panel layerPanel,int maxLayersInPage,int scrollWitdth,int settingbarSize)
         {
             graph = layerPanel.CreateGraphics();
             sizeX = layerPanel.Width;
             sizeY = layerPanel.Height;
-            bmp = new Bitmap(sizeX, sizeY, graph);
+            bmp = new Bitmap(sizeX+scrollWidth, sizeY, graph);
             gbuff = Graphics.FromImage(bmp);
             gbuff.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
@@ -233,22 +188,22 @@ namespace TestEditor
             this.settingsBarSize = settingbarSize;
 
             layerSize = Convert.ToInt16(sizeY / maxLayersInPage - settingsBarSize / maxLayersInPage);
-            Scroll = new IpVerticalScroll(sizeX, sizeY - settingsBarSize - 1, scrollWidth, 0, 0, 20);
+            Scroll = new IpVerticalScroll(layerPanel, sizeX- scrollWidth, 0, scrollWidth, sizeY-settingbarSize-(int)bPen.Width, 0, 100, 10);
             settingsBar = new IpSettingsBar(sizeX, sizeY, settingsBarSize);
-
+            Scroll.Enable = false;
             AddLayer();
             layerR[0].SelectedLayer = true;
 
             layerPanel.MouseDown += LayerPanel_MouseDown;
-            layerPanel.MouseMove += LayerPanel_MouseMove;
-            layerPanel.MouseUp += LayerPanel_MouseUp;
+            layerPanel.Paint += LayerPanel_Paint;
+            Scroll.IpScroll += Scroll_IpScroll;
         }
+
 
         public void Draw()
         {
-            gbuff.FillRectangle(whiteBrush, 0, 0, sizeX, sizeY);
+            gbuff.FillRectangle(whiteBrush, 0, 0, sizeX-scrollWidth-bPen.Width, sizeY);
             DrawLayers();
-            Scroll.DrawRectangle(gbuff);
             settingsBar.DrawBar(gbuff);
             graph.DrawImageUnscaled(bmp, 0, 0);
         }

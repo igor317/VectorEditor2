@@ -70,8 +70,10 @@
     <Compile Include="IpPicture.cs" />
     <Compile Include="DrawingStruct\IpSpline.cs" />
     <Compile Include="LayerPanel\IpCursor.cs" />
+    <Compile Include="LayerPanel\IpHorizontalScroll.cs" />
     <Compile Include="LayerPanel\IpLayer.cs" />
     <Compile Include="LayerPanel\IpLayerRec.cs" />
+    <Compile Include="LayerPanel\IpScroll.cs" />
     <Compile Include="LayerPanel\IpSettingsBar.cs" />
     <Compile Include="LayerPanel\IpVerticalScroll.cs" />
     <Compile Include="LayerPanel\PanelLayer.cs" />

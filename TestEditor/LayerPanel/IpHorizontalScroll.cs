@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace TestEditor
 {
-    class IpVerticalScroll:IpScroll
+    class IpHorizontalScroll:IpScroll
     {
         public event IpEventScrollHandler IpScroll;
         public event IpEventScrollHandler IpMouseUp;
@@ -22,7 +22,7 @@ namespace TestEditor
                 if (value > minValue && value < maxValue)
                 {
                     this.value = value;
-                    Offset = (value-minValue) * height/(maxValue-minValue);
+                    Offset = (value - minValue) * width / (maxValue - minValue);
                 }
                 else
                 {
@@ -34,13 +34,14 @@ namespace TestEditor
                     if (value >= maxValue - lenght)
                     {
                         this.value = maxValue - lenght;
-                        Offset = height - lenght * height / (maxValue - minValue);
+                        Offset = width - lenght * width / (maxValue - minValue);
                     }
                 }
 
             }
             get { return value; }
         }
+
         #endregion
 
         #region PRIVATE METHODS
@@ -48,10 +49,10 @@ namespace TestEditor
         {
             if (Enable)
             {
-                if (x >= this.x && x <= this.x+width
-                    && y >= Offset && y <= Offset + lenght*height/(maxValue-minValue))
+                if (y >= this.y && y <= this.y + height
+                    && x >= Offset && x <= Offset + lenght * width / (maxValue - minValue))
                 {
-                    offmouse = y - Offset;
+                    offmouse = x - Offset;
                     return true;
                 }
             }
@@ -62,32 +63,32 @@ namespace TestEditor
         {
             if (Enable)
             {
-                if (pos - offmouse >= this.y && pos - offmouse + lenght * height / (maxValue - minValue) <= this.y + height)
+                if (pos - offmouse >= this.x && pos - offmouse + lenght * width / (maxValue - minValue) <= this.x + width)
                 {
                     Offset = pos - offmouse;
-                    value = Convert.ToInt16(minValue + (Offset-y) / (height) * (maxValue - minValue));
+                    value = Convert.ToInt16(minValue + (Offset - x) / (width) * (maxValue - minValue));
                 }
-                if (pos - offmouse <= this.y)
+                if (pos - offmouse <= this.x)
                 {
-                    Offset = this.y;
+                    Offset = this.x;
                     value = minValue;
                 }
-                if (pos - offmouse + lenght * height / (maxValue - minValue) > this.y + height)
+                if (pos - offmouse + lenght * width / (maxValue - minValue) > this.x + width)
                 {
-                    Offset = this.y + height - lenght * height / (maxValue - minValue);
+                    Offset = this.x + width - lenght * width / (maxValue - minValue);
                     value = maxValue - lenght;
                 }
             }
         }
 
-       private void Holst_MouseDown(object sender, MouseEventArgs e)
+        private void Holst_MouseDown(object sender, MouseEventArgs e)
         {
             if (ScrollCheck(e.X, e.Y))
             {
                 inSelect = true;
                 DrawRectangle();
                 if (IpMouseDown != null)
-                    IpMouseDown(this, new IpScrollEventArgs(x, y, width, height, value, minValue, maxValue));
+                    IpMouseDown(this, new IpScrollEventArgs(x, y, width, height, value, maxValue, maxValue));
             }
         }
 
@@ -96,20 +97,19 @@ namespace TestEditor
             inSelect = false;
             DrawRectangle();
             if (IpMouseUp != null)
-                IpMouseUp(this, new IpScrollEventArgs(x, y, width, height, value, minValue, maxValue));
+                IpMouseUp(this, new IpScrollEventArgs(x, y, width, height, value, maxValue, maxValue));
         }
 
         private void Holst_MouseMove(object sender, MouseEventArgs e)
         {
             if (inSelect)
             {
-                Scroll(e.Y);
+                Scroll(e.X);
                 DrawRectangle();
                 if (IpScroll != null)
-                    IpScroll(this, new IpScrollEventArgs(x, y, width, height, Value, MinValue, maxValue));
+                    IpScroll(this, new IpScrollEventArgs(x, y, width, height, value, maxValue, maxValue));
             }
         }
-
         private void Holst_Paint(object sender, PaintEventArgs e)
         {
             DrawRectangle();
@@ -117,10 +117,9 @@ namespace TestEditor
         #endregion
 
         #region PUBLIC METHODS
-
-        public IpVerticalScroll(Control holst, int x, int y, int width, int height, int minValue, int maxValue, int lenght) : base(holst, x, y, width, height, minValue, maxValue, lenght)
+        public IpHorizontalScroll(Control holst, int x, int y, int width, int height, int minValue, int maxValue, int lenght) : base(holst, x, y, width, height, minValue, maxValue, lenght)
         {
-            Offset = this.y;
+            Offset = this.x;
 
             holst.MouseDown += Holst_MouseDown;
             holst.MouseUp += Holst_MouseUp;
@@ -134,9 +133,9 @@ namespace TestEditor
         {
             gbuff.FillRectangle(BackBrush, x, y, width, height);
             if (Enable)
-                gbuff.FillRectangle(ScrollBrush, x, Offset, width, lenght * height / (maxValue - minValue));          // Каретка
+                gbuff.FillRectangle(ScrollBrush, Offset, y, lenght * width / (maxValue - minValue), height);          // Каретка
             else
-                gbuff.FillRectangle(ScrollBrushDisabled, x, Offset, width, lenght * height / (maxValue - minValue));  // Каретка
+                gbuff.FillRectangle(ScrollBrushDisabled, Offset, y, width * width / (maxValue - minValue), height);  // Каретка
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 
