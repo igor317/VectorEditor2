@@ -16,6 +16,7 @@ namespace TestEditor
         public Pen pen;
         public bool selected;
         public int layer;
+        public Pen selectedPen;
 
         private float angle1, angle2;
         private float radius1, radius2;
@@ -59,6 +60,7 @@ namespace TestEditor
             y2 = selectCursor.Y;
             selected = false;
             this.pen = pen;
+            selectedPen = new Pen(Color.Red);
             this.layer = layer;
         }
 
@@ -88,13 +90,14 @@ namespace TestEditor
                 y2 = y2 - Math.Abs(cursor.Y - y2) * 2;
         }
 
-        public void DrawLine(Graphics buff,float xf,float yf,float coeff, Pen selectedPen)
+        public void DrawLine(Graphics buff,float xf,float yf,float coeff)
         {
             Pen sPen;
             if (selected)
                 sPen = selectedPen;
             else
                 sPen = pen;
+            sPen.Width = coeff;
             buff.DrawLine(sPen, x1*coeff - xf, y1 * coeff - yf, x2 * coeff - xf, y2 * coeff - yf);
         }
 

@@ -270,14 +270,19 @@ namespace TestEditor
                     int cury = Convert.ToInt16(sizeY / countGridLines * i);
                     if (i == countGridLines / 2)
                     {
-                        graph.DrawLine(gridPenDG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset);
-                        graph.DrawLine(gridPenDG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);
+                        if (curx * coeff - xOffset >= 0 && curx * coeff - xOffset <= sizeX)
+                            graph.DrawLine(gridPenDG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset);
+                        if (cury * coeff - yOffset >= 0 && cury * coeff - yOffset <= sizeY)
+                            graph.DrawLine(gridPenDG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);
                     }
                     else
                     {
-                        graph.DrawLine(gridPenLG, curx* coeff-xOffset, 0, curx* coeff-xOffset, sizeY* coeff-yOffset);
-                        graph.DrawLine(gridPenLG, 0, cury* coeff-yOffset, sizeX* coeff-xOffset, cury * coeff-yOffset);
+                        if (curx * coeff - xOffset >= 0 && curx * coeff - xOffset <= sizeX)
+                            graph.DrawLine(gridPenLG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset); // Vertical
+                        if (cury * coeff - yOffset >= 0 && cury * coeff - yOffset <= sizeY)
+                            graph.DrawLine(gridPenLG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);  // Horizontal
                     }
+
                 }
             }
         }

@@ -10,7 +10,6 @@ namespace TestEditor
     class GizmoEditor
     {
         #region VARIABLES
-        private Pen selectionPen = new Pen(Color.Red);
         private IpGizmo gizmo;
         private SelectRect selectRect;
         private IpGrid grid;
@@ -20,10 +19,6 @@ namespace TestEditor
         #endregion
 
         #region GET&GET METHODS
-        public Pen SelectionPen
-        {
-            get { return selectionPen; }
-        }
         public bool MoveCenterPointCursor
         {
             set

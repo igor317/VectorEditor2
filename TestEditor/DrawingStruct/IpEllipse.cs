@@ -16,6 +16,7 @@ namespace TestEditor
         public float radX;
         public float radY;
         public Pen pen;
+        public Pen selectedPen;
         public bool selected;
         public float alpha;
         public float pAlpha;
@@ -63,6 +64,7 @@ namespace TestEditor
             radY = Math.Abs(lastCursor.Y - selectCursor.Y);
             CalculatePoints();
             this.pen = pen;
+            selectedPen = new Pen(Color.Red);
             this.layer = layer;
             selected = false;
         }
@@ -97,7 +99,7 @@ namespace TestEditor
             y2 = Math.Abs(yR - yMax);
         }
 
-        public void DrawEllipse(Graphics buff, float xf, float yf, float coeff, Pen selectedPen)
+        public void DrawEllipse(Graphics buff, float xf, float yf, float coeff)
         {
             Pen sPen;
             if (selected)
@@ -108,6 +110,7 @@ namespace TestEditor
             {
                 buff.DrawLine(sPen, (xR + x[i])*coeff-xf, (yR + y[i])*coeff-yf, (xR + x[i - 1])*coeff-xf, (yR + y[i - 1])*coeff-yf);
             }
+            sPen.Width = coeff;
             buff.DrawLine(sPen, (xR + x[0])*coeff-xf, (yR + y[0])*coeff-yf, (xR + x[res-1])*coeff-xf, (yR + y[res-1])*coeff-yf);
         }
 

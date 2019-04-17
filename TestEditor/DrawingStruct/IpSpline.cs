@@ -20,6 +20,7 @@ namespace TestEditor
         public float x4;
         public float y4;
         public Pen pen;
+        public Pen selectedPen;
         public bool selected;
         public float xSmin,ySmin,xSmax,ySmax;
         public int layer;
@@ -84,6 +85,7 @@ namespace TestEditor
             x3 = (x1 + x4) / 2;
             y3 = (y1 + y4) / 2;
             this.pen = pen;
+            selectedPen = new Pen(Color.Red);
             this.layer = layer;
             CalculatePoints();
             selected = false;
@@ -203,13 +205,14 @@ namespace TestEditor
         }
 
 
-        public void DrawSpline(Graphics buff, float xf, float yf, float coeff, Pen selectedPen)
+        public void DrawSpline(Graphics buff, float xf, float yf, float coeff)
         {
             Pen sPen;
             if (selected)
                 sPen = selectedPen;
             else
                 sPen = pen;
+            sPen.Width = coeff;
             for (int i = 1; i < res; ++i)
             {
                 buff.DrawLine(sPen, x[i] * coeff - xf, y[i] * coeff - yf, x[i - 1] * coeff - xf, y[i - 1] * coeff - yf);

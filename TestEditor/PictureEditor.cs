@@ -43,7 +43,7 @@ namespace TestEditor
         private float xOffset = 0, yOffset = 0;
         private float maxScale = 5;
         private float minScale = 1;
-        private float deltaScale = 0.5f;
+        private float deltaScale = 0.1f;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
@@ -141,7 +141,7 @@ namespace TestEditor
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff);
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace TestEditor
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Ellipses[i].DrawEllipse(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    pic.Ellipses[i].DrawEllipse(gBuff, xOffset, yOffset, scaleCoeff);
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace TestEditor
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff, gizmoEditor.SelectionPen);
+                    pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff);
                 }
             }
         }
@@ -461,23 +461,30 @@ namespace TestEditor
                 pic.ScaleCoefficient = scaleCoeff;
                 Grid.ScaleCoeff = scaleCoeff;
 
-                //yScroll.Enable = true;
-                //yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
+                if (scaleCoeff >= maxScale)
+                {
+                    scaleCoeff = maxScale;
+                    pic.ScaleCoefficient = scaleCoeff;
+                    Grid.ScaleCoeff = scaleCoeff;
+                }
             }
         }
 
         public void ReduceScaleCoeff(int xPos, int yPos)
         {
+
+
             if (scaleCoeff > minScale)
             {
                 scaleCoeff -= deltaScale;
                 pic.ScaleCoefficient = scaleCoeff;
                 Grid.ScaleCoeff = scaleCoeff;
 
-                if (scaleCoeff == minScale)
+                if (scaleCoeff <= minScale)
                 {
-                    //yScroll.Enable = false;
-                    return;
+                    scaleCoeff = minScale;
+                    pic.ScaleCoefficient = scaleCoeff;
+                    Grid.ScaleCoeff = scaleCoeff;
                 }
                 //yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
