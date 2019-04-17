@@ -79,7 +79,7 @@ namespace TestEditor
                 Scroll.Enable = true;
                 //Scroll.Length = sizeY;
                 //Scroll.Value = layerSize * (countLayers- maxLayersInPage);
-                Scroll.MaxValue = layerSize * (countLayers - maxLayersInPage) ;
+                Scroll.MaxValue = layerSize * (countLayers - maxLayersInPage);
                 //Scroll.Value = 
             }
         }
