@@ -61,9 +61,9 @@ namespace TestEditor
         private Graphics graph;                                               // Первичный буфер
         private Graphics gBuff;                                               // Вторичный буфер
         private Bitmap bmp;                                                   // Изображения для буфера
-        private float maxScale = 5;
+        private float maxScale = 20;
         private float minScale = 1;
-        private float deltaScale = 0.5f;
+        private float deltaScale = 1.0f;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
         private SolidBrush grayHolstBrush = new SolidBrush(Color.Gray);
         private SolidBrush textBrush = new SolidBrush(Color.Black);
@@ -474,8 +474,6 @@ namespace TestEditor
 
         public void ReduceScaleCoeff(int xPos, int yPos)
         {
-
-
             if (ViewBox.scaleCoefficient > minScale)
             {
                 ViewBox.scaleCoefficient -= deltaScale;

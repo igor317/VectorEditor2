@@ -537,21 +537,21 @@ namespace TestEditor
 
             if (bufferCircles != null)
             {
-                counterC += counterCBuff-1;
+                counterC += counterCBuff - 1;
                 counterCircles = counterC;
                 Array.Resize(ref circles, counterC+1);
                 Array.Copy(bufferCircles, 0, circles, counterC - counterCBuff+1, counterCBuff);
             }
             if (bufferLines != null)
             {
-                counter += counterLBuff;
+                counter += counterLBuff - 1;
                 counterLines = counter + 1;
                 Array.Resize(ref lines, counter + 1);
                 Array.Copy(bufferLines, 0, lines, counter - counterLBuff + 1, counterLBuff);
             }
             if (bufferSplines != null)
             {
-                counterS += counterSBuff-1;
+                counterS += counterSBuff - 1;
                 counterSplines = counterS;
                 Array.Resize(ref splines, counterS + 1);
                 Array.Copy(bufferSplines, 0, splines, counterS - counterSBuff + 1, counterSBuff);
