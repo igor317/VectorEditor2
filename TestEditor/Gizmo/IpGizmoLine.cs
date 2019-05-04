@@ -40,7 +40,7 @@ namespace TestEditor
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
         {
-            if (cursor.InCursorArea(xPos, yPos, pic.XOffset, pic.YOffset, pic.ScaleCoefficient))
+            if (cursor.InCursorArea(xPos, yPos, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient))
             {
                 cursor.Pen = selectedControllerPen;
                 return true;
@@ -135,9 +135,9 @@ namespace TestEditor
         {
             if (showGizmo)
             {
-                moveCursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-                p1Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-                p2Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+                moveCursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+                p1Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+                p2Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
             }
         }
 

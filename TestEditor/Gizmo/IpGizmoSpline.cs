@@ -97,7 +97,7 @@ namespace TestEditor
 
         private bool ReDrawController(IpCursor cursor, int xPos, int yPos)
         {
-            if (cursor.InCursorArea(xPos, yPos, pic.XOffset, pic.YOffset, pic.ScaleCoefficient))
+            if (cursor.InCursorArea(xPos, yPos, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient))
             {
                 cursor.Pen = selectedControllerPen;
                 return true;
@@ -119,8 +119,8 @@ namespace TestEditor
 
         private void CalculateAngles(float xPos, float yPos)
         {
-            float w = (moveCursor.X * pic.ScaleCoefficient - pic.XOffset) - xPos;
-            float h = (moveCursor.Y * pic.ScaleCoefficient - pic.YOffset) - yPos;
+            float w = (moveCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset) - xPos;
+            float h = (moveCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset) - yPos;
             cursorAngle = (float)Math.Atan2(-w, -h);
             if (grid.EnableRotationGrid)
                 cursorAngle = grid.GridRotation(cursorAngle);
@@ -289,24 +289,41 @@ namespace TestEditor
                     f1 = k - 90;
                     rotationAngle = 360 - l;
                 }
-                graph.DrawEllipse(gizmoPen, (moveCursor.X - radius) * pic.ScaleCoefficient - pic.XOffset, (moveCursor.Y - radius) * pic.ScaleCoefficient - pic.YOffset, radius * 2 * pic.ScaleCoefficient, radius * 2 * pic.ScaleCoefficient);
-                graph.FillPie(sectorBrush, (moveCursor.X - radius) * pic.ScaleCoefficient - pic.XOffset, (moveCursor.Y - radius) * pic.ScaleCoefficient - pic.YOffset, radius * 2 * pic.ScaleCoefficient, radius * 2 * pic.ScaleCoefficient, f1, rotationAngle);
-                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10 * pic.ScaleCoefficient), textBrush, moveCursor.X * pic.ScaleCoefficient - pic.XOffset, moveCursor.Y * pic.ScaleCoefficient - pic.YOffset);
+                graph.DrawEllipse(gizmoPen, (moveCursor.X - radius) * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                            (moveCursor.Y - radius) * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset,
+                                            radius * 2 * pic.ViewBox.scaleCoefficient,
+                                            radius * 2 * pic.ViewBox.scaleCoefficient);
+
+                graph.FillPie(sectorBrush, (moveCursor.X - radius) * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                           (moveCursor.Y - radius) * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset,
+                                           radius * 2 * pic.ViewBox.scaleCoefficient,
+                                           radius * 2 * pic.ViewBox.scaleCoefficient,
+                                           f1, rotationAngle);
+
+                graph.DrawString(Convert.ToString(Math.Round(rotationAngle, 2)), new Font("Times New Roman", 10 * pic.ViewBox.scaleCoefficient),
+                                textBrush, 
+                                moveCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                moveCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset);
             }
-            moveCursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-            rotationCursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+            moveCursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+            rotationCursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
             if (showGizmo)
             {
 
-                p1Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-                p2Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-                p3Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
-                p4Cursor.DrawXCursor(graph, pic.XOffset, pic.YOffset, pic.ScaleCoefficient);
+                p1Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+                p2Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+                p3Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
+                p4Cursor.DrawXCursor(graph, pic.ViewBox.xOffset, pic.ViewBox.yOffset, pic.ViewBox.scaleCoefficient);
 
-                graph.DrawLine(gizmoPen, pic.Splines[index].x1 * pic.ScaleCoefficient - pic.XOffset, pic.Splines[index].y1 * pic.ScaleCoefficient - pic.YOffset,
-                    pic.Splines[index].x2 * pic.ScaleCoefficient - pic.XOffset, pic.Splines[index].y2 * pic.ScaleCoefficient - pic.YOffset);
-                graph.DrawLine(gizmoPen, pic.Splines[index].x3 * pic.ScaleCoefficient - pic.XOffset, pic.Splines[index].y3 * pic.ScaleCoefficient - pic.YOffset,
-                    pic.Splines[index].x4 * pic.ScaleCoefficient - pic.XOffset, pic.Splines[index].y4 * pic.ScaleCoefficient - pic.YOffset);
+                graph.DrawLine(gizmoPen, pic.Splines[index].x1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                         pic.Splines[index].y1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset,
+                                         pic.Splines[index].x2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                         pic.Splines[index].y2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset);
+
+                graph.DrawLine(gizmoPen, pic.Splines[index].x3 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                         pic.Splines[index].y3 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset,
+                                         pic.Splines[index].x4 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset,
+                                         pic.Splines[index].y4 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset);
             }
         }
 

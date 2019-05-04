@@ -9,6 +9,29 @@ using System.IO;
 
 namespace TestEditor
 {
+    class ViewBox
+    {
+        public float x;
+        public float y;
+        public float width;
+        public float height;
+
+        public float xOffset;
+        public float yOffset;
+        public float scaleCoefficient;
+
+        public ViewBox(float x,float y, float width,float height)
+        {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            xOffset = 0;
+            yOffset = 0;
+            scaleCoefficient = 1;
+        }
+    }
+
     public enum EditMode
     {
         LineModeM = 1,
@@ -34,25 +57,24 @@ namespace TestEditor
         private IpCursor selectCursor = new IpCursor(5, new Pen(Color.Black));
         private IpCursor lastCursor = new IpCursor(5, new Pen(Color.Red));
         private int sizeX, sizeY;                                             // Размеры холста
-        private int yScrollWidth = 20;
 
         private Graphics graph;                                               // Первичный буфер
         private Graphics gBuff;                                               // Вторичный буфер
         private Bitmap bmp;                                                   // Изображения для буфера
-        private float scaleCoeff = 1;
-        private float xOffset = 0, yOffset = 0;
         private float maxScale = 5;
         private float minScale = 1;
-        private float deltaScale = 0.1f;
+        private float deltaScale = 0.5f;
         private SolidBrush whiteHolstBrush = new SolidBrush(Color.White);
+        private SolidBrush grayHolstBrush = new SolidBrush(Color.Gray);
         private SolidBrush textBrush = new SolidBrush(Color.Black);
         private Font textFont = new Font("Times New Roman", 20);
         private bool drawScaleCoeff = true;
-        //private IpVerticalScroll yScroll;
 
         private bool inSelect = false;
         public bool shift;
         public bool ctrl;
+
+        public ViewBox ViewBox { get; private set; }
         #endregion
 
         #region SET&GET METHODS
@@ -81,20 +103,6 @@ namespace TestEditor
         {
             get { return gizmoEditor; }
         }
-
-        public float ScaleCoeff
-        {
-            get { return scaleCoeff; }
-        }
-        public float XOffset
-        {
-            get { return xOffset; }
-        }
-        public float YOffset
-        {
-            get { return yOffset; }
-        }
-
         #endregion
 
         #region PRIVATE METHODS
@@ -102,9 +110,9 @@ namespace TestEditor
         private void DrawCursor()
         {
             if (editMode == EditMode.LineModeD || editMode == EditMode.CircleModeD || editMode == EditMode.SplineD || editMode == EditMode.Spline1 || editMode == EditMode.Spline2)
-                SelectCursor.DrawXCursor(gBuff,xOffset,yOffset,scaleCoeff);
+                SelectCursor.DrawXCursor(gBuff,ViewBox.xOffset,ViewBox.yOffset, ViewBox.scaleCoefficient);
             if (editMode == EditMode.LineModeD || editMode == EditMode.LineModeM || editMode == EditMode.CircleModeM || editMode == EditMode.CircleModeD || editMode == EditMode.SplineM)
-                LastCursor.DrawXCursor(gBuff, xOffset, yOffset, scaleCoeff);
+                LastCursor.DrawXCursor(gBuff, ViewBox.xOffset, ViewBox.yOffset, ViewBox.scaleCoefficient);
         }
 
         private void DrawGizmo()
@@ -133,15 +141,15 @@ namespace TestEditor
                 if (pic.Lines[i] == 0)
                     return;
 
-                float xMin = Math.Min(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
-                float xMax = Math.Max(pic.Lines[i].x1, pic.Lines[i].x2) * scaleCoeff - XOffset;
-                float yMin = Math.Min(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
-                float yMax = Math.Max(pic.Lines[i].y1, pic.Lines[i].y2) * scaleCoeff - YOffset;
+                float xMin = Math.Min(pic.Lines[i].x1, pic.Lines[i].x2) * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float xMax = Math.Max(pic.Lines[i].x1, pic.Lines[i].x2) * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float yMin = Math.Min(pic.Lines[i].y1, pic.Lines[i].y2) * ViewBox.scaleCoefficient - ViewBox.yOffset;
+                float yMax = Math.Max(pic.Lines[i].y1, pic.Lines[i].y2) * ViewBox.scaleCoefficient - ViewBox.yOffset;
                 float lX = xMax - xMin;
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Lines[i].DrawLine(gBuff, xOffset, yOffset, scaleCoeff);
+                    pic.Lines[i].DrawLine(gBuff, ViewBox.xOffset, ViewBox.yOffset, ViewBox.scaleCoefficient);
                 }
             }
         }
@@ -156,15 +164,15 @@ namespace TestEditor
                 if (pic.Ellipses[i] == 0)
                     return;
 
-                float xMax = pic.Ellipses[i].x1 * scaleCoeff - XOffset;
-                float xMin = pic.Ellipses[i].x2 * scaleCoeff - XOffset;
-                float yMax = pic.Ellipses[i].y1 * scaleCoeff - YOffset;
-                float yMin = pic.Ellipses[i].y2 * scaleCoeff - YOffset;
+                float xMax = pic.Ellipses[i].x1 * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float xMin = pic.Ellipses[i].x2 * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float yMax = pic.Ellipses[i].y1 * ViewBox.scaleCoefficient - ViewBox.yOffset;
+                float yMin = pic.Ellipses[i].y2 * ViewBox.scaleCoefficient - ViewBox.yOffset;
                 float lX = xMax - xMin;
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Ellipses[i].DrawEllipse(gBuff, xOffset, yOffset, scaleCoeff);
+                    pic.Ellipses[i].DrawEllipse(gBuff, ViewBox.xOffset, ViewBox.yOffset, ViewBox.scaleCoefficient);
                 }
             }
         }
@@ -179,15 +187,15 @@ namespace TestEditor
                 if (pic.Splines[i] == 0)
                     return;
 
-                float xMax = pic.Splines[i].xSmax * scaleCoeff - XOffset;
-                float xMin = pic.Splines[i].xSmin * scaleCoeff - XOffset;
-                float yMax = pic.Splines[i].ySmax * scaleCoeff - YOffset;
-                float yMin = pic.Splines[i].ySmin * scaleCoeff - YOffset;
+                float xMax = pic.Splines[i].xSmax * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float xMin = pic.Splines[i].xSmin * ViewBox.scaleCoefficient - ViewBox.xOffset;
+                float yMax = pic.Splines[i].ySmax * ViewBox.scaleCoefficient - ViewBox.yOffset;
+                float yMin = pic.Splines[i].ySmin * ViewBox.scaleCoefficient - ViewBox.yOffset;
                 float lX = xMax - xMin;
                 float lY = yMax - yMin;
                 if (xMin + lX >= 0 && xMax - lX <= sizeX && yMin + lY >= 0 && yMax - lY <= sizeY)
                 {
-                    pic.Splines[i].DrawSpline(gBuff, xOffset, yOffset, scaleCoeff);
+                    pic.Splines[i].DrawSpline(gBuff, ViewBox.xOffset, ViewBox.yOffset, ViewBox.scaleCoefficient);
                 }
             }
         }
@@ -374,18 +382,16 @@ namespace TestEditor
 
         #region PUBLIC METHODS
 
-        public PictureEditor(Control Holst)
+        public PictureEditor(Control Holst,float width,float height)
         {
             this.sizeX = Holst.Width;
             this.sizeY = Holst.Height;
+            ViewBox = new ViewBox(sizeX / 2 - width / 2, sizeY / 2 - height / 2, width, height);
             graph = Holst.CreateGraphics();
 
-            pic = new IpPicture(SelectCursor, LastCursor, sizeX,sizeY);
-            ipGrid = new IpGrid(sizeX, sizeY, Picture);
+            pic = new IpPicture(SelectCursor, LastCursor, sizeX,sizeY,ViewBox);
+            ipGrid = new IpGrid(sizeX, sizeY, Picture,ViewBox);
             gizmoEditor = new GizmoEditor(Picture,Grid);
-            //yScroll = new IpVerticalScroll(sizeX+ yScrollWidth, sizeY, yScrollWidth, 0, 100, 50);
-            //yScroll.ScrollBrush = new SolidBrush(Color.Blue);
-            //yScroll.Enable = false;
             ClearPicture();
             bmp = new Bitmap(sizeX, sizeY, graph);
             gBuff = Graphics.FromImage(bmp);
@@ -400,16 +406,18 @@ namespace TestEditor
 
         public void Draw()
         {
-            gBuff.FillRectangle(whiteHolstBrush, 0, 0, sizeX, sizeY);
-            Grid.DrawGrid(gBuff,xOffset,yOffset,scaleCoeff);
+            if (sizeX*sizeY > ViewBox.width* ViewBox.height)
+                gBuff.FillRectangle(grayHolstBrush, 0, 0, sizeX, sizeY);
+            gBuff.FillRectangle(whiteHolstBrush, ViewBox.x, ViewBox.y, ViewBox.width, ViewBox.height);
+            Grid.DrawGrid(gBuff, ViewBox.xOffset, ViewBox.yOffset, ViewBox.scaleCoefficient);
             DrawCursor();
             DrawSelectionRectangle();
             DrawGizmo();
             DrawLines();
             DrawCircles();
             DrawSplines();
-            if (drawScaleCoeff && scaleCoeff > minScale)
-                gBuff.DrawString("x"+scaleCoeff.ToString(), textFont, textBrush, 0, 0);
+            if (drawScaleCoeff && ViewBox.scaleCoefficient > minScale)
+                gBuff.DrawString("x"+ ViewBox.scaleCoefficient.ToString(), textFont, textBrush, 0, 0);
             graph.DrawImageUnscaled(bmp, 0, 0);
         }
 
@@ -445,27 +453,21 @@ namespace TestEditor
 
         public void SetOffsets(float xOffset,float yOffset)
         {
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-            Grid.xOffset = xOffset;
-            Grid.yOffset = yOffset;
-            pic.XOffset = xOffset;
-            pic.YOffset = yOffset;
+            this.ViewBox.xOffset = xOffset;
+            this.ViewBox.yOffset = yOffset;
         }
 
         public void IncreaseScaleCoeff(int xPos,int yPos)
         {
-            if (scaleCoeff < maxScale)
+            if (ViewBox.scaleCoefficient < maxScale)
             {
-                scaleCoeff += deltaScale;
-                pic.ScaleCoefficient = scaleCoeff;
-                Grid.ScaleCoeff = scaleCoeff;
+                ViewBox.scaleCoefficient += deltaScale;
+                pic.ViewBox.scaleCoefficient = ViewBox.scaleCoefficient;
 
-                if (scaleCoeff >= maxScale)
+                if (ViewBox.scaleCoefficient >= maxScale)
                 {
-                    scaleCoeff = maxScale;
-                    pic.ScaleCoefficient = scaleCoeff;
-                    Grid.ScaleCoeff = scaleCoeff;
+                    ViewBox.scaleCoefficient = maxScale;
+                    pic.ViewBox.scaleCoefficient = ViewBox.scaleCoefficient;
                 }
             }
         }
@@ -474,19 +476,16 @@ namespace TestEditor
         {
 
 
-            if (scaleCoeff > minScale)
+            if (ViewBox.scaleCoefficient > minScale)
             {
-                scaleCoeff -= deltaScale;
-                pic.ScaleCoefficient = scaleCoeff;
-                Grid.ScaleCoeff = scaleCoeff;
+                ViewBox.scaleCoefficient -= deltaScale;
+                pic.ViewBox.scaleCoefficient = ViewBox.scaleCoefficient;
 
-                if (scaleCoeff <= minScale)
+                if (ViewBox.scaleCoefficient <= minScale)
                 {
-                    scaleCoeff = minScale;
-                    pic.ScaleCoefficient = scaleCoeff;
-                    Grid.ScaleCoeff = scaleCoeff;
+                    ViewBox.scaleCoefficient = minScale;
+                    pic.ViewBox.scaleCoefficient = ViewBox.scaleCoefficient;
                 }
-                //yScroll.MaxValue = (int)(sizeY * (ScaleCoeff - 1));
             }
         }
 

@@ -56,32 +56,32 @@ namespace TestEditor
         {
             if (selectCursor.X >= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Правый нижний
             {
-                x1 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y1 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
-                x2 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y2 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x1 = lastCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y1 = lastCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
+                x2 = selectCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y2 = selectCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
             }
             if (selectCursor.X <= lastCursor.X && selectCursor.Y >= lastCursor.Y) // Левый нижний
             {
-                x1 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y1 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
-                x2 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y2 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x1 = selectCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y1 = lastCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
+                x2 = lastCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y2 = selectCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
 
             }
             if (selectCursor.X >= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Правый верхний
             {
-                x1 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y1 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
-                x2 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y2 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x1 = lastCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y1 = selectCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
+                x2 = selectCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y2 = lastCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
             }
             if (selectCursor.X <= lastCursor.X && selectCursor.Y <= lastCursor.Y) // Левый верхний
             {
-                x1 = selectCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y1 = selectCursor.Y * pic.ScaleCoefficient - pic.YOffset;
-                x2 = lastCursor.X * pic.ScaleCoefficient - pic.XOffset;
-                y2 = lastCursor.Y * pic.ScaleCoefficient - pic.YOffset;
+                x1 = selectCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y1 = selectCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
+                x2 = lastCursor.X * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset;
+                y2 = lastCursor.Y * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset;
             }
             width = x2 - x1;
             height = y2 - y1;
@@ -99,10 +99,10 @@ namespace TestEditor
         {
             for (int i = 0; i < pic.CounterLines + 1; ++i)
             {
-                if (pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
-                    && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Lines[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Lines[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
+                if (pic.Lines[i].x1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Lines[i].x1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Lines[i].y1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Lines[i].y1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2
+                    && pic.Lines[i].x2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Lines[i].x2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Lines[i].y2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Lines[i].y2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2)
                 {
                     //if (pic.Layers[pic.Lines[i].layer].active)
                         pic.Lines[i].selected = add;
@@ -110,10 +110,10 @@ namespace TestEditor
             }
             for (int i = 0; i < pic.CounterEllipses + 1; ++i)
             {
-                if (pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x1 * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y1 * pic.ScaleCoefficient - pic.YOffset <= y2
-                    && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Ellipses[i].x2 * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Ellipses[i].y2 * pic.ScaleCoefficient - pic.YOffset <= y2)
+                if (pic.Ellipses[i].x1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Ellipses[i].x1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Ellipses[i].y1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Ellipses[i].y1 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2
+                    && pic.Ellipses[i].x2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Ellipses[i].x2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Ellipses[i].y2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Ellipses[i].y2 * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2)
                 {
                    // if (pic.Layers[pic.Ellipses[i].layer].active)
                         pic.Ellipses[i].selected = add;
@@ -121,10 +121,10 @@ namespace TestEditor
             }
             for (int i = 0; i < pic.CounterSplines + 1; ++i)
             {
-                if (pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmin * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmin * pic.ScaleCoefficient - pic.YOffset <= y2
-                    && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset >= x1 && pic.Splines[i].xSmax * pic.ScaleCoefficient - pic.XOffset <= x2
-                    && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset >= y1 && pic.Splines[i].ySmax * pic.ScaleCoefficient - pic.YOffset <= y2)
+                if (pic.Splines[i].xSmin * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Splines[i].xSmin * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Splines[i].ySmin * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Splines[i].ySmin * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2
+                    && pic.Splines[i].xSmax * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset >= x1 && pic.Splines[i].xSmax * pic.ViewBox.scaleCoefficient - pic.ViewBox.xOffset <= x2
+                    && pic.Splines[i].ySmax * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset >= y1 && pic.Splines[i].ySmax * pic.ViewBox.scaleCoefficient - pic.ViewBox.yOffset <= y2)
                 {
                    // if (pic.Layers[pic.Splines[i].layer].active)
                         pic.Splines[i].selected = add;

@@ -24,9 +24,8 @@ namespace TestEditor
         private int gridDegree = 15;
         private Pen gridPenLG = new Pen(Color.LightGray);
         private Pen gridPenDG = new Pen(Color.DarkGray);
+        private ViewBox viewBox;
 
-        private float scale = 1;
-        private float xOff = 0, yoff = 0;
         #endregion
 
         #region SET&GET METHODS
@@ -64,39 +63,21 @@ namespace TestEditor
             set { rotationGrid = value; }
             get { return rotationGrid; }
         }
-
-        public float ScaleCoeff
-        {
-            set { scale = value; }
-            get { return scale; }
-        }
-        public float xOffset
-        {
-            set { xOff = value; }
-            get { return xOff; }
-        }
-        public float yOffset
-        {
-            set { yoff = value; }
-            get { return yoff; }
-        }
         #endregion
 
         #region PRIVATE METHODS
         private void GridXPosition(IpCursor cursor,float xPos)
         {
             int LenghtLinesX = Convert.ToInt32(sizeX / countGridLines);
-            float xR = xPos/ LenghtLinesX - Convert.ToInt16(xPos / LenghtLinesX);
             int xT = LenghtLinesX * Convert.ToInt16(xPos / LenghtLinesX);
-            cursor.X = (xR >= 0.5f) ? xT : xT + 1;
+            cursor.X = xT;
         }
 
         private void GridYPosition(IpCursor cursor,float yPos)
         {
             int LenghtLinesY = Convert.ToInt32(sizeY / countGridLines);
-            float yR = yPos / LenghtLinesY - Convert.ToInt16(yPos / LenghtLinesY);
             int yT = LenghtLinesY * Convert.ToInt16(yPos / LenghtLinesY);
-            cursor.Y = (yR >= 0.5f) ? yT : yT + 1;
+            cursor.Y = yT;
         }
 
         private void MagnetLines(IpCursor cursor, bool ignoreSelected, float res)
@@ -222,11 +203,12 @@ namespace TestEditor
         #endregion
 
         #region PUBLIC METHODS
-        public IpGrid(int sizeX, int sizeY, IpPicture pic)
+        public IpGrid(int sizeX, int sizeY, IpPicture pic,ViewBox viewBox)
         {
             this.sizeX = sizeX;
             this.sizeY = sizeY;
             this.pic = pic;
+            this.viewBox = viewBox;
         }
 
         /// <summary>
@@ -289,50 +271,54 @@ namespace TestEditor
 
         public void MoveCursor(IpCursor cursor, float xPos, float yPos, bool ignoreSelected, IpCursor pivot)
         {
-            if (xPos != -1)
+            if (EnableGrid)
             {
-                if (xPos < sizeX)
-                    cursor.X = (xPos + xOffset) / ScaleCoeff;
-                if (xPos >= sizeX)
-                    cursor.X = (sizeX + xOffset) / ScaleCoeff;
-                if (xPos < 0)
-                    cursor.X = 0;
+                if (xPos != -1)
+                    GridXPosition(cursor, (xPos + viewBox.xOffset) / viewBox.scaleCoefficient);
+                if (yPos != -1)
+                    GridYPosition(cursor, (yPos + viewBox.yOffset) / viewBox.scaleCoefficient);
             }
-            if (yPos != -1)
+            else
             {
-                if (yPos < sizeY)
-                    cursor.Y = (yPos + yOffset) / ScaleCoeff;
-                if (yPos >= sizeY)
-                    cursor.Y = (sizeY + yOffset) / ScaleCoeff;
-                if (yPos < 0)
-                    cursor.Y = 0;
+                if (xPos != -1)
+                    if (xPos < sizeX)
+                        cursor.X = (xPos + viewBox.xOffset) / viewBox.scaleCoefficient;
+                if (yPos != -1)
+                    if (yPos < sizeY)
+                        cursor.Y = (yPos + viewBox.yOffset) / viewBox.scaleCoefficient;
             }
             if (EnableMagnet)
             {
                 if (ignoreSelected)
-                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, true, 5);
+                    MagnetCursorPosition(cursor, (xPos + viewBox.xOffset) / viewBox.scaleCoefficient, (yPos + viewBox.yOffset) / viewBox.scaleCoefficient, true, 5);
                 else
-                    MagnetCursorPosition(cursor, (xPos + xOffset) / ScaleCoeff, (yPos + yOffset) / ScaleCoeff, false, 5);
-                //return;
-            }
-            if (EnableGrid)
-            {
-                if (xPos != -1)
-                    GridXPosition(cursor, (xPos + xOffset) / ScaleCoeff);
-                if (yPos != -1)
-                    GridYPosition(cursor, (yPos + yOffset) / ScaleCoeff);
-                //return;
+                    MagnetCursorPosition(cursor, (xPos + viewBox.xOffset) / viewBox.scaleCoefficient, (yPos + viewBox.yOffset) / viewBox.scaleCoefficient, false, 5);
             }
 
-            if (rotationGrid && pivot != null)
+            if (xPos != -1)
             {
-                float xp = pivot.X * ScaleCoeff - xOff - xPos;
-                float yp = pivot.Y * ScaleCoeff - yoff - yPos;
+                if (xPos >= sizeX)
+                    cursor.X = (sizeX + viewBox.xOffset) / viewBox.scaleCoefficient;
+                if (xPos < 0)
+                    cursor.X = viewBox.xOffset/viewBox.scaleCoefficient;
+            }
+            if (yPos != -1)
+            {
+                if (yPos >= sizeY)
+                    cursor.Y = (sizeY + viewBox.yOffset) / viewBox.scaleCoefficient;
+                if (yPos < 0)
+                    cursor.Y = viewBox.yOffset/viewBox.scaleCoefficient;
+            }
+
+                if (rotationGrid && pivot != null)
+            {
+                float xp = pivot.X * viewBox.scaleCoefficient - viewBox.xOffset - xPos;
+                float yp = pivot.Y * viewBox.scaleCoefficient - viewBox.yOffset - yPos;
                 float raduis = (float)Math.Sqrt(Math.Pow(xp, 2) + Math.Pow(yp, 2));
                 float angle = (float)Math.Atan2(-xp, -yp);
                 angle = GridRotation(angle);
-                cursor.X = pivot.X + raduis / ScaleCoeff * (float)Math.Sin(angle);
-                cursor.Y = pivot.Y + raduis / ScaleCoeff * (float)Math.Cos(angle);
+                cursor.X = pivot.X + raduis / viewBox.scaleCoefficient * (float)Math.Sin(angle);
+                cursor.Y = pivot.Y + raduis / viewBox.scaleCoefficient * (float)Math.Cos(angle);
             }
         }
 

@@ -21,6 +21,7 @@ namespace TestEditor
         private Ellipse[] bufferCircles;
         private IpSpline[] bufferSplines;
         private IpLayer[] bufferLayers;
+        public ViewBox ViewBox { get; private set; }
         
         int counterSBuff = 0;
         int counterLBuff = 0;
@@ -38,9 +39,6 @@ namespace TestEditor
         private IpCursor lastCursor;
         private VectorPicture vectorPicture;
         private int sizeX, sizeY;
-        private float scaleCoeff = 1;
-        private float xOffset = 0;
-        private float yOffset = 0;
 
         #endregion
 
@@ -74,23 +72,6 @@ namespace TestEditor
         {
             get { return counterLayers; }
         }
-
-        public float ScaleCoefficient
-        {
-            set { scaleCoeff = value; }
-            get { return scaleCoeff; }
-        }
-        public float XOffset
-        {
-            set { xOffset = value; }
-            get { return xOffset; }
-        }
-        public float YOffset
-        {
-            set { yOffset = value; }
-            get { return yOffset; }
-        }
-
         #endregion
 
         #region PRIVATE METHODS
@@ -196,7 +177,7 @@ namespace TestEditor
         #endregion
 
         #region PUBLIC METHODS
-        public IpPicture(IpCursor selectCursor, IpCursor lastCursor, int sizeX, int sizeY)
+        public IpPicture(IpCursor selectCursor, IpCursor lastCursor, int sizeX, int sizeY,ViewBox viewBox)
         {
             lines = new LinePic[counterLines];
             circles = new Ellipse[counterCircles];
@@ -206,6 +187,7 @@ namespace TestEditor
             vectorPicture = new VectorPicture();
             this.sizeX = sizeX;
             this.sizeY = sizeY;
+            this.ViewBox = viewBox;
         }
 
         public void AddSelectedToLayer(int index)
@@ -356,6 +338,7 @@ namespace TestEditor
                 lines[i].y2 = Convert.ToInt16(vectorPicture.Lines[i].y2 * yC);
                 lines[i].layer = vectorPicture.Lines[i].layer;
                 lines[i].pen = new Pen(Color.Black);
+                lines[i].selectedPen = new Pen(Color.Red);
                 counter++;
             }
             for (int i = 0;i<vectorPicture.CounterCircles;++i)
@@ -368,6 +351,7 @@ namespace TestEditor
                 circles[i].layer = vectorPicture.Ellipses[i].layer;
                 circles[i].pen = new Pen(Color.Black);
                 circles[i].CalculatePoints();
+                circles[i].selectedPen = new Pen(Color.Red);
                 counterC++;
             }
             for (int i = 0;i<vectorPicture.CounterSplines;++i)
@@ -383,6 +367,7 @@ namespace TestEditor
                 splines[i].layer = vectorPicture.Splines[i].layer;
                 splines[i].pen = new Pen(Color.Black);
                 splines[i].CalculatePoints();
+                splines[i].selectedPen = new Pen(Color.Red); 
                 counterS++;
             }
             vectorPicture.ClearBuffer();
