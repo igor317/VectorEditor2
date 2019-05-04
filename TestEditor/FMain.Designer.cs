@@ -89,10 +89,10 @@
             // 
             this.yOffsetB.Enabled = false;
             this.yOffsetB.LargeChange = 1;
-            this.yOffsetB.Location = new System.Drawing.Point(1062, 39);
+            this.yOffsetB.Location = new System.Drawing.Point(1053, 39);
             this.yOffsetB.Maximum = 0;
             this.yOffsetB.Name = "yOffsetB";
-            this.yOffsetB.Size = new System.Drawing.Size(20, 616);
+            this.yOffsetB.Size = new System.Drawing.Size(20, 620);
             this.yOffsetB.TabIndex = 1;
             this.yOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             // 
@@ -100,10 +100,10 @@
             // 
             this.xOffsetB.Enabled = false;
             this.xOffsetB.LargeChange = 1;
-            this.xOffsetB.Location = new System.Drawing.Point(153, 651);
+            this.xOffsetB.Location = new System.Drawing.Point(153, 639);
             this.xOffsetB.Maximum = 0;
             this.xOffsetB.Name = "xOffsetB";
-            this.xOffsetB.Size = new System.Drawing.Size(894, 20);
+            this.xOffsetB.Size = new System.Drawing.Size(900, 20);
             this.xOffsetB.TabIndex = 0;
             this.xOffsetB.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
