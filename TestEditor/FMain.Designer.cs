@@ -109,22 +109,24 @@
             // 
             // btnIncGrid
             // 
+            this.btnIncGrid.BackColor = System.Drawing.SystemColors.GrayText;
             this.btnIncGrid.Location = new System.Drawing.Point(12, 279);
             this.btnIncGrid.Name = "btnIncGrid";
             this.btnIncGrid.Size = new System.Drawing.Size(75, 23);
             this.btnIncGrid.TabIndex = 3;
             this.btnIncGrid.Text = "More";
-            this.btnIncGrid.UseVisualStyleBackColor = true;
+            this.btnIncGrid.UseVisualStyleBackColor = false;
             this.btnIncGrid.Click += new System.EventHandler(this.button2_Click);
             // 
             // btnRedGrid
             // 
+            this.btnRedGrid.BackColor = System.Drawing.SystemColors.GrayText;
             this.btnRedGrid.Location = new System.Drawing.Point(12, 250);
             this.btnRedGrid.Name = "btnRedGrid";
             this.btnRedGrid.Size = new System.Drawing.Size(75, 23);
             this.btnRedGrid.TabIndex = 4;
             this.btnRedGrid.Text = "Less";
-            this.btnRedGrid.UseVisualStyleBackColor = true;
+            this.btnRedGrid.UseVisualStyleBackColor = false;
             this.btnRedGrid.Click += new System.EventHandler(this.button3_Click);
             // 
             // label1
@@ -138,12 +140,13 @@
             // 
             // button4
             // 
+            this.button4.BackColor = System.Drawing.SystemColors.GrayText;
             this.button4.Location = new System.Drawing.Point(53, 82);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 12;
             this.button4.Text = "reset";
-            this.button4.UseVisualStyleBackColor = true;
+            this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pLine
@@ -234,6 +237,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.GrayText;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.editToolStripMenuItem,
@@ -387,7 +391,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.BackColor = System.Drawing.SystemColors.GrayText;
             this.ClientSize = new System.Drawing.Size(1326, 671);
             this.Controls.Add(this.pLayer);
             this.Controls.Add(this.pSpline2);
@@ -413,6 +417,7 @@
             this.Controls.Add(this.btnIncGrid);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
