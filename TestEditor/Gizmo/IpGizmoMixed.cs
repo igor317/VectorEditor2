@@ -305,13 +305,19 @@ namespace TestEditor
             {
                 if (pic.Ellipses[i].selected)
                 {
-                    float coeffC = 0;
+                    float coeffyR = 0;
+                    float coeffxR = 0;
                     float coeff1 = 0;
 
                     float coeff2 = 0;
                     if (right)
                     {
                         mR = xScaleR.X;
+                        coeffxR = 1 - ((xScaleR.X - pic.Ellipses[i].xR) / width);
+                        coeffyR = 1 - ((xScaleR.Y - pic.Ellipses[i].yR) / height);
+                        //coeff1 = 1 - pic.Ellipses[i].radX / width;
+                        coeff1 = (pic.Ellipses[i].radX/width);
+                        coeff2 = (pic.Ellipses[i].radY / height);
                     }
                     else
                     {
@@ -319,11 +325,12 @@ namespace TestEditor
                         //coeff1 = 1 - ((pic.Ellipses[i].xR - xScaleL.X) / width);
                     }
                     //pic.Ellipses[i].radX += (kX - mR)/2 * coeff1;
-                    //pic.Ellipses[i].xR += (kX - mR) * coeffC;
-                    //pic.Ellipses[i].xRaX += (kX - mR) * coeff1;
-                    //pic.Ellipses[i].xRaY += (kX - mR) * coeffC;
-                    //pic.Ellipses[i].CalculatePoints();
-                    //pic.Ellipses[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
+                    pic.Ellipses[i].xR += (kX - mR) * coeffxR*(float)Math.Cos(pic.Ellipses[i].pAlpha);
+                    pic.Ellipses[i].radY += (kX - mR) * coeff2 * (float)Math.Sin(pic.Ellipses[i].pAlpha);
+                    pic.Ellipses[i].radX += (kX - mR) * coeff1 * (float)Math.Cos(pic.Ellipses[i].pAlpha);
+                    //pic.Ellipses[i].yR += (kX - mR) * coeffyR * (float)Math.Sin(pic.Ellipses[i].pAlpha);
+                    pic.Ellipses[i].CalculatePoints();
+                    pic.Ellipses[i].CalculateRotationAxes(moveCursor.X, moveCursor.Y);
                 }
             }
 

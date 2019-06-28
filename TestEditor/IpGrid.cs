@@ -219,7 +219,7 @@ namespace TestEditor
             if (countGridLines >= maxCountGridLines)
                 return;
             int countG = countGridLines + 1;
-            while (sizeX % countG != 0 || countG % 2 != 0)
+            while ((sizeX % countG != 0 || sizeY % countG != 0) || countG % 2 != 0)
             {
                 countG++;
             }
@@ -234,7 +234,7 @@ namespace TestEditor
             if (countGridLines <= minCountGridLines)
                 return;
             int countG = countGridLines - 1;
-            while (sizeX % countG != 0 || countG % 2 != 0)
+            while ((sizeX % countG != 0 || sizeY % countG != 0) || countG % 2 != 0)
             {
                 countG--;
             }
@@ -253,16 +253,30 @@ namespace TestEditor
                     if (i == countGridLines / 2)
                     {
                         if (curx * coeff - xOffset >= 0 && curx * coeff - xOffset <= sizeX)
-                            graph.DrawLine(gridPenDG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset);
+                            graph.DrawLine(gridPenDG, curx * coeff - xOffset,
+                                                      0,
+                                                      curx * coeff - xOffset,
+                                                      sizeY * coeff - yOffset);
+
                         if (cury * coeff - yOffset >= 0 && cury * coeff - yOffset <= sizeY)
-                            graph.DrawLine(gridPenDG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);
+                            graph.DrawLine(gridPenDG, 0,
+                                                      cury * coeff - yOffset,
+                                                      sizeX * coeff - xOffset,
+                                                      cury * coeff - yOffset);
                     }
                     else
                     {
                         if (curx * coeff - xOffset >= 0 && curx * coeff - xOffset <= sizeX)
-                            graph.DrawLine(gridPenLG, curx * coeff - xOffset, 0, curx * coeff - xOffset, sizeY * coeff - yOffset); // Vertical
+                            graph.DrawLine(gridPenLG, curx * coeff - xOffset,
+                                                      0,
+                                                      curx * coeff - xOffset,
+                                                      sizeY * coeff - yOffset); // Vertical
+
                         if (cury * coeff - yOffset >= 0 && cury * coeff - yOffset <= sizeY)
-                            graph.DrawLine(gridPenLG, 0, cury * coeff - yOffset, sizeX * coeff - xOffset, cury * coeff - yOffset);  // Horizontal
+                            graph.DrawLine(gridPenLG, 0,
+                                                      cury * coeff - yOffset,
+                                                      sizeX * coeff - xOffset,
+                                                      cury * coeff - yOffset);  // Horizontal
                     }
 
                 }

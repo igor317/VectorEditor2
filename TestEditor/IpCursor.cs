@@ -79,8 +79,8 @@ namespace TestEditor
         {
             if (!enableCursor)
                 return false;
-            if (x >= (X - size)*scale-xOffset && x <= (X + size)*scale-xOffset 
-                && y >= (Y - size)*scale-yOffset && y <= (Y + size)*scale-yOffset)
+            if (x >= X * scale - size - xOffset && x <= X * scale + size - xOffset
+                && y >= Y * scale - size - yOffset && y <= Y * scale + size - yOffset)
                 return true;
             return false;
         }
@@ -89,8 +89,15 @@ namespace TestEditor
         {
             if (enableCursor)
             {
-                graph.DrawLine(Pen, (X - Size)*scale - xOffset, Y*scale - yOffset, (X + Size)*scale - xOffset, Y*scale - yOffset);
-                graph.DrawLine(Pen, X*scale - xOffset, (Y - Size)*scale - yOffset, X*scale - xOffset, (Y + Size)*scale - yOffset);
+                graph.DrawLine(Pen, X * scale - Size - xOffset,
+                                    Y * scale - yOffset,
+                                    X * scale + Size - xOffset,
+                                    Y * scale - yOffset);
+
+                graph.DrawLine(Pen, X * scale - xOffset,
+                                    Y * scale - Size - yOffset,
+                                    X * scale - xOffset,
+                                    Y * scale + Size - yOffset);
             }
         }
         #endregion
